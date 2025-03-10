@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>CO₂ Express Advanced – Chatbot Bilanzierung</title>
+  
+  <!-- Bibliotheken -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <style>
+    /* Allgemeine Styles */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #23d5ab, #23a6d5); color: #333; padding: 1rem; }
+    header { background: linear-gradient(90deg, #004d40, #00796b); padding: 15px 30px; display: flex; align-items: center; justify-content: space-between; color: #fff; border-radius: 10px; margin-bottom: 1rem; }
+    header img { height: 45px; transition: transform 0.3s ease; }
+    header img:hover { transform: scale(1.05); }
+    nav { display: flex; gap: 20px; }
+    nav a { color: #fff; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 25px; transition: background 0.3s; }
+    nav a:hover { background: rgba(165,214,167,0.2); }
+    nav a.active { background: rgba(35,213,171,0.3); }
+
+    .container { max-width: 1400px; margin: 0 auto; background: #fff; border-radius: 10px; padding: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+
+    /* Chatbot-Bereich */
+    .chat-container { max-width: 600px; margin: 0 auto 2rem; border: 1px solid #ccc; border-radius: 10px; background: #f9f9f9; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .chat-header { background: #004d40; color: #fff; padding: 1rem; cursor: pointer; text-align: center; font-weight: bold; }
+    .chat-body { padding: 1rem; flex: 1; overflow-y: auto; }
+    .chat-messages { list-style: none; }
+    .message { padding: 0.5rem 1rem; border-radius: 10px; margin-bottom: 0.5rem; max-width: 80%; }
+    .bot-message { background: #e3f2fd; align-self: flex-start; }
+    .user-message { background: #004d40; color: #fff; align-self: flex-end; }
+    .chat-input { display: flex; border-top: 1px solid #ddd; }
+    .chat-input input { flex: 1; padding: 0.8rem; border: none; }
+    .chat-input button { padding: 0.8rem; border: none; background: #23d5ab; color: #fff; cursor: pointer; }
+
+    /* Dashboard */
+    #dashboard { display: none; margin-top: 2rem; }
+    #pdfContent { background: #fafafa; border: 1px solid #ddd; border-radius: 8px; padding: 1rem; }
+    .scope-summary { display: flex; flex-wrap: wrap; gap: 1rem; margin: 2rem 0; }
+    .scope-box { flex: 1 1 200px; background: #f2f2f2; border-radius: 8px; padding: 1rem; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    table.scope-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    table.scope-table th, table.scope-table td { border: 1px solid #ccc; padding: 0.5rem; }
+    table.scope-table th { background: #e3f2fd; font-weight: bold; }
+    .chart-container { max-width: 500px; margin: 2rem auto; }
+    .chart-grid { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; margin-top: 2rem; }
+    .chart-box { background: #f9f9f9; border-radius: 8px; padding: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-width: 280px; text-align: center; }
+    .dash-btns { text-align: center; margin: 1rem 0; }
+    .btn { background: linear-gradient(45deg, #23d5ab, #23a6d5); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 25px; font-weight: 600; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; margin: 0.2rem 0; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(35,213,171,0.4); }
+    .error-msg { color: #b71c1c; font-weight: bold; margin-top: 0.5rem; }
+    .info-msg { color: #004d40; font-size: 0.9rem; }
+
+    @media print {
+      .btn, header, .chat-container { display: none !important; }
+      body { background: #fff; }
+      #pdfContent { border: none; background: #fff; }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+ <header>
+    <a href="Dateipload.html">
+      <img src="https://digi-green-pilot.de/wp-content/uploads/2023/10/DGP-Logo-1024x438.png" alt="DigiGreen Pilot Logo">
+    </a>
+    
+    <nav>
+      <!-- Hier wurden die zwei zusätzlichen Buttons eingefügt: CO₂ Express & Chatbot -->
+      <a href="seite1/Dateipload.html" >
+        <i class="fas fa-poll"></i> Umfrage
+      </a>
+      <a href="Co2express.html">
+        <i class="fas fa-bolt"></i> CO₂ Express
+      </a>
+      <a href="Chatbot.html"class="active">
+        <i class="fas fa-comments"></i> Chatbot
+      </a>
+      <a href="livecalc.html">
+        <i class="fas fa-poll"></i> Live Calculator
+      </a>
+      <a href="Dashboard.html">
+        <i class="fas fa-leaf"></i> Dashboard
+      </a>
+      <a href="https://moodle.digitalekompetenzen.org/login/index.php#module-483">
+        <i class="fas fa-envelope"></i> Lernplatform
+      </a>
+      <a href="Meinprofil.html">
+        <i class="fas fa-user"></i> Mein Profil
+      </a>
+    </nav>
+  </header>
+
+
+
+  <div class="container">
+    <h1 class="title">CO₂ Express Advanced – Chatbot Bilanzierung</h1>
+    
+    <!-- Chatbot-Bereich -->
+    <div class="chat-container" id="chatContainer">
+      <div class="chat-header" id="chatHeader">CO₂ Assistant – Fragen Sie mich alles!</div>
+      <div class="chat-body" id="chatBody">
+        <ul class="chat-messages" id="chatMessages">
+          <li class="message bot-message">Hallo! Ich helfe Ihnen bei Ihrer CO₂-Bilanzierung. Lassen Sie uns beginnen. Bitte geben Sie Ihren Firmennamen ein.</li>
+        </ul>
+        <div class="chat-input">
+          <input type="text" id="userInput" placeholder="Ihre Antwort..." onkeypress="handleKeyPress(event)">
+          <button onclick="sendMessage()">Senden</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard (wird nach Abschluss des Chats eingeblendet) -->
+    <div id="dashboard">
+      <div id="pdfContent">
+        <h2>CO₂-Bilanz Ergebnis</h2>
+        <p id="companyInfo" style="font-size:0.9rem;color:#444;"></p>
+        <div class="scope-summary" id="scopeSummary"></div>
+        <table class="scope-table" id="scopeTable">
+          <thead>
+            <tr>
+              <th>Scope</th>
+              <th>Emissionen (kg CO₂)</th>
+              <th>Anteil (%)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr>
+              <th>Gesamt</th>
+              <th id="totalEmissionCell"></th>
+              <th>100%</th>
+            </tr>
+          </tfoot>
+        </table>
+        <div class="chart-container">
+          <canvas id="scopeChart"></canvas>
+        </div>
+        <div class="chart-grid">
+          <div class="chart-box">
+            <h4>Subscope-Emissionen</h4>
+            <canvas id="subscopeChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="dash-btns">
+        <button class="btn" onclick="downloadPDF()">PDF Export</button>
+        <button class="btn" onclick="downloadExcel()">Excel Export</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /****************************************************
+     * 0) Erweiterte Gesprächslogik – Alle relevanten
+     * Variablen für eine präzise CO₂-Bilanzierung
+     ****************************************************/
+    // Hier definieren wir eine umfangreiche Liste von Schritten (conversationSteps).
+    // Für jedes Subscope und jede relevante Variable wird eine Frage gestellt.
+    const conversationSteps = [
+      { key: "companyName", question: "Bitte geben Sie Ihren Firmennamen ein:" },
+      { key: "year", question: "Welches Bezugsjahr möchten Sie bilanzieren? (z. B. 2023)" },
+
+      // Scope 1 – Direkte Emissionen (Fahrzeuge, Heizung, Gase, sonstige Emittenten)
+      { key: "scope1_carDiesel", question: "Geben Sie die jährliche Dieselmenge (in Litern) für Firmen-PKW ein:" },
+      { key: "scope1_carDieselFactor", question: "Welchen Emissionsfaktor (kg CO₂/Liter) nutzen Sie für Diesel? (Standard: 2.64)", default: 2.64 },
+      { key: "scope1_carGasoline", question: "Geben Sie die jährliche Benzinmenge (in Litern) für Firmen-PKW ein:" },
+      { key: "scope1_carGasolineFactor", question: "Welchen Emissionsfaktor (kg CO₂/Liter) nutzen Sie für Benzin? (Standard: 2.32)", default: 2.32 },
+      { key: "scope1_heatingConsumption", question: "Geben Sie den jährlichen Erdgasverbrauch (in kWh) für Ihre Heizungsanlage ein:" },
+      { key: "scope1_heatingFactor", question: "Welchen Emissionsfaktor (kg CO₂/kWh) nutzen Sie für Erdgas? (Standard: 0.201)", default: 0.201 },
+      { key: "scope1_techGases", question: "Geben Sie die Menge der verbrauchten technischen Gase (in kg) ein:" },
+      { key: "scope1_techGasesFactor", question: "Welchen Emissionsfaktor (kg CO₂/kg) nutzen Sie für technische Gase? (z. B. 1430 für R134a)", default: 1430 },
+      { key: "scope1_otherEmitters", question: "Geben Sie die Menge anderer Emittenten (z. B. Notstromaggregate, in Litern) ein:" },
+      { key: "scope1_otherEmittersFactor", question: "Welchen Emissionsfaktor (kg CO₂ pro Liter) nutzen Sie für diese sonstigen Emittenten? (Standard: 2.50)", default: 2.50 },
+
+      // Scope 2 – Indirekte Emissionen (Strom)
+      { key: "scope2_electricity", question: "Geben Sie den jährlichen Stromverbrauch (in kWh) ein:" },
+      { key: "scope2_electricityFactor", question: "Welchen Emissionsfaktor (kg CO₂/kWh) nutzen Sie für den zugekauften Strom? (Standard: 0.356)", default: 0.356 },
+
+      // Scope 3 – Weitere indirekte Emissionen (Geschäftsreisen, externer Transport, postal, Chemikalien, Papier, Kunststoffe, Metalle, Mineralien, Entsorgung, Wasser)
+      { key: "scope3_trainTravel", question: "Geben Sie die jährliche Strecke (in km) für Geschäftsreisen per Bahn ein:" },
+      { key: "scope3_trainTravelFactor", question: "Welchen Emissionsfaktor (kg CO₂/km) nutzen Sie für Bahnreisen? (Standard: 0.06)", default: 0.06 },
+      { key: "scope3_flightTravel", question: "Geben Sie die jährliche Strecke (in km) für Geschäftsreisen per Flugzeug ein:" },
+      { key: "scope3_flightTravelFactor", question: "Welchen Emissionsfaktor (kg CO₂/km) nutzen Sie für Flugreisen? (Standard: 0.25)", default: 0.25 },
+      { key: "scope3_externalTransport", question: "Geben Sie die jährliche Distanz (in km) für externe Transporte ein:" },
+      { key: "scope3_externalTransportFactor", question: "Welchen Emissionsfaktor (kg CO₂/km) nutzen Sie für externe Transporte? (Standard: 0.09367)", default: 0.09367 },
+      { key: "scope3_postalPackages", question: "Geben Sie die Anzahl der versendeten Pakete (postal) ein:" },
+      { key: "scope3_postalPackagesFactor", question: "Welchen Emissionsfaktor (kg CO₂ pro Stück) nutzen Sie für Pakete? (Standard: 1.374)", default: 1.374 },
+      { key: "scope3_postalLetters", question: "Geben Sie die Anzahl der versendeten Briefe ein:" },
+      { key: "scope3_postalLettersFactor", question: "Welchen Emissionsfaktor (kg CO₂ pro Stück) nutzen Sie für Briefe? (Standard: 0.02)", default: 0.02 },
+      { key: "scope3_chemicals", question: "Geben Sie den Verbrauch chemischer Grundstoffe (in kg) ein:" },
+      { key: "scope3_chemicalsFactor", question: "Welchen Emissionsfaktor (kg CO₂/kg) nutzen Sie für chemische Grundstoffe? (Standard: 1.01)", default: 1.01 },
+      { key: "scope3_paper", question: "Geben Sie den jährlichen Papierverbrauch (in Blatt) ein:" },
+      { key: "scope3_paperFactor", question: "Welchen Emissionsfaktor (kg CO₂ pro Blatt) nutzen Sie für Papier? (Standard: 0.82)", default: 0.82 },
+      { key: "scope3_plastics", question: "Geben Sie den jährlichen Verbrauch von Kunststoffen (in kg) ein:" },
+      { key: "scope3_plasticsFactor", question: "Welchen Emissionsfaktor (kg CO₂/kg) nutzen Sie für Kunststoffe? (Standard: 1.9)", default: 1.9 },
+      { key: "scope3_metals", question: "Geben Sie den Verbrauch von Metallen (in kg) ein:" },
+      { key: "scope3_metalsFactor", question: "Welchen Emissionsfaktor (kg CO₂/kg) nutzen Sie für Metalle? (Standard: 10)", default: 10 },
+      { key: "scope3_minerals", question: "Geben Sie den Verbrauch von Mineralien/Baustoffen (in kg) ein:" },
+      { key: "scope3_mineralsFactor", question: "Welchen Emissionsfaktor (kg CO₂/kg) nutzen Sie für Mineralien/Baustoffe? (Standard: 0.0612)", default: 0.0612 },
+      { key: "scope3_disposalVolume", question: "Geben Sie das Volumen (in Litern) der entsorgten Abfälle ein:" },
+      { key: "scope3_disposalFill", question: "Geben Sie den durchschnittlichen Füllgrad (%) der Abfallbehälter ein:" },
+      { key: "scope3_disposalCollections", question: "Geben Sie die Anzahl der Leerungen pro Jahr für Abfallbehälter ein:" },
+      { key: "scope3_disposalFactor", question: "Welchen Emissionsfaktor (kg CO₂ pro Liter) nutzen Sie für die Entsorgung? (Standard: 2.63)", default: 2.63 },
+      { key: "scope3_water", question: "Geben Sie den jährlichen Wasserverbrauch (in m³) ein:" },
+      { key: "scope3_waterFactor", question: "Welchen Emissionsfaktor (kg CO₂/m³) nutzen Sie für Wasser? (Standard: 0.00229)", default: 0.00229 },
+
+      { key: "done", question: "Sind alle Daten eingegeben? (ja/nein)" }
+    ];
+
+    // Globale Variable zur Speicherung der Antworten
+    const responses = {};
+    let currentStep = 0;
+
+    // Zeigt die nächste Frage im Chat an
+    function showNextQuestion() {
+      if (currentStep < conversationSteps.length) {
+        const step = conversationSteps[currentStep];
+        addMessage(step.question, "bot");
+      } else {
+        // Wenn alle Schritte durchlaufen sind, berechne die Bilanz
+        calculateBilanz();
+      }
+    }
+
+    // Fügt eine Nachricht zum Chat hinzu
+    function addMessage(text, sender) {
+      const chatMessages = document.getElementById("chatMessages");
+      const li = document.createElement("li");
+      li.className = "message " + (sender === "bot" ? "bot-message" : "user-message");
+      li.textContent = text;
+      chatMessages.appendChild(li);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Verarbeitung der Benutzereingabe
+    function processUserInput(input) {
+      const step = conversationSteps[currentStep];
+      // Wenn kein Input und ein Default-Wert definiert ist, diesen Wert verwenden
+      if (!input && step.default !== undefined) {
+        responses[step.key] = step.default;
+      } else {
+        responses[step.key] = input;
+      }
+      addMessage("Ihre Antwort: " + input, "user");
+      currentStep++;
+      if (step.key === "done" && input.toLowerCase() === "nein") {
+        addMessage("Bitte geben Sie weitere Daten ein. Starten Sie den Dialog neu, wenn Sie fertig sind.", "bot");
+        return;
+      }
+      setTimeout(showNextQuestion, 600);
+    }
+
+    // Handler für Enter-Taste
+    function handleKeyPress(event) {
+      if (event.key === "Enter") {
+        const inputField = document.getElementById("userInput");
+        const text = inputField.value.trim();
+        if (text !== "") {
+          processUserInput(text);
+          inputField.value = "";
+        }
+      }
+    }
+
+    // Senden-Button
+    function sendMessage() {
+      const inputField = document.getElementById("userInput");
+      const text = inputField.value.trim();
+      if (text !== "") {
+        processUserInput(text);
+        inputField.value = "";
+      }
+    }
+
+    // Start des Chatdialogs beim Laden der Seite
+    document.addEventListener("DOMContentLoaded", function() {
+      showNextQuestion();
+    });
+
+    /******************************************************
+     * CO₂-Bilanzierung: Berechnung aller Scopes
+     ******************************************************/
+    function calculateBilanz() {
+      // Scope 1 – Direkte Emissionen
+      const carDiesel = parseFloat(responses.scope1_carDiesel) || 0;
+      const carDieselFactor = parseFloat(responses.scope1_carDieselFactor) || 2.64;
+      const carGasoline = parseFloat(responses.scope1_carGasoline) || 0;
+      const carGasolineFactor = parseFloat(responses.scope1_carGasolineFactor) || 2.32;
+      const heatingConsumption = parseFloat(responses.scope1_heatingConsumption) || 0;
+      const heatingFactor = parseFloat(responses.scope1_heatingFactor) || 0.201;
+      const techGases = parseFloat(responses.scope1_techGases) || 0;
+      const techGasesFactor = parseFloat(responses.scope1_techGasesFactor) || 1430;
+      const otherEmitters = parseFloat(responses.scope1_otherEmitters) || 0;
+      const otherEmittersFactor = parseFloat(responses.scope1_otherEmittersFactor) || 2.50;
+      const scope1_total = (carDiesel * carDieselFactor) +
+                           (carGasoline * carGasolineFactor) +
+                           (heatingConsumption * heatingFactor) +
+                           (techGases * techGasesFactor) +
+                           (otherEmitters * otherEmittersFactor);
+
+      // Scope 2 – Indirekte Emissionen (Strom)
+      const electricity = parseFloat(responses.scope2_electricity) || 0;
+      const electricityFactor = parseFloat(responses.scope2_electricityFactor) || 0.356;
+      const scope2_total = electricity * electricityFactor;
+
+      // Scope 3 – Weitere indirekte Emissionen
+      const trainTravel = parseFloat(responses.scope3_trainTravel) || 0;
+      const trainFactor = parseFloat(responses.scope3_trainTravelFactor) || 0.06;
+      const flightTravel = parseFloat(responses.scope3_flightTravel) || 0;
+      const flightFactor = parseFloat(responses.scope3_flightTravelFactor) || 0.25;
+      const externalTransport = parseFloat(responses.scope3_externalTransport) || 0;
+      const externalTransportFactor = parseFloat(responses.scope3_externalTransportFactor) || 0.09367;
+      const postalPackages = parseFloat(responses.scope3_postalPackages) || 0;
+      const postalPackagesFactor = parseFloat(responses.scope3_postalPackagesFactor) || 1.374;
+      const postalLetters = parseFloat(responses.scope3_postalLetters) || 0;
+      const postalLettersFactor = parseFloat(responses.scope3_postalLettersFactor) || 0.02;
+      const chemicals = parseFloat(responses.scope3_chemicals) || 0;
+      const chemicalsFactor = parseFloat(responses.scope3_chemicalsFactor) || 1.01;
+      const paper = parseFloat(responses.scope3_paper) || 0;
+      const paperFactor = parseFloat(responses.scope3_paperFactor) || 0.82;
+      const plastics = parseFloat(responses.scope3_plastics) || 0;
+      const plasticsFactor = parseFloat(responses.scope3_plasticsFactor) || 1.9;
+      const metals = parseFloat(responses.scope3_metals) || 0;
+      const metalsFactor = parseFloat(responses.scope3_metalsFactor) || 10;
+      const minerals = parseFloat(responses.scope3_minerals) || 0;
+      const mineralsFactor = parseFloat(responses.scope3_mineralsFactor) || 0.0612;
+      // Für Entsorgung: Volumen (Liter) * (Füllgrad/100) * Leerungen * Factor / 1000 (Umrechnung auf kg)
+      const disposalVolume = parseFloat(responses.scope3_disposalVolume) || 0;
+      const disposalFill = parseFloat(responses.scope3_disposalFill) || 0;
+      const disposalCollections = parseFloat(responses.scope3_disposalCollections) || 0;
+      const disposalFactor = parseFloat(responses.scope3_disposalFactor) || 2.63;
+      const disposalEmissions = (disposalVolume * (disposalFill / 100) * disposalCollections * disposalFactor) / 1000;
+      const water = parseFloat(responses.scope3_water) || 0;
+      const waterFactor = parseFloat(responses.scope3_waterFactor) || 0.00229;
+      
+      const scope3_total = (trainTravel * trainFactor) +
+                           (flightTravel * flightFactor) +
+                           (externalTransport * externalTransportFactor) +
+                           (postalPackages * postalPackagesFactor) +
+                           (postalLetters * postalLettersFactor) +
+                           (chemicals * chemicalsFactor) +
+                           (paper * paperFactor) +
+                           (plastics * plasticsFactor) +
+                           (metals * metalsFactor) +
+                           (minerals * mineralsFactor) +
+                           disposalEmissions +
+                           (water * waterFactor);
+
+      const totalEmissions = scope1_total + scope2_total + scope3_total;
+
+      // Speichern der Ergebnisse
+      responses.scope1_total = scope1_total;
+      responses.scope2_total = scope2_total;
+      responses.scope3_total = scope3_total;
+      responses.totalEmissions = totalEmissions;
+
+      // Ausgabe im Chat
+      addMessage("Vielen Dank! Ihre CO₂-Bilanz wurde berechnet:", "bot");
+      addMessage(`Scope 1: ${scope1_total.toFixed(2)} kg CO₂`, "bot");
+      addMessage(`Scope 2: ${scope2_total.toFixed(2)} kg CO₂`, "bot");
+      addMessage(`Scope 3: ${scope3_total.toFixed(2)} kg CO₂`, "bot");
+      addMessage(`Gesamt: ${totalEmissions.toFixed(2)} kg CO₂`, "bot");
+
+      // Dashboard aufbauen
+      buildDashboard();
+    }
+
+    /******************************************************
+     * Dashboard-Aufbau: Ergebnisse, Tabelle & Diagramme
+     ******************************************************/
+    function buildDashboard() {
+      // Chat ausblenden, Dashboard einblenden
+      document.getElementById("chatContainer").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+
+      // Firmendaten anzeigen
+      document.getElementById("companyInfo").textContent =
+        `Firma: ${responses.companyName}, Bezugsjahr: ${responses.year}`;
+
+      // Scope-Zusammenfassungen
+      const scopeSummaryEl = document.getElementById("scopeSummary");
+      scopeSummaryEl.innerHTML = `
+        <div class="scope-box">
+          <h3>Scope 1</h3>
+          <p>${responses.scope1_total.toFixed(2)} kg CO₂</p>
+        </div>
+        <div class="scope-box">
+          <h3>Scope 2</h3>
+          <p>${responses.scope2_total.toFixed(2)} kg CO₂</p>
+        </div>
+        <div class="scope-box">
+          <h3>Scope 3</h3>
+          <p>${responses.scope3_total.toFixed(2)} kg CO₂</p>
+        </div>
+      `;
+      const total = responses.totalEmissions;
+      const tableBody = document.querySelector("#scopeTable tbody");
+      tableBody.innerHTML = `
+        <tr>
+          <td>Scope 1</td>
+          <td>${responses.scope1_total.toFixed(2)}</td>
+          <td>${((responses.scope1_total/total)*100).toFixed(1)}%</td>
+        </tr>
+        <tr>
+          <td>Scope 2</td>
+          <td>${responses.scope2_total.toFixed(2)}</td>
+          <td>${((responses.scope2_total/total)*100).toFixed(1)}%</td>
+        </tr>
+        <tr>
+          <td>Scope 3</td>
+          <td>${responses.scope3_total.toFixed(2)}</td>
+          <td>${((responses.scope3_total/total)*100).toFixed(1)}%</td>
+        </tr>
+      `;
+      document.getElementById("totalEmissionCell").textContent = total.toFixed(2);
+
+      // Diagramme erstellen
+      createScopeChart({
+        "Scope 1": responses.scope1_total,
+        "Scope 2": responses.scope2_total,
+        "Scope 3": responses.scope3_total
+      });
+      createSubscopeChart(["Scope 1", "Scope 2", "Scope 3"],
+                           [responses.scope1_total, responses.scope2_total, responses.scope3_total]);
+    }
+
+    /******************************************************
+     * Diagramme mit Chart.js
+     ******************************************************/
+    let scopeChartRef = null;
+    function createScopeChart(scopeSums) {
+      const ctx = document.getElementById("scopeChart").getContext("2d");
+      if (scopeChartRef) scopeChartRef.destroy();
+      scopeChartRef = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: ["Scope 1", "Scope 2", "Scope 3"],
+          datasets: [{
+            data: [scopeSums["Scope 1"], scopeSums["Scope 2"], scopeSums["Scope 3"]],
+            backgroundColor: [
+              "rgba(54,162,235,0.7)",
+              "rgba(255,99,132,0.7)",
+              "rgba(75,192,192,0.7)"
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: "bottom" } }
+        }
+      });
+    }
+
+    let subscopeChartRef = null;
+    function createSubscopeChart(labels, values) {
+      const ctx = document.getElementById("subscopeChart").getContext("2d");
+      if (subscopeChartRef) subscopeChartRef.destroy();
+      subscopeChartRef = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "CO₂ (kg)",
+            data: values,
+            backgroundColor: "rgba(153,102,255,0.7)"
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: { ticks: { autoSkip: false, maxRotation: 45, minRotation: 0 } },
+            y: { beginAtZero: true }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    /******************************************************
+     * PDF-Export (html2pdf.js)
+     ******************************************************/
+    function downloadPDF() {
+      const element = document.getElementById("pdfContent");
+      const opt = {
+        filename: "CO2_Express_Advanced_Bilanz.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 3 },
+        jsPDF: { unit: "pt", format: "a4", orientation: "portrait" }
+      };
+      html2pdf().from(element).set(opt).save();
+    }
+
+    /******************************************************
+     * Excel-Export (SheetJS)
+     ******************************************************/
+    function downloadExcel() {
+      if (!parsedData || parsedData.length === 0) {
+        alert("Keine Daten vorhanden.");
+        return;
+      }
+      const wb = XLSX.utils.book_new();
+      wb.Props = {
+        Title: "CO2 Express Advanced Bilanz",
+        Subject: "CO2 Bilanz",
+        Author: responses.companyName || "CO2 Express",
+        CreatedDate: new Date()
+      };
+      const rawDataSheet = XLSX.utils.json_to_sheet(parsedData);
+      XLSX.utils.book_append_sheet(wb, rawDataSheet, "Rohdaten");
+      XLSX.writeFile(wb, "CO2_Express_Advanced_Bilanz.xlsx");
+    }
+
+    /******************************************************
+     * Formular-Submit: Speichern der Daten und Weiterleitung
+     ******************************************************/
+    function handleSubmit(event) {
+      event.preventDefault();
+      localStorage.setItem("co2Data", JSON.stringify(responses));
+      alert("Ihre CO₂-Bilanz wurde gespeichert!");
+      // Hier könnten Sie zur Dashboard-Seite weiterleiten:
+      // window.location.href = "Dashboard.html";
+    }
+
+    /******************************************************
+     * CSV-Einlesen und Dashboard-Generierung
+     ******************************************************/
+    let parsedData = [];
+    function processCSV() {
+      const fileInput = document.getElementById("csvFileInput");
+      const errorEl = document.getElementById("csvError");
+      errorEl.style.display = "none";
+      errorEl.textContent = "";
+      if (!fileInput.files || fileInput.files.length === 0) {
+        errorEl.style.display = "block";
+        errorEl.textContent = "Bitte eine CSV-Datei auswählen.";
+        return;
+      }
+      const file = fileInput.files[0];
+      Papa.parse(file, {
+        header: true,
+        delimiter: ";",
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          console.log("PapaParse results:", results);
+          if (results.errors && results.errors.length > 0) {
+            errorEl.style.display = "block";
+            errorEl.textContent = "CSV-Fehler: " + results.errors[0].message;
+            return;
+          }
+          parsedData = results.data;
+          if (!parsedData.some(row => row.scope !== undefined && row.scope !== "")) {
+            errorEl.style.display = "block";
+            errorEl.textContent = 'Spalte "scope" nicht gefunden oder leer. Bitte Template beachten.';
+            return;
+          }
+          showCSVPreview(parsedData);
+          generateDashboard(parsedData);
+        }
+      });
+    }
+
+    function showCSVPreview(data) {
+      const previewEl = document.getElementById("csvPreview");
+      previewEl.innerHTML = "";
+      if (!data || data.length === 0) {
+        previewEl.innerHTML = '<p class="info-msg">Keine Daten oder leere CSV.</p>';
+        return;
+      }
+      let tableHTML = '<table id="csvPreviewTable"><thead><tr>';
+      const columns = Object.keys(data[0]);
+      columns.forEach(col => { tableHTML += `<th>${col}</th>`; });
+      tableHTML += '</tr></thead><tbody>';
+      data.slice(0, 15).forEach(row => {
+        tableHTML += "<tr>";
+        columns.forEach(col => { tableHTML += `<td>${row[col] || ""}</td>`; });
+        tableHTML += "</tr>";
+      });
+      tableHTML += "</tbody></table>";
+      previewEl.innerHTML = tableHTML;
+    }
+  </script>
+</body>
+</html>
