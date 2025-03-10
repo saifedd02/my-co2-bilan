@@ -211,7 +211,11 @@
     </div>
 
     <script>
-  
+       document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Dummy‑Login: Es wird immer zum Dashboard weitergeleitet.
+    window.location.href = 'Dashboard.html';
+  });
 
 // Diese Funktion startet das Fade-Out und verzögert die Weiterleitung
 function doFadeOut() {
@@ -229,14 +233,19 @@ document.addEventListener('DOMContentLoaded', () => {
   document.body.classList.add('fade-in');
 });
         function simpleHash(str) {
-    // Sehr einfache Pseudo-Hashfunktion NUR als Beispiel!
-    // Ersetzt jeden Buchstaben durch seinen charCode und summiert.
-    // Richtige Hashing würde eine Kryptolibrary benötigen.
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        hash = (hash + str.charCodeAt(i)) & 0xFFFFFFFF;
-    }
-    return 'hash' + hash; // prefix 'hash' nur um zu zeigen dass es gehasht ist.
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash + str.charCodeAt(i)) & 0xFFFFFFFF;
+  }
+  return 'hash' + hash;
+}
+
+// Beim Registrieren:
+users[username].password = simpleHash(gewähltesPasswort);
+
+// Beim Login:
+if (users[username] && users[username].password === simpleHash(eingegebenesPasswort)) {
+  // Login erfolgreich
 }
         // Initialisiere Standard-Benutzer, wenn noch keine existieren
         if (!localStorage.getItem('users')) {
@@ -250,6 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('users', JSON.stringify(defaultUsers));
         }
 
+        // Login-Formular Event Listener
     
 
         // Registrierung anzeigen
@@ -380,3 +390,4 @@ if (users[username] && users[username].password === hashFunktion(password)) {
 </body>
 
 </html>
+
