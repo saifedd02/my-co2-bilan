@@ -3984,5 +3984,5 @@ function addScope3L() {
     alert('Ihre CO₂-Bilanz wurde erfolgreich gespeichert!');
   
     // Weiterleitung zum Dashboard (oder eine andere Zielseite)
-    window.location.href = '../Dashboard.html';
+    window.location.href = 'Dashboard.html';
   }
