@@ -360,20 +360,7 @@ function checkLoginStatus() {
     }
 }
 
-document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    
-    // Einfacher Vergleich für die Präsentation
-    if (username === 'admin' && password === 'admin123') {
-        alert('Erfolgreich angemeldet!');
-        window.location.href = 'Dashboard.html'; // Weiterleitung zum Dashboard
-    } else {
-        alert('Ungültiger Benutzername oder Passwort');
-    }
-});
+
 
 // Manuelle Logout-Funktion
 function logout() {
