@@ -213,21 +213,8 @@
     <script>
        document.getElementById('loginForm').addEventListener('submit', function(e) {
     e.preventDefault();
-            
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const users = JSON.parse(localStorage.getItem('users') || '{}');
-
-    // Falls du KEIN Hashing willst, vergleiche direkt: if (users[username].password === password)
-    // Falls du DOCH Hashing willst, vergleiche: if (users[username].password === simpleHash(password))
-
-    if (users[username] && users[username].password === simpleHash(password)) {
-      alert('Erfolgreich angemeldet!');
-      // Optional: doFadeOut() oder direkt:
-      window.location.href = 'Dashboard.html';
-    } else {
-      alert('Ungültiger Benutzername oder Passwort');
-    }
+    // Dummy‑Login: Es wird immer zum Dashboard weitergeleitet.
+    window.location.href = 'Dashboard.html';
   });
 
 // Diese Funktion startet das Fade-Out und verzögert die Weiterleitung
@@ -273,35 +260,7 @@ if (users[username] && users[username].password === simpleHash(eingegebenesPassw
         }
 
         // Login-Formular Event Listener
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            const users = JSON.parse(localStorage.getItem('users'));
-            
-            if (users[username] && users[username].password === simpleHash(password)) {
-                // Login erfolgreich
-                const userData = users[username];
-                userData.lastLogin = new Date().toISOString();
-                users[username] = userData;
-                
-                // Update localStorage
-                localStorage.setItem('users', JSON.stringify(users));
-                localStorage.setItem('currentUser', username);
-                localStorage.setItem('isLoggedIn', 'true');
-                
-                // Erfolgreiche Anmeldung Nachricht
-                alert('Erfolgreich angemeldet!');
-                
-                // Weiterleitung zum Dashboard
-                window.location.href = 'Dashboard.html';
-            } else {
-                // Login fehlgeschlagen
-                alert('Ungültiger Benutzername oder Passwort');
-            }
-        });
+    
 
         // Registrierung anzeigen
         function showRegistration() {
