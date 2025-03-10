@@ -1,450 +1,2713 @@
-<!DOCTYPE html>
+<!--Hey Justus, Ich hoffe du kannst das verstehen mit Kommentaren , du kannst verändern das code ist kein Problem-->
+
+<!DOCTYPE html> 
+<!-- Deklariert, dass dies ein HTML5-Dokument ist -->
+
 <html lang="de">
+<!-- Öffnet das HTML-Dokument und legt die Sprache auf Deutsch fest -->
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - DigiGreenPilot</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(-45deg, #2ecc71, #27ae60, #16a085, #1abc9c);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            font-family: Arial, sans-serif;
-            perspective: 1000px;
-        }
-
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .container {
-            width: 90%;
-            max-width: 400px;
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-        }
-
-        .container:hover {
-            transform: translateY(-10px) rotateX(5deg);
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .logo {
-            width: 150px;
-            height: auto;
-            margin: 0 auto 20px;
-            display: block;
-            transform: translateZ(30px);
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-
-        .header-text {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #333;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 25px;
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 15px rgba(46, 204, 113, 0.5);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 25px;
-            background: linear-gradient(45deg, #2ecc71, #27ae60);
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
-        }
-
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transform: rotate(45deg);
-            animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
-        }
-
-        .info {
-            text-align: center;
-            margin-top: 20px;
-            color: #333;
-        }
-
-        .info a {
-            color: #27ae60;
-            text-decoration: none;
-            position: relative;
-        }
-
-        .info a::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            bottom: -2px;
-            left: 0;
-            background: linear-gradient(90deg, #2ecc71, #27ae60);
-            transform: scaleX(0);
-            transition: transform 0.3s;
-        }
-
-        .info a:hover::after {
-            transform: scaleX(1);
-        }
-
-        /* Füge dies in dein <style> oder deine CSS-Datei ein */
-
-/* Animations-Dauer nach Wunsch anpassen (hier 600ms) */
-.fade-out {
-  animation: fadeOut 0.6s forwards;
-}
-
-@keyframes fadeOut {
-  to {
-    opacity: 0;
-    transform: scale(0.98);
-  }
-}
-
-/* Optional: Falls du beim Eintritt ebenfalls eine Animation möchtest */
-.fade-in {
-  animation: fadeIn 0.6s forwards;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-    </style>
-</head>
-
-<body>
+    <!-- Der Kopfbereich enthält Meta-Informationen und Links zu Ressourcen -->
     
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Bindet die Chart.js-Bibliothek ein, die für Diagramme verwendet wird -->
+    
+    <meta charset="UTF-8">
+    <!-- Legt die Zeichenkodierung auf UTF-8 fest, damit Sonderzeichen wie ä, ö, ü korrekt angezeigt werden -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Sorgt dafür, dass die Webseite auch auf mobilen Geräten korrekt skaliert wird -->
+    
+    <title>DigiGreenPilot CO₂-Bilanzierung</title>
+    <!-- Titel der Webseite, der oben im Browser-Tab angezeigt wird -->
+
+    <!-- Verlinkt eine externe CSS-Datei  "style.css", die das Aussehen der Webseite definiert -->
+</head>
+<header>
+    <a href="Dateipload.html">
+        <img src="https://digi-green-pilot.de/wp-content/uploads/2023/10/DGP-Logo-1024x438.png" alt="DigiGreen Pilot Logo" >
+    </a>
+    
+    <nav>
+        <a href="Dateipload.html"><i class="fas fa-poll"></i>Umfrage</a>
+        <a href="livecalc.html"><i class="fas fa-poll"></i> Live Calculator</a>
+        <a href="Dashboard.html"><i class="fas fa-leaf"></i> Dashboard</a>     
+        <a href="https://moodle.digitalekompetenzen.org/login/index.php#module-483"><i class="fas fa-envelope"></i> Lernplatform</a>
+        <a href="Meinprofil.html"><i class="fas fa-user"></i> Mein Profil</a>
+    </nav>
+    
+</header>
+
+<style>
+    header {
+    background: linear-gradient(90deg, #004d40, #00796b);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+header img {
+    height: 45px;
+    transition: transform 0.3s ease;
+}
+
+header img:hover {
+    transform: scale(1.05);
+}
+
+nav {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 15px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+header a i {
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+header a:hover {
+    background: rgba(165, 214, 167, 0.15);
+    color: #a5d6a7;
+    transform: translateY(-2px);
+}
+
+header a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #a5d6a7;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+header a:hover::after {
+    width: 80%;
+}
+
+/* Aktiver Link-Status */
+header a.active {
+    background: rgba(165, 214, 167, 0.2);
+    color: #a5d6a7;
+}
+
+/* Grünes Highlight für spezielle Links */
+header a[href="Dashboard.html"] {
+    background: rgba(35, 213, 171, 0.15);
+    border: 1px solid rgba(35, 213, 171, 0.3);
+}
+
+header a[href="Dashboard.html"]:hover {
+    background: rgba(35, 213, 171, 0.25);
+    border-color: rgba(35, 213, 171, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header {
+        padding: 15px 20px;
+    }
+
+    nav {
+        gap: 15px;
+    }
+
+    header a {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    header img {
+        height: 35px;
+    }
+
+    /* Verstecke Text auf sehr kleinen Bildschirmen, zeige nur Icons */
+    @media (max-width: 480px) {
+        header a span {
+            display: none;
+        }
+        
+        header a i {
+            font-size: 20px;
+        }
+    }
+}
+
+/* Animiertes Umwelt-Icon */
+.fa-leaf {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+:root {
+    --primary: #23d5ab;
+    --secondary: #23a6d5;
+    --dark: #004d40;
+    --light: #e8f5e9;
+    --glow: rgba(35, 213, 171, 0.2);
+    --card: rgba(255, 255, 255, 0.95);
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #23d5ab, #23a6d5, #23d5ab, #23a6d5);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    font-family: Arial, sans-serif;
+}
+
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Header Style wie beim Login */
+header {
+    background: linear-gradient(90deg, #004d40, #00796b);
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Results Panel mit Login-Glaseffekt */
+.sticky-results-top {
+    position: sticky;
+    top: 80px;
+    z-index: 900;
+    background: var(--card);
+    margin: 20px auto;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    max-width: 1200px;
+    transition: transform 0.3s;
+}
+
+.result-item {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s;
+    border: 1px solid rgba(35, 213, 171, 0.1);
+}
+
+.result-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px var(--glow);
+}
+
+/* Scope Sections im Login-Style */
+.scope-section {
+    background: var(--card);
+    border-radius: 20px;
+    margin: 25px 0;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+}
+
+.scope-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px var(--glow);
+}
+
+/* Input Fields wie beim Login */
+.input-group {
+    margin-bottom: 20px;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    box-shadow: 
+        inset 0 2px 5px rgba(0, 0, 0, 0.1),
+        0 0 0 2px var(--primary);
+    transform: translateY(-2px);
+}
+
+/* Subscopes mit sanftem Design */
+.subscope {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 15px;
+    margin: 20px 0;
+    padding: 25px;
+    border-left: 4px solid var(--primary);
+    transition: all 0.3s;
+}
+
+.subscope:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateX(5px);
+}
+
+.subscope-title {
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Chart Container im gleichen Stil */
+.chart-container {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 25px;
+    margin: 30px auto;
+    max-width: 1200px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.chart-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px var(--glow);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .input-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .sticky-results-top {
+        margin: 10px;
+    }
+    
+    .scope-section {
+        margin: 15px;
+        padding: 20px;
+    }
+}
+
+/* Smooth Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--light);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(var(--primary), var(--secondary));
+    border-radius: 5px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+/* Effekte passend zum Login */
+.result-item-value {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: var(--primary);
+    transition: all 0.3s;
+}
+
+.result-item:hover .result-item-value {
+    transform: scale(1.05);
+}
+
+:root {
+    --primary: #23d5ab;
+    --secondary: #23a6d5;
+    --dark: #004d40;
+    --light: #e8f5e9;
+    --glow: rgba(35, 213, 171, 0.2);
+    --card: rgba(255, 255, 255, 0.95);
+    --text-dark: #2c3e50;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #23d5ab, #23a6d5, #23d5ab, #23a6d5);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    font-family: 'Arial', sans-serif;
+    color: var(--text-dark);
+}
+
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Header Styles */
+header {
+    background: linear-gradient(90deg, #004d40, #00796b);
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+header img {
+    height: 45px;
+    transition: transform 0.3s ease;
+}
+
+header img:hover {
+    transform: scale(1.05);
+}
+
+nav {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 15px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+header a i {
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+header a:hover {
+    background: rgba(165, 214, 167, 0.15);
+    color: #a5d6a7;
+    transform: translateY(-2px);
+}
+
+header a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #a5d6a7;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+header a:hover::after {
+    width: 80%;
+}
+
+header a.active {
+    background: rgba(165, 214, 167, 0.2);
+    color: #a5d6a7;
+}
+
+header a[href="Dashboard.html"] {
+    background: rgba(35, 213, 171, 0.15);
+    border: 1px solid rgba(35, 213, 171, 0.3);
+}
+
+header a[href="Dashboard.html"]:hover {
+    background: rgba(35, 213, 171, 0.25);
+    border-color: rgba(35, 213, 171, 0.5);
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 15px 20px;
+    }
+
+    nav {
+        gap: 15px;
+    }
+
+    header a {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    header img {
+        height: 35px;
+    }
+
+    @media (max-width: 480px) {
+        header a span {
+            display: none;
+        }
+        
+        header a i {
+            font-size: 20px;
+        }
+    }
+}
+
+/* Form Sections */
+.form-section {
+    background: var(--card);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    margin: 2rem auto;
+    padding: 2rem;
+    max-width: 1200px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transform-style: preserve-3d;
+    transition: all 0.6s ease;
+}
+
+.form-section:hover {
+    transform: translateY(-10px) rotateX(5deg);
+}
+
+/* Scope Sections */
+.scope-section {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(46, 204, 113, 0.1);
+}
+
+.scope-section:hover {
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.1);
+    transform: translateY(-3px);
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+/* Input Styles */
+input, select {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    box-shadow: 
+        inset 0 2px 5px rgba(0, 0, 0, 0.1),
+        0 0 0 2px var(--primary);
+    transform: translateY(-2px);
+}
+
+/* Buttons */
+button {
+    width: auto;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(45deg, #23d5ab, #23a6d5);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(35, 213, 171, 0.4);
+}
+
+button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
+}
+
+button[type="submit"] {
+    width: 100%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    display: block;
+    padding: 1rem;
+    font-weight: bold;
+}
+
+.remove-field {
+    
+    background: linear-gradient(45deg, #ff6b6b, #ee5253);
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+/* Dynamic Fields */
+.dynamic-field {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin: 1rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Result Section */
+.result-section {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 1200px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .form-section {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .dynamic-field {
+        grid-template-columns: 1fr;
+    }
+}
+
+.input-toggle {
+    margin-bottom: 1rem;
+    margin: 15px 0;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.calculation-method {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.energy-price-info {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
+.cost-input {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.emissions-summary {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.emissions-summary .total {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid #004d40;
+    font-weight: bold;
+}
+
+.tooltip-icon {
+    display: inline-block;
+    background: #004d40;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 20px;
+    margin-left: 5px;
+    cursor: pointer;
+    position: relative;
+}
+
+.tooltip-text {
+    display: none;
+    position: absolute;
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 14px;
+    top: 25px; 
+    left: 0;
+    width: 200px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+}
+
+.tooltip-icon:hover + .tooltip-text,
+.tooltip-icon:focus + .tooltip-text {
+    display: block;
+}
+
+/* Chatbot Styles */
+.chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    background: #004d40;
+    color: white;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.small-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.3);
+    flex-shrink: 0;
+}
+
+.small-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.chat-title {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.minimize-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.chat-body {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: #f8f9fa;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 15px;
+    max-width: 80%;
+}
+
+.bot-message {
+    background: #e3f2fd;
+    margin-right: auto;
+}
+
+.user-message {
+    background: #004d40;
+    color: white;
+    margin-left: auto;
+}
+
+.quick-replies {
+    padding: 10px;
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.quick-reply {
+    background: #f0f0f0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.quick-reply:hover {
+    background: #e0e0e0;
+}
+
+.chat-input {
+    display: flex;
+    padding: 10px;
+    gap: 5px;
+    border-top: 1px solid #eee;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+}
+
+.chat-input button {
+    background: #004d40;
+    color: white;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.chatbot-container.minimized .chat-body {
+    display: none;
+}
+
+/* Animiertes Icon */
+.fa-leaf {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+/*veränderung*/
+
+.scope-section {
+    position: relative; /* Für Pseudo-Elemente */
+    margin: 1rem 0;
+    padding: 1.5rem 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-left: 4px solid var(--primary); /* farbiger Balken links */
+    border-radius: 10px;
+  }
+  
+  /* Optional: Kleinen "Trennstrich" zwischen Abschnitten */
+  .scope-section + .scope-section::before {
+    content: "";
+    display: block;
+    width: 50%;
+    height: 2px;
+    margin: 2rem auto;
+    background: var(--primary);
+    opacity: 0.2;
+  }
+
+  @media (max-width: 480px) {
+    .dynamic-field {
+      grid-template-columns: 1fr; /* Alles untereinander */
+      gap: 0.5rem; /* etwas geringerer Abstand */
+    }
+  }
+  .remove-field {
+  background: linear-gradient(45deg, #ff6b6b, #ee5253);
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.remove-field:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+}
+
+button {
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    font-size: 14px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(35, 213, 171, 0.4);
+}
+
+/* Entfernen-Button in Rot */
+button.remove-button {
+    background: linear-gradient(45deg, #ff6b6b, #ee5253);
+}
+
+/* Größerer Submit-Button */
+button.submit-button {
+    width: 100%;
+    max-width: 1200px;
+    display: block;
+    margin: 2rem auto;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 1rem;
+}
+.add-button {
+    background: linear-gradient(45deg, #4caf50, #2ecc71); /* z.B. Grüner Ton */
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+/* Wenn du noch Hover-Effekt willst: */
+.add-button:hover {
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+}
+
+.scope-card {
+    background: #ffffff; /* oder var(--card), wenn du möchtest */
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Farbige Hintergründe für unterschiedliche Scopes */
+
+/* Scope 1 mit leichtem Grünhauch */
+.scope-1 {
+    background: #ecfdf5; /* helles Grün */
+    border-left: 5px solid #23d5ab; /* auffälliger Balken links */
+    margin-bottom: 2rem; 
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+  
+  /* Scope 2 mit hellblauer Tönung */
+  .scope-2 {
+    background: #f0f9ff; /* helles Blau */
+    border-left: 5px solid #23a6d5;
+    margin-bottom: 2rem; 
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+  
+  /* Scope 3 mit gelblicher Nuance */
+  .scope-3 {
+    background: #fffbeb; /* helles Gelb */
+    border-left: 5px solid #fcd34d;
+    margin-bottom: 2rem; 
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+  /* =========================
+   1) Grundlegende Variablen
+   ========================= */
+:root {
+    --bg-color: #1b1b1b;        /* Sehr dunkles Grau (fast Schwarz) */
+    --accent-color: #00ffd5;    /* Neon-Türkis */
+    --accent-color-2: #ff00ff;  /* Neon-Pink */
+    --text-color: #ffffff;      /* Weißer Text */
+    --text-color-light: #d1d1d1;/* Etwas hellerer Grauton für Labels */
+    --header-height: 60px;
+    --transition-speed: 0.3s;
+  }
+  
+  /* =========================
+     2) Allgemeines Layout
+     ========================= */
+  body {
+    margin: 0;
+    font-family: "Arial", sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    /* Kleiner animierter BG-Farbverlauf (subtil) */
+    background: radial-gradient(circle at center, #222 0%, #000 100%);
+    background-size: cover;
+    transition: background var(--transition-speed) ease;
+    overflow-x: hidden;
+  }
+  
+  /* Sanftes "rein-zoomen" */
+  @keyframes fadeInZoom {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* =========================
+     3) Header / Navigation
+     ========================= */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: var(--header-height);
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 255, 213, 0.1);
+    border-bottom: 1px solid rgba(0, 255, 213, 0.2);
+  }
+  
+  header img {
+    height: 40px;
+    transition: transform 0.2s;
+  }
+  
+  header img:hover {
+    transform: scale(1.05);
+  }
+  
+  nav {
+    display: flex;
+    gap: 15px;
+  }
+  
+  header a {
+    color: var(--accent-color);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  
+  header a:hover {
+    background: rgba(0,255,213,0.1);
+    transform: translateY(-2px);
+  }
+  
+  header a.active {
+    background: rgba(0,255,213,0.2);
+    color: #fff;
+    border: 1px solid rgba(0,255,213,0.3);
+  }
+  
+  /* Responsive Header-Anpassung */
+  @media (max-width: 768px) {
+    nav {
+      gap: 10px;
+    }
+    header a {
+      padding: 4px 8px;
+      font-size: 14px;
+    }
+  }
+  
+  /* =========================
+     4) Container & Karten
+     ========================= */
+  .container {
+    max-width: 1200px;
+    margin: 1.5rem auto;
+    padding: 1.5rem;
+    animation: fadeInZoom 0.5s ease forwards;
+  }
+  
+  .form-section,
+  .scope-section,
+  .scope-card {
+    background: #2a2a2a; /* Dunkles Grau */
+    border: 1px solid rgba(0,255,213,0.2);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 0 10px rgba(0,255,213,0.05);
+    animation: fadeInZoom 0.6s ease forwards;
+  }
+  
+  /* "Leuchtender" Rahmen bei Hover */
+  .form-section:hover,
+  .scope-section:hover,
+  .scope-card:hover {
+    box-shadow: 0 0 10px rgba(0,255,213,0.3), 0 0 20px rgba(255,0,255,0.1);
+    transform: translateY(-2px);
+  }
+  
+  /* =========================
+     5) Überschriften
+     ========================= */
+  h1, h2, h3 {
+    margin-top: 0;
+    color: var(--accent-color);
+    text-shadow: 0 0 5px rgba(0,255,213,0.4);
+  }
+  
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--accent-color-2);
+    text-shadow: 0 0 5px rgba(255,0,255,0.5);
+  }
+  
+  /* =========================
+     6) Formularelemente
+     ========================= */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--text-color-light);
+  }
+  
+  input, select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    background: #333;
+    color: #fff;
+    transition: box-shadow var(--transition-speed);
+  }
+  
+  input:focus, select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--accent-color);
+  }
+  
+  /* =========================
+     7) Buttons
+     ========================= */
+  button, .action-button {
+    display: inline-block;
+    background: var(--accent-color);
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: 0.5rem;
+  }
+  
+  button:hover, .action-button:hover {
+    background: var(--accent-color-2);
+    color: #fff;
+    box-shadow: 0 0 8px var(--accent-color-2);
+    transform: translateY(-2px);
+  }
+  
+  button.submit-button {
+    width: 100%;
+    margin-top: 1.5rem;
+    font-size: 16px;
+    background: var(--accent-color-2);
+    color: #fff;
+  }
+  
+  button.remove-field {
+    background: #ff0066; /* Kräftiges Pink/Rot */
+    margin-top: 1rem;
+  }
+  
+  button.remove-field:hover {
+    box-shadow: 0 0 10px #ff0066;
+  }
+  
+  /* =========================
+     8) Dynamische Felder
+     ========================= */
+  .dynamic-fields, .dynamic-field {
+    margin-top: 1rem;
+    background: #333;
+    border: 1px solid rgba(0,255,213,0.1);
+    border-radius: 6px;
+    padding: 1rem;
+    position: relative;
+    transition: box-shadow 0.3s;
+  }
+  
+  .dynamic-field:hover {
+    box-shadow: 0 0 8px rgba(0,255,213,0.3);
+  }
+  
+  /* Felder in Grid-Layout */
+  .dynamic-field {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+  
+  /* =========================
+     9) Chatbot
+     ========================= */
+  .chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 320px;
+    background: #2a2a2a;
+    border: 1px solid rgba(0,255,213,0.3);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,255,213,0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+    animation: fadeInZoom 0.5s ease forwards;
+  }
+  
+  .chat-header {
+    background: #333;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .chat-header .chat-title {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .chat-body {
+    display: flex;
+    flex-direction: column;
+    height: 380px;
+    background: #1b1b1b;
+  }
+  
+  .chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+  }
+  
+  .message {
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    max-width: 80%;
+    line-height: 1.3;
+  }
+  
+  .bot-message {
+    background: #004d40;
+    color: #fff;
+    margin-right: auto;
+    box-shadow: 0 0 5px rgba(0,255,213,0.3);
+  }
+  
+  .user-message {
+    background: var(--accent-color);
+    color: #000;
+    margin-left: auto;
+    box-shadow: 0 0 5px var(--accent-color);
+  }
+  
+  .quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    background: #222;
+    padding: 6px;
+  }
+  
+  .quick-reply {
+    background: #444;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  
+  .quick-reply:hover {
+    background: var(--accent-color);
+    color: #000;
+  }
+  
+  .chat-input {
+    display: flex;
+    gap: 5px;
+    padding: 8px;
+    background: #333;
+  }
+  
+  .chat-input input {
+    flex-grow: 1;
+    background: #222;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 8px;
+  }
+  
+  .chat-input input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--accent-color);
+  }
+  
+  .chat-input button {
+    background: var(--accent-color);
+    color: #000;
+    border-radius: 4px;
+    width: 40px;
+    border: none;
+    font-weight: bold;
+  }
+  
+  .chatbot-container.minimized .chat-body {
+    display: none;
+  }
+  
+  /* =========================
+     10) Medienabfragen
+     ========================= */
+  @media (max-width: 768px) {
+    .container {
+      margin: 1rem;
+      padding: 1rem;
+    }
+    .dynamic-field {
+      grid-template-columns: 1fr;
+    }
+    .chatbot-container {
+      width: 90%;
+      right: 5%;
+    }
+  }
+  
+  /* Kleiner Schimmer-Effekt */
+  @keyframes shimmer {
+    0% { background-position: -200px 0; }
+    100% { background-position: 200px 0; }
+  }
+  /* =============================
+   1) Standard-Variablen (Light Mode)
+   ============================= */
+:root {
+    --transition-speed: 0.3s;
+    --font-family: "Arial", sans-serif;
+  
+    /* Farben Light Mode */
+    --bg-color: #f0f0f0;         /* Hintergrund (hell) */
+    --text-color: #1b1b1b;       /* Text (dunkel) */
+    --accent-color: #0066cc;     /* Akzent (Blau) */
+    --accent-color-2: #00cc66;   /* 2. Akzent (Grün) */
+    --card-bg: #ffffff;          /* Karten/Box-Hintergrund */
+    --border-color: rgba(0,0,0,0.1);
+  
+    /* Optional: Größere Layout-Variablen */
+    --header-height: 60px;
+  }
+  
+  /* =============================
+     2) Dark Mode Variablen
+     Überschreiben dieselben Namen
+     ============================= */
+  .dark-mode {
+    --bg-color: #1b1b1b;         /* Hintergrund (dunkel) */
+    --text-color: #ffffff;       /* Text (hell) */
+    --accent-color: #00ffd5;     /* Neon-Türkis */
+    --accent-color-2: #ff00ff;   /* Neon-Pink */
+    --card-bg: #2a2a2a;          /* Kartenhintergrund (dunkler) */
+    --border-color: rgba(0,255,213,0.3);
+  }
+  
+  /* =============================
+     3) Globales Styling
+     (greift auf die Variablen zu)
+     ============================= */
+  
+  /* Body */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family);
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background var(--transition-speed), color var(--transition-speed);
+  }
+  
+  /* Header (Beispiel) */
+  header {
+    height: var(--header-height);
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  /* Ein Button, um den Mode zu toggeln */
+  .toggle-btn {
+    background: var(--accent-color);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background var(--transition-speed);
+  }
+  .toggle-btn:hover {
+    background: var(--accent-color-2);
+  }
+  
+  /* Beispiel: Container / Section / Card */
+  .container,
+  .form-section,
+  .scope-section,
+  .scope-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin: 1rem auto;
+    padding: 1rem;
+    max-width: 1200px;
+    transition: background var(--transition-speed), box-shadow var(--transition-speed);
+  }
+  
+  /* Buttons allgemein */
+  button, .action-button {
+    background: var(--accent-color);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    margin: 0.25rem 0;
+  }
+  button:hover, .action-button:hover {
+    background: var(--accent-color-2);
+  }
+  
+  /* Textfelder, Inputs, Selects */
+  input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    transition: background var(--transition-speed), color var(--transition-speed);
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid var(--accent-color);
+  }
+  
+  /* Überschriften */
+  h1, h2, h3, h4 {
+    color: var(--text-color);
+    margin: 0.5rem 0;
+  }
+  
+  /* Beispiel: Minimale Chatbot-Stile (vereinfacht) */
+  .chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    transition: background var(--transition-speed);
+  }
+  .chat-header {
+    background: var(--accent-color);
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+  }
+  .chat-body {
+    height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    background: var(--card-bg);
+  }
+  .message {
+    background: #e3f2fd;
+    margin: 5px 0;
+    padding: 8px;
+    border-radius: 8px;
+  }
+  
+  /* etc. … */
+  /* ==============================================
+   1) Standard (Light Mode) – Variablen & Basics
+   ============================================== */
+:root {
+    --transition-speed: 0.3s;
+    --font-family: 'Arial', sans-serif;
+  
+    /* Farben: Light Mode */
+    --bg-color: #f8f8f8;        /* Hintergrund hell */
+    --text-color: #2c3e50;      /* Dunkler Text */
+    --accent-color: #0066cc;    /* Akzent (Blau) */
+    --accent-color-2: #00cc66;  /* 2. Akzent (Grün) */
+    --card-bg: #ffffff;         /* Karten / Boxen */
+    --border-color: rgba(0,0,0,0.1);
+  
+    /* Layout-Größen */
+    --header-height: 60px;
+  }
+  
+  /* ==============================================
+     2) Dark Mode – überschreibt dieselben Variablen
+     ============================================== */
+  .dark-mode {
+    --bg-color: #1b1b1b;        /* Sehr dunkel */
+    --text-color: #ffffff;      /* Heller Text */
+    --accent-color: #00ffd5;    /* Neon-Türkis */
+    --accent-color-2: #ff00ff;  /* Neon-Pink */
+    --card-bg: #2a2a2a;         /* Dunkles Grau */
+    --border-color: rgba(0,255,213,0.3);
+  }
+  
+  /* ==============================================
+     3) Globales Styling
+     ============================================== */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family);
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background var(--transition-speed), color var(--transition-speed);
+  }
+  
+  /* Header-Beispiel */
+  header {
+    height: var(--header-height);
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  header img {
+    height: 40px;
+    transition: transform 0.2s;
+  }
+  header img:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Navigation */
+  nav {
+    display: flex;
+    gap: 15px;
+  }
+  
+  header a {
+    color: var(--accent-color);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  header a:hover {
+    background: rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+  }
+  header a.active {
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--text-color);
+  }
+  
+  /* ==============================================
+     4) Container, Sektionen, Karten
+     ============================================== */
+  .container,
+  .form-section,
+  .scope-section,
+  .scope-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin: 1rem auto;
+    padding: 1rem;
+    max-width: 1200px;
+    transition: background var(--transition-speed), box-shadow var(--transition-speed);
+  }
+  
+  /* Hover-Effekt bei Cards/Sektionen */
+  .form-section:hover,
+  .scope-section:hover,
+  .scope-card:hover {
+    box-shadow: 0 2px 8px var(--border-color);
+    transform: translateY(-2px);
+  }
+  
+  /* ==============================================
+     5) Überschriften
+     ============================================== */
+  h1, h2, h3, h4 {
+    color: var(--accent-color);
+    margin: 0.5rem 0;
+  }
+  h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: var(--accent-color-2);
+    margin-bottom: 1rem;
+  }
+  
+  /* ==============================================
+     6) Formularelemente
+     ============================================== */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: bold;
+    color: var(--text-color);
+  }
+  input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background var(--transition-speed), color var(--transition-speed);
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid var(--accent-color);
+  }
+  
+  /* ==============================================
+     7) Buttons
+     ============================================== */
+  button, .action-button {
+    background: var(--accent-color);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    margin: 0.25rem 0;
+  }
+  button:hover, .action-button:hover {
+    background: var(--accent-color-2);
+    transform: translateY(-2px);
+  }
+  button.submit-button {
+    width: 100%;
+    margin-top: 1.5rem;
+    font-size: 16px;
+    background: var(--accent-color-2);
+  }
+  
+  /* Entfernen-Button in Rot */
+  button.remove-field {
+    background: #ff0066;
+    margin-top: 1rem;
+  }
+  button.remove-field:hover {
+    box-shadow: 0 0 10px #ff0066;
+  }
+  
+  /* ==============================================
+     8) Dynamische Felder (z.B. .dynamic-field)
+     ============================================== */
+  .dynamic-fields,
+  .dynamic-field {
+    margin-top: 1rem;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1rem;
+    position: relative;
+    transition: box-shadow 0.3s;
+  }
+  
+  .dynamic-field {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+  .dynamic-field:hover {
+    box-shadow: 0 0 8px var(--border-color);
+  }
+  
+  /* ==============================================
+     9) Quick-Replies / Chatbot-Elemente
+     ============================================== */
+  .quick-reply {
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .quick-reply:hover {
+    background: var(--accent-color);
+    color: #fff;
+  }
+  
+  /* ==============================================
+     10) Chatbot-Container
+     ============================================== */
+  .chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 320px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    transition: background var(--transition-speed);
+  }
+  
+  .chat-header {
+    background: var(--accent-color);
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .chat-body {
+    height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    background: var(--bg-color);
+  }
+  
+  .chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+  }
+  
+  .message {
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    max-width: 80%;
+    line-height: 1.3;
+    color: var(--text-color);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+  }
+  
+  .bot-message {
+    margin-right: auto;
+    border-left: 3px solid var(--accent-color);
+  }
+  .user-message {
+    margin-left: auto;
+    border-left: 3px solid var(--accent-color-2);
+  }
+  
+  .chat-input {
+    display: flex;
+    gap: 5px;
+    padding: 8px;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .chat-input input {
+    flex-grow: 1;
+    background: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 25px;
+    padding: 8px;
+  }
+  .chat-input button {
+    background: var(--accent-color);
+    color: #fff;
+    border-radius: 25px;
+    width: 40px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .chatbot-container.minimized .chat-body {
+    display: none;
+  }
+  
+  /* ==============================================
+     11) Responsive Anpassungen
+     ============================================== */
+  @media (max-width: 768px) {
+    .container {
+      margin: 1rem;
+      padding: 1rem;
+    }
+    .dynamic-field {
+      grid-template-columns: 1fr;
+    }
+    .chatbot-container {
+      width: 90%;
+      right: 5%;
+    }
+  }
+  ::-webkit-input-placeholder { 
+    color: rgba(255,255,255,0.5); /* z.B. in Dark Mode */
+  }
+  :-ms-input-placeholder {
+    color: rgba(255,255,255,0.5);
+  }
+  ::placeholder {
+    color: rgba(255,255,255,0.5);
+  }
+</style>
+<body>
+<!-- Ergebnisbereich für Scope 1, Scope 2 und Scope 3 Emissionen -->
+<div class="results sticky-results-top">
+    <!-- Rasterlayout (Grid) für die Anzeige der einzelnen Scope-Ergebnisse -->
+    <div class="results-grid sticky-grid">
+        <!-- Anzeige für Scope 1 Emissionen -->
+        <div class="result-item">
+            <div class="result-item-title">Scope 1 Emissionen</div> <!-- Titel für Scope 1 -->
+            <div class="result-item-value" id="scope1">0 kg CO₂</div> <!-- Standardwert: 0 -->
+        </div>
+        <!-- Anzeige für Scope 2 Emissionen -->
+        <div class="result-item">
+            <div class="result-item-title">Scope 2 Emissionen</div> <!-- Titel für Scope 2 -->
+            <div class="result-item-value" id="scope2">0 kg CO₂</div> <!-- Standardwert: 0 -->
+        </div>
+        <!-- Anzeige für Scope 3 Emissionen -->
+        <div class="result-item">
+            <div class="result-item-title">Scope 3 Emissionen</div> <!-- Titel für Scope 3 -->
+            <div class="result-item-value" id="scope3">0 kg CO₂</div> <!-- Standardwert: 0 -->
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Großer Diagrammbereich für die Emissionsanzeige -->
+<div class="chart-container">
+    <!-- Canvas-Element für das Hauptdiagramm -->
+    <canvas id="emissionsChart"></canvas>
+</div>
+<script>
+    // Funktion: Ruft den Wert eines Eingabefelds basierend auf der ID ab.
+    function getValue(id) {
+        // Sucht das Element mit der angegebenen ID
+        const element = document.getElementById(id);
+        // Gibt den numerischen Wert zurück oder 0, falls kein Wert eingegeben wurde
+        return element ? parseFloat(element.value) || 0 : 0;
+    }
+
+    // Funktion: Aktualisiert die angezeigten Ergebnisse auf der Webseite.
+    function updateResults(results) {
+        // Subscope-Werte aktualisieren (z. B. Scope 1A, Scope 1B)
+        updateValue('scope1A_result', results.scope1A);
+        updateValue('scope1B_result', results.scope1B);
+        updateValue('scope1C_result', results.scope1C);
+        updateValue('scope2A_result', results.scope2A);
+        updateValue('scope2B_result', results.scope2B);
+        updateValue('scope3A_result', results.scope3A);
+
+        // Gesamtergebnisse für Scope 1, 2, und 3 aktualisieren
+        updateValue('scope1', results.totalScope1);
+        updateValue('scope2', results.totalScope2);
+        updateValue('scope3', results.totalScope3);
+
+        // Gesamtwert aller Emissionen berechnen
+        const total = results.totalScope1 + results.totalScope2 + results.totalScope3;
+        updateValue('gesamtEmissionen', total);
+
+        // Aktualisiert das Diagramm mit den neuen Werten
+        emissionsChart.data.datasets[0].data = [
+            results.totalScope1,
+            results.totalScope2,
+            results.totalScope3
+        ];
+        emissionsChart.update(); // Das Diagramm wird visuell aktualisiert
+    }
+
+    // Funktion: Aktualisiert den Textinhalt eines Elements mit einer ID.
+    function updateValue(id, value) {
+        // Sucht das Element mit der angegebenen ID
+        const element = document.getElementById(id);
+        if (element) {
+            // Formatiert den Wert auf 2 Dezimalstellen und fügt "kg CO₂" hinzu
+            element.textContent = `${value.toFixed(2)} kg CO₂`;
+        }
+    }
+
+    // Fügt jedem Eingabefeld (input) einen Event Listener hinzu
+    document.querySelectorAll('input').forEach(input => {
+        // Bei jeder Eingabe (input) wird die Funktion calculateEmissions ausgeführt
+        input.addEventListener('input', calculateEmissions);
+    });
+
+    // Führt eine Initialberechnung durch, wenn die Seite geladen wird
+    calculateEmissions();
+</script>
+
     <div class="container">
-        <div class="card">
-            <img src="https://digi-green-pilot.de/wp-content/uploads/2023/10/DGP-Logo-1024x438.png" alt="DigiGreen Pilot Logo" class="logo">
+        <div class="header">
+            
+
             <div class="header-text">
-                <h1>Willkommen beim DigiGreenPilot</h1>
-                <p>Bitte melden Sie sich an, um Ihre CO₂-Bilanz zu verwalten.</p>
+            <h1>DigiGreenPilot CO₂-Bilanzierung</h1>
+            <p>Erfassen und analysieren Sie Ihre betrieblichen Treibhausgasemissionen</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                Emissionserfassung
             </div>
-            <form id="loginForm">
-                <div class="input-group">
-                    <input type="text" id="username" name="username" placeholder="Benutzername" required>
+            <div class="card-body">
+                <!-- Scope 1: Direkte Emissionen -->
+                <div class="scope-section">
+                    <h2 class="scope-title">Scope 1: Direkte Emissionen</h2>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="heizoel">Heizöl (Liter/Jahr)</label>
+                            <input type="number" id="heizoel" min="0" value="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="erdgas">Erdgas (kWh/Jahr)</label>
+                            <input type="number" id="erdgas" min="0" value="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="diesel">Fuhrpark - Diesel (Liter/Jahr)</label>
+                            <input type="number" id="diesel" min="0" value="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="benzin">Fuhrpark - Benzin (Liter/Jahr)</label>
+                            <input type="number" id="benzin" min="0" value="0">
+                        </div>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <input type="password" id="password" name="password" placeholder="Passwort" required>
-                </div>
-                <button type="submit" class="btn">Anmelden</button>
-            </form>
-            <p class="info">Noch keinen Zugang? <a href="Registrierung.html">Jetzt registrieren</a></p>            <p class="info"><a href="#" onclick="forgotPassword()">Passwort vergessen?</a></p>
+
+             
+<div class="scope-section">
+    <h2 class="scope-title">
+        <span class="scope-icon">  </span>
+           -> Subscope
+    </h2>
+
+    <!-- Subscope 1A: Stationäre Verbrennung -->
+    <div class="subscope">
+        <h3 class="subscope-title">
+            <span class="subscope-icon">🏢</span>
+            1A: Stationäre Verbrennung
+        </h3>
+        <div class="input-grid">
+            
+            <div class="input-group">
+                <label for="pellets">Holzpellets (kg/Jahr)</label>
+                <input type="number" id="pellets" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label for="fluessiggas">Flüssiggas (kg/Jahr)</label>
+                <input type="number" id="fluessiggas" min="0" value="0">
+            </div>
         </div>
     </div>
 
+    <!-- Subscope 1B: Mobile Verbrennung -->
+    <div class="subscope">
+        <h3 class="subscope-title">
+            <span class="subscope-icon">🚗</span>
+            1B: Mobile Verbrennung (Fuhrpark)
+        </h3>
+        <div class="input-grid">
+            <div class="input-group">
+                <label for="diesel_pkw">PKW - Diesel (Liter/Jahr)</label>
+                <input type="number" id="diesel_pkw" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label for="benzin_pkw">PKW - Benzin (Liter/Jahr)</label>
+                <input type="number" id="benzin_pkw" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label for="diesel_lkw">LKW - Diesel (Liter/Jahr)</label>
+                <input type="number" id="diesel_lkw" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label for="gas_fahrzeuge">Gasfahrzeuge (kg/Jahr)</label>
+                <input type="number" id="gas_fahrzeuge" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label for="elektro_fahrzeuge">Elektrofahrzeuge (kWh/Jahr)</label>
+                <input type="number" id="elektro_fahrzeuge" min="0" value="0">
+            </div>
+        </div>
+    </div>
+
+    <!-- Subscope 1C: Prozessemissionen -->
+    <div class="subscope">
+        <h3 class="subscope-title">
+            <span class="subscope-icon">⚙️</span>
+            1C: Prozessemissionen
+        </h3>
+        <div class="input-grid">
+            <div class="input-group">
+                <label for="kaeltemittel">Kältemittel (kg/Jahr)</label>
+                <input type="number" id="kaeltemittel" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label for="loesemittel">Lösemittel (Liter/Jahr)</label>
+                <input type="number" id="loesemittel" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label for="schwefelhexafluorid">Schwefelhexafluorid (kg/Jahr)</label>
+                <input type="number" id="schwefelhexafluorid" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label for="prozesswaerme">Prozesswärme (kWh/Jahr)</label>
+                <input type="number" id="prozesswaerme" min="0" value="0">
+            </div>
+        </div>
+    </div>
+
+    <!-- Subscope 1D: Landwirtschaft -->
+    <div class="subscope">
+        <h3 class="subscope-title">
+            <span class="subscope-icon">🌾</span>
+            1D: Landwirtschaftliche Emissionen
+        </h3>
+        <div class="input-grid">
+            <div class="input-group">
+                <label for="duenger">Düngemitteleinsatz (kg/Jahr)</label>
+                <input type="number" id="duenger" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label for="tierhaltung">Tierhaltung (Anzahl Tiere)</label>
+                <input type="number" id="tierhaltung" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label for="landmaschinen">Landmaschinen Diesel (Liter/Jahr)</label>
+                <input type="number" id="landmaschinen" min="0" value="0">
+            </div>
+        </div>
+    </div>
+
+    <!-- Subscope 1E: Notfallsysteme -->
+    <div class="subscope">
+        <h3 class="subscope-title">
+            <span class="subscope-icon">🚨</span>
+            1E: Notfall- und Backup-Systeme
+        </h3>
+        <div class="input-grid">
+            <div class="input-group">
+                <label for="notstrom">Notstromaggregate Diesel (Liter/Jahr)</label>
+                <input type="number" id="notstrom" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label for="feuersysteme">Feuerlöschsysteme (kg CO2/Jahr)</label>
+                <input type="number" id="feuersysteme" min="0" value="0">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+                <!-- Scope 2: Indirekte Emissionen -->
+                <div class="scope-section">
+                    <h2 class="scope-title">Scope 2: Indirekte Emissionen</h2>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="elektrizitaet">Stromverbrauch (kWh/Jahr)</label>
+                            <input type="number" id="elektrizitaet" min="0" value="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="fernwaerme">Fernwärme (kWh/Jahr)</label>
+                            <input type="number" id="fernwaerme" min="0" value="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scope-section">
+                    <h2 class="scope-title">
+                        <span class="scope-icon"></span>
+                        -> Subscope
+                    </h2>
+                
+                    <!-- Subscope 2A: Stromverbrauch -->
+                    <div class="subscope">
+                        <h3 class="subscope-title">
+                            <span class="subscope-icon">⚡</span>
+                            2A: Stromverbrauch
+                        </h3>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="strom_standard">Standardstrom (kWh/Jahr)</label>
+                                <input type="number" id="strom_standard" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="strom_oeko">Ökostrom (kWh/Jahr)</label>
+                                <input type="number" id="strom_oeko" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="strom_eigen">Eigenerzeugung (kWh/Jahr)</label>
+                                <input type="number" id="strom_eigen" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="strom_pv">Photovoltaik Einspeisung (kWh/Jahr)</label>
+                                <input type="number" id="strom_pv" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Subscope 2B: Wärme und Kälte -->
+                    <div class="subscope">
+                        <h3 class="subscope-title">
+                            <span class="subscope-icon">🌡️</span>
+                            2B: Wärme und Kälte
+                        </h3>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="fernwaerme_standard">Fernwärme Standard (kWh/Jahr)</label>
+                                <input type="number" id="fernwaerme_standard" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="fernwaerme_bio">Fernwärme Bio (kWh/Jahr)</label>
+                                <input type="number" id="fernwaerme_bio" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="fernkaelte">Fernkälte (kWh/Jahr)</label>
+                                <input type="number" id="fernkaelte" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="prozesskaelte">Prozesskälte (kWh/Jahr)</label>
+                                <input type="number" id="prozesskaelte" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Subscope 2C: Standortspezifische Energieverbräuche -->
+                    <div class="subscope">
+                        <h3 class="subscope-title">
+                            <span class="subscope-icon">📍</span>
+                            2C: Standortspezifische Energieverbräuche
+                        </h3>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="standort_name">Standort Name</label>
+                                <input type="text" id="standort_name" placeholder="z.B. Werk 1">
+                            </div>
+                            <div class="input-group">
+                                <label for="standort_strom">Stromverbrauch Standort (kWh/Jahr)</label>
+                                <input type="number" id="standort_strom" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="standort_waerme">Wärmeverbrauch Standort (kWh/Jahr)</label>
+                                <input type="number" id="standort_waerme" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="standort_kaelte">Kälteverbrauch Standort (kWh/Jahr)</label>
+                                <input type="number" id="standort_kaelte" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Subscope 2D: Energiemix und Zertifikate -->
+                    <div class="subscope">
+                        <h3 class="subscope-title">
+                            <span class="subscope-icon">📊</span>
+                            2D: Energiemix und Zertifikate
+                        </h3>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="strom_mix">Strommix</label>
+                                <select id="strom_mix">
+                                    <option value="de">Deutscher Strommix</option>
+                                    <option value="oeko">100% Ökostrom</option>
+                                    <option value="custom">Individueller Mix</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="herkunftsnachweise">Herkunftsnachweise (kWh/Jahr)</label>
+                                <input type="number" id="herkunftsnachweise" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="kompensation">CO₂-Kompensation (t/Jahr)</label>
+                                <input type="number" id="kompensation" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Subscope 2E: Energieeffizienzmaßnahmen -->
+                    <div class="subscope">
+                        <h3 class="subscope-title">
+                            <span class="subscope-icon">📈</span>
+                            2E: Energieeffizienzmaßnahmen
+                        </h3>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="einsparung_strom">Stromeinsparung (kWh/Jahr)</label>
+                                <input type="number" id="einsparung_strom" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="einsparung_waerme">Wärmeeinsparung (kWh/Jahr)</label>
+                                <input type="number" id="einsparung_waerme" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="eigenverbrauch_pv">PV-Eigenverbrauch (kWh/Jahr)</label>
+                                <input type="number" id="eigenverbrauch_pv" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scope 3: Weitere indirekte Emissionen -->
+                <div class="scope-section">
+                    <h2 class="scope-title">Scope 3: Weitere indirekte Emissionen</h2>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="flugreisen">Geschäftsreisen - Flug (km/Jahr)</label>
+                            <input type="number" id="flugreisen" min="0" value="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="zugreisen">Geschäftsreisen - Bahn (km/Jahr)</label>
+                            <input type="number" id="zugreisen" min="0" value="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="pendeln">Pendeln der Mitarbeiter (km/Jahr)</label>
+                            <input type="number" id="pendeln" min="0" value="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scope-section">
+                    <h2 class="scope-title">
+                        <span class="scope-icon"></span>
+                         -> Subscope
+                    </h2>
+                
+                    <!-- Subscope 3A: Geschäftsreisen -->
+                    <div class="subscope">
+                        <h3 class="subscope-title">
+                            <span class="subscope-icon">✈️</span>
+                            3A: Geschäftsreisen
+                        </h3>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="flug_kurz">Flüge Kurzstrecke (km/Jahr)</label>
+                                <input type="number" id="flug_kurz" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="flug_mittel">Flüge Mittelstrecke (km/Jahr)</label>
+                                <input type="number" id="flug_mittel" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="flug_lang">Flüge Langstrecke (km/Jahr)</label>
+                                <input type="number" id="flug_lang" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="bahn_nah">Bahn Nahverkehr (km/Jahr)</label>
+                                <input type="number" id="bahn_nah" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="bahn_fern">Bahn Fernverkehr (km/Jahr)</label>
+                                <input type="number" id="bahn_fern" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="hotel">Hotelübernachtungen (Nächte/Jahr)</label>
+                                <input type="number" id="hotel" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Subscope 3B: Mitarbeitermobilität -->
+                    <div class="subscope">
+                        <h3 class="subscope-title">
+                            <span class="subscope-icon">🚗</span>
+                            3B: Mitarbeitermobilität
+                        </h3>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="pendeln_pkw">Pendeln PKW (km/Jahr)</label>
+                                <input type="number" id="pendeln_pkw" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="pendeln_oepnv">Pendeln ÖPNV (km/Jahr)</label>
+                                <input type="number" id="pendeln_oepnv" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="pendeln_fahrrad">Pendeln Fahrrad (km/Jahr)</label>
+                                <input type="number" id="pendeln_fahrrad" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="homeoffice">Homeoffice (Tage/Jahr)</label>
+                                <input type="number" id="homeoffice" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Subscope 3C: Logistik und Transport -->
+                    <div class="subscope">
+                        <h3 class="subscope-title">
+                            <span class="subscope-icon">🚛</span>
+                            3C: Logistik und Transport
+                        </h3>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="transport_strasse">Transport Straße (tkm/Jahr)</label>
+                                <input type="number" id="transport_strasse" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="transport_schiene">Transport Schiene (tkm/Jahr)</label>
+                                <input type="number" id="transport_schiene" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="transport_see">Transport Seefracht (tkm/Jahr)</label>
+                                <input type="number" id="transport_see" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="transport_luft">Transport Luftfracht (tkm/Jahr)</label>
+                                <input type="number" id="transport_luft" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Subscope 3D: Materialien und Rohstoffe -->
+                    <div class="subscope">
+                        <h3 class="subscope-title">
+                            <span class="subscope-icon">📦</span>
+                            3D: Materialien und Rohstoffe
+                        </h3>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="papier">Papier/Pappe (t/Jahr)</label>
+                                <input type="number" id="papier" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="kunststoffe">Kunststoffe (t/Jahr)</label>
+                                <input type="number" id="kunststoffe" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="metalle">Metalle (t/Jahr)</label>
+                                <input type="number" id="metalle" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="chemikalien">Chemikalien (t/Jahr)</label>
+                                <input type="number" id="chemikalien" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Subscope 3E: Abfall und Recycling -->
+                    <div class="subscope">
+                        <h3 class="subscope-title">
+                            <span class="subscope-icon">♻️</span>
+                            3E: Abfall und Recycling
+                        </h3>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="restmuell">Restmüll (t/Jahr)</label>
+                                <input type="number" id="restmuell" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="altpapier">Altpapier (t/Jahr)</label>
+                                <input type="number" id="altpapier" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="wertstoffe">Wertstoffe (t/Jahr)</label>
+                                <input type="number" id="wertstoffe" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="sonderabfall">Sonderabfall (t/Jahr)</label>
+                                <input type="number" id="sonderabfall" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Subscope 3F: IT und Digitalisierung -->
+                    <div class="subscope">
+                        <h3 class="subscope-title">
+                            <span class="subscope-icon">💻</span>
+                            3F: IT und Digitalisierung
+                        </h3>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="rechenzentrum">Rechenzentrumsnutzung (kWh/Jahr)</label>
+                                <input type="number" id="rechenzentrum" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="cloud_dienste">Cloud-Dienste (GB/Jahr)</label>
+                                <input type="number" id="cloud_dienste" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="endgeraete">IT-Endgeräte (Stück)</label>
+                                <input type="number" id="endgeraete" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Subscope 3G: Wassermanagement -->
+                    <div class="subscope">
+                        <h3 class="subscope-title">
+                            <span class="subscope-icon">💧</span>
+                            3G: Wassermanagement
+                        </h3>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="wasser_frisch">Frischwasserverbrauch (m³/Jahr)</label>
+                                <input type="number" id="wasser_frisch" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="wasser_abwasser">Abwasser (m³/Jahr)</label>
+                                <input type="number" id="wasser_abwasser" min="0" value="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="wasser_aufbereitung">Wasseraufbereitung (kWh/Jahr)</label>
+                                <input type="number" id="wasser_aufbereitung" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results">
+                    <div class="results-grid">
+                        <div class="result-item">
+                            <div class="result-item-title">Scope 1 Emissionen</div>
+                            <div class="result-item-value" id="scope1">0 kg CO₂</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-item-title">Scope 2 Emissionen</div>
+                            <div class="result-item-value" id="scope2">0 kg CO₂</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-item-title">Scope 3 Emissionen</div>
+                            <div class="result-item-value" id="scope3">0 kg CO₂</div>
+                        </div>
+                    </div>
+
+                    <div class="total-emissions">
+                        <span class="total-emissions-label">Gesamtemissionen</span>
+                        <span class="total-emissions-value" id="gesamtEmissionen">0 kg CO₂/Jahr</span>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <p>Die Berechnung basiert auf den aktuellen Emissionsfaktoren des Umweltbundesamtes (2024).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-  e.preventDefault();
 
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-  const users = JSON.parse(localStorage.getItem('users') || '{}');
-
-  if (users[username] && users[username].password === password) {
-    // Login erfolgreich
-    users[username].lastLogin = new Date().toISOString();
-    localStorage.setItem('users', JSON.stringify(users));
-    localStorage.setItem('currentUser', username);
-    localStorage.setItem('isLoggedIn', 'true');
-
-    // Session setzen
-    sessionStorage.setItem('sessionActive', 'true');
-
-    // Rufe die Ausblendung auf
-    doFadeOut();
-
-  } else {
-    alert('Ungültiger Benutzername oder Passwort');
-  }
-});
-
-// Diese Funktion startet das Fade-Out und verzögert die Weiterleitung
-function doFadeOut() {
-  // Body bekommt die fade-out-Klasse
-  document.body.classList.add('fade-out');
-
-  // Warte die Animationsdauer (hier: 600ms), dann leite weiter:
-  setTimeout(() => {
-    window.location.href = 'Dateipload.html'; 
-  }, 600);
+     // Funktion, um den eingegebenen Wert eines Eingabefelds basierend auf der ID zu holen
+function getValue(id) {
+    const element = document.getElementById(id);
+    return element ? parseFloat(element.value) || 0 : 0; // Gib den Wert zurück oder 0, falls leer
 }
 
-// Optional: Beim Laden die fade-in-Klasse setzen
-document.addEventListener('DOMContentLoaded', () => {
-  document.body.classList.add('fade-in');
-});
-        function simpleHash(str) {
-    // Sehr einfache Pseudo-Hashfunktion NUR als Beispiel!
-    // Ersetzt jeden Buchstaben durch seinen charCode und summiert.
-    // Richtige Hashing würde eine Kryptolibrary benötigen.
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        hash = (hash + str.charCodeAt(i)) & 0xFFFFFFFF;
-    }
-    return 'hash' + hash; // prefix 'hash' nur um zu zeigen dass es gehasht ist.
+// Funktion, um die Ergebnisse zu aktualisieren
+function updateResults(results) {
+    // Gesamtwerte aktualisieren
+    document.getElementById('scope1').textContent = `${results.scope1.toFixed(2)} t CO₂`;
+    document.getElementById('scope2').textContent = `${results.scope2.toFixed(2)} t CO₂`;
+    document.getElementById('scope3').textContent = `${results.scope3.toFixed(2)} t CO₂`;
+    document.getElementById('gesamtEmissionen').textContent = `${results.total.toFixed(2)} t CO₂/Jahr`;
+
+    // Diagrammdaten aktualisieren
+    emissionsChart.data.datasets[0].data = [
+        results.scope1,
+        results.scope2,
+        results.scope3
+    ];
+    emissionsChart.update();
 }
-        // Initialisiere Standard-Benutzer, wenn noch keine existieren
-        if (!localStorage.getItem('users')) {
-            users[username] = {
-    password: simpleHash(password),  // Hier jetzt gehashter Wert
-    email: email,
-    company: company,
-    registrationDate: new Date().toISOString(),
-    lastLogin: null
+
+// Emissionsfaktoren (t CO₂ pro Einheit)
+const emissionFactors = {
+    // Scope 1
+    heizoel: 0.00268,      // t CO₂/Liter
+    erdgas: 0.000201,      // t CO₂/kWh
+    pellets: 0.000023,     // t CO₂/kg
+    fluessiggas: 0.00314,  // t CO₂/kg
+    diesel_pkw: 0.00265,   // t CO₂/Liter
+    benzin_pkw: 0.00237,   // t CO₂/Liter
+    diesel_lkw: 0.00265,   // t CO₂/Liter
+    kaeltemittel: 1.430,   // t CO₂/kg
+    loesemittel: 0.001,    // t CO₂/Liter
+    schwefelhexafluorid: 22.8, // t CO₂/kg
+    prozesswaerme: 0.000201, // t CO₂/kWh
+    duenger: 0.002,        // t CO₂/kg
+    landmaschinen: 0.00265, // t CO₂/Liter
+    notstrom: 0.00265,     // t CO₂/Liter
+    feuersysteme: 1.430,   // t CO₂/kg
+
+    // Scope 2
+    strom_standard: 0.00042, // t CO₂/kWh
+    strom_oeko: 0.000019,   // t CO₂/kWh
+    fernwaerme: 0.00018,    // t CO₂/kWh
+
+    // Scope 3
+    flug_kurz: 0.000214,    // t CO₂/km
+    flug_mittel: 0.00017,   // t CO₂/km
+    flug_lang: 0.000151,    // t CO₂/km
+    bahn: 0.000032,         // t CO₂/km
+    papier: 0.939,          // t CO₂/t
+    kunststoff: 2.7,        // t CO₂/t
+    metall: 1.5,            // t CO₂/t
+    abwasser: 0.00037,      // t CO₂/m³
+    wasser_aufbereitung: 0.0001 // t CO₂/kWh
 };
-            localStorage.setItem('users', JSON.stringify(defaultUsers));
+
+// Funktion: Holt den Wert eines Eingabefelds
+function getValue(id) {
+    const element = document.getElementById(id);
+    return element ? parseFloat(element.value) || 0 : 0;
+}
+
+// Funktion: Aktualisiert die Ergebnisse auf der Seite
+function updateResults(results) {
+    document.getElementById('scope1').textContent = results.scope1.toFixed(2);
+    document.getElementById('scope2').textContent = results.scope2.toFixed(2);
+    document.getElementById('scope3').textContent = results.scope3.toFixed(2);
+    document.getElementById('gesamtEmissionen').textContent = results.total.toFixed(2);
+
+    emissionsChart.data.datasets[0].data = [
+        results.scope1,
+        results.scope2,
+        results.scope3
+    ];
+    emissionsChart.update();
+}
+
+// Funktion: Berechnet die Emissionen
+function calculateEmissions() {
+    // Scope 1 Berechnung
+    const scope1 = (
+        getValue('heizoel') * emissionFactors.heizoel +
+        getValue('erdgas') * emissionFactors.erdgas +
+        getValue('pellets') * emissionFactors.pellets +
+        getValue('fluessiggas') * emissionFactors.fluessiggas +
+        getValue('diesel_pkw') * emissionFactors.diesel_pkw +
+        getValue('benzin_pkw') * emissionFactors.benzin_pkw +
+        getValue('diesel_lkw') * emissionFactors.diesel_lkw +
+        getValue('kaeltemittel') * emissionFactors.kaeltemittel +
+        getValue('loesemittel') * emissionFactors.loesemittel +
+        getValue('schwefelhexafluorid') * emissionFactors.schwefelhexafluorid +
+        getValue('prozesswaerme') * emissionFactors.prozesswaerme +
+        getValue('duenger') * emissionFactors.duenger +
+        getValue('landmaschinen') * emissionFactors.landmaschinen +
+        getValue('notstrom') * emissionFactors.notstrom +
+        getValue('feuersysteme') * emissionFactors.feuersysteme
+    );
+
+    // Scope 2 Berechnung
+    const scope2 = (
+        getValue('strom_standard') * emissionFactors.strom_standard +
+        getValue('strom_oeko') * emissionFactors.strom_oeko +
+        getValue('fernwaerme') * emissionFactors.fernwaerme
+    );
+
+    // Scope 3 Berechnung
+    const scope3 = (
+        getValue('flug_kurz') * emissionFactors.flug_kurz +
+        getValue('flug_mittel') * emissionFactors.flug_mittel +
+        getValue('flug_lang') * emissionFactors.flug_lang +
+        getValue('bahn') * emissionFactors.bahn +
+        getValue('papier') * emissionFactors.papier +
+        getValue('kunststoff') * emissionFactors.kunststoff +
+        getValue('metall') * emissionFactors.metall +
+        getValue('abwasser') * emissionFactors.abwasser +
+        getValue('wasser_aufbereitung') * emissionFactors.wasser_aufbereitung
+    );
+
+    // Gesamtemissionen berechnen
+    const total = scope1 + scope2 + scope3;
+
+    // Ergebnisse aktualisieren
+    updateResults({
+        scope1,
+        scope2,
+        scope3,
+        total
+    });
+}
+
+// Füge Event-Listener zu allen Eingabefeldern hinzu
+document.querySelectorAll('input').forEach(input => {
+    input.addEventListener('input', calculateEmissions);
+});
+
+// Chart.js Diagramm initialisieren
+const ctx = document.getElementById('emissionsChart').getContext('2d');
+const emissionsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Scope 1', 'Scope 2', 'Scope 3'],
+        datasets: [{
+            label: 'CO₂-Emissionen (t)',
+            data: [0, 0, 0],
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(255, 206, 86, 0.6)'
+            ],
+            borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: { beginAtZero: true }
         }
-
-        // Login-Formular Event Listener
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            const users = JSON.parse(localStorage.getItem('users'));
-            
-            if (users[username] && users[username].password === simpleHash(password)) {
-                // Login erfolgreich
-                const userData = users[username];
-                userData.lastLogin = new Date().toISOString();
-                users[username] = userData;
-                
-                // Update localStorage
-                localStorage.setItem('users', JSON.stringify(users));
-                localStorage.setItem('currentUser', username);
-                localStorage.setItem('isLoggedIn', 'true');
-                
-                // Erfolgreiche Anmeldung Nachricht
-                alert('Erfolgreich angemeldet!');
-                
-                // Weiterleitung zum Dashboard
-                window.location.href = 'Dashboard.html';
-            } else {
-                // Login fehlgeschlagen
-                alert('Ungültiger Benutzername oder Passwort');
-            }
-        });
-
-        // Registrierung anzeigen
-        function showRegistration() {
-            const username = prompt('Wählen Sie einen Benutzernamen:');
-            if (!username) return;
-
-            const users = JSON.parse(localStorage.getItem('users'));
-            if (users[username]) {
-                alert('Dieser Benutzername existiert bereits!');
-                return;
-            }
-
-            const password = prompt('Wählen Sie ein Passwort:');
-            if (!password) return;
-
-            const email = prompt('Ihre E-Mail-Adresse:');
-            if (!email) return;
-
-            const company = prompt('Ihr Unternehmensname:');
-            if (!company) return;
-
-            users[username] = {
-                password: password,
-                email: email,
-                company: company,
-                registrationDate: new Date().toISOString(),
-                lastLogin: null
-            };
-
-            localStorage.setItem('users', JSON.stringify(users));
-            alert('Registrierung erfolgreich! Sie können sich jetzt anmelden.');
-        }
-
-        // Passwort vergessen Funktion
-        function forgotPassword() {
-            const username = prompt('Geben Sie Ihren Benutzernamen ein:');
-            if (!username) return;
-
-            const users = JSON.parse(localStorage.getItem('users'));
-            if (!users[username]) {
-                alert('Benutzername nicht gefunden!');
-                return;
-            }
-
-            const email = prompt('Geben Sie Ihre E-Mail-Adresse zur Bestätigung ein:');
-            if (email === users[username].email) {
-                const newPassword = Math.random().toString(36).slice(-8);
-                users[username].password = newPassword;
-                localStorage.setItem('users', JSON.stringify(users));
-                alert(`Ihr neues temporäres Passwort lautet: ${newPassword}`);
-            } else {
-                alert('Die eingegebene E-Mail-Adresse stimmt nicht überein!');
-            }
-        }
-
-        // Prüfe Login-Status beim Laden der Seite
-        document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('isLoggedIn') === 'true') {
-                window.location.href = 'Dashboard.html';
-            }
-        });
-
-        // Füge diesen Code in die login.html
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Setze einen Flag im sessionStorage beim Login
-    sessionStorage.setItem('sessionActive', 'true');
-
-    // Prüfe auf neue Registrierung
-    const newRegistration = sessionStorage.getItem('newRegistration');
-    if (newRegistration) {
-        const { username, password } = JSON.parse(newRegistration);
-        document.getElementById('username').value = username;
-        document.getElementById('password').value = password;
-        sessionStorage.removeItem('newRegistration');
     }
 });
 
-// Event-Listener für das Schließen des Tabs/Browsers
-window.addEventListener('beforeunload', function() {
-    // Lösche Session-Daten
-    sessionStorage.clear();
-    localStorage.setItem('isLoggedIn', 'false');
-    localStorage.removeItem('currentUser');
-});
-
-// Prüfe beim Laden jeder Seite den Login-Status
-function checkLoginStatus() {
-    // Prüfe ob eine aktive Session existiert
-    const isSessionActive = sessionStorage.getItem('sessionActive');
-    
-    if (!isSessionActive) {
-        // Keine aktive Session - User ausloggen
-        localStorage.setItem('isLoggedIn', 'false');
-        localStorage.removeItem('currentUser');
-        window.location.href = 'login.html';
-    }
-}
-
-document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    
-    // Einfacher Vergleich für die Präsentation
-    if (username === 'admin' && password === 'admin123') {
-        alert('Erfolgreich angemeldet!');
-        window.location.href = 'Dashboard.html'; // Weiterleitung zum Dashboard
-    } else {
-        alert('Ungültiger Benutzername oder Passwort');
-    }
-});
-
-// Manuelle Logout-Funktion
-function logout() {
-    sessionStorage.clear();
-    localStorage.setItem('isLoggedIn', 'false');
-    localStorage.removeItem('currentUser');
-    window.location.href = 'login.html';
-}
-// Beispiel mit fiktiver hashFunktion:
-const hashFunktion = (input) => {
-    // hier müsstest du eine Hashfunktion einbinden oder implementieren
-    return yourHashLib.hash(input);
-}
-
-// Beim Registrieren:
-const password = prompt('Wählen Sie ein Passwort:');
-const hashedPassword = hashFunktion(password);
-users[username].password = hashedPassword;
-
-// Beim Login:
-if (users[username] && users[username].password === hashFunktion(password)) {
-    // Login erfolgreich
-}
+// Initiale Berechnung
+calculateEmissions();
 
     </script>
-    
 </body>
-
 </html>
+
+
 
 
 
