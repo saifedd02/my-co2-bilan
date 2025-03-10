@@ -211,30 +211,24 @@
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-  e.preventDefault();
+       document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+            
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
 
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-  const users = JSON.parse(localStorage.getItem('users') || '{}');
+    // Falls du KEIN Hashing willst, vergleiche direkt: if (users[username].password === password)
+    // Falls du DOCH Hashing willst, vergleiche: if (users[username].password === simpleHash(password))
 
-  if (users[username] && users[username].password === password) {
-    // Login erfolgreich
-    users[username].lastLogin = new Date().toISOString();
-    localStorage.setItem('users', JSON.stringify(users));
-    localStorage.setItem('currentUser', username);
-    localStorage.setItem('isLoggedIn', 'true');
-
-    // Session setzen
-    sessionStorage.setItem('sessionActive', 'true');
-
-    // Rufe die Ausblendung auf
-    doFadeOut();
-
-  } else {
-    alert('Ungültiger Benutzername oder Passwort');
-  }
-});
+    if (users[username] && users[username].password === simpleHash(password)) {
+      alert('Erfolgreich angemeldet!');
+      // Optional: doFadeOut() oder direkt:
+      window.location.href = 'Dashboard.html';
+    } else {
+      alert('Ungültiger Benutzername oder Passwort');
+    }
+  });
 
 // Diese Funktion startet das Fade-Out und verzögert die Weiterleitung
 function doFadeOut() {
@@ -252,14 +246,19 @@ document.addEventListener('DOMContentLoaded', () => {
   document.body.classList.add('fade-in');
 });
         function simpleHash(str) {
-    // Sehr einfache Pseudo-Hashfunktion NUR als Beispiel!
-    // Ersetzt jeden Buchstaben durch seinen charCode und summiert.
-    // Richtige Hashing würde eine Kryptolibrary benötigen.
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        hash = (hash + str.charCodeAt(i)) & 0xFFFFFFFF;
-    }
-    return 'hash' + hash; // prefix 'hash' nur um zu zeigen dass es gehasht ist.
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash + str.charCodeAt(i)) & 0xFFFFFFFF;
+  }
+  return 'hash' + hash;
+}
+
+// Beim Registrieren:
+users[username].password = simpleHash(gewähltesPasswort);
+
+// Beim Login:
+if (users[username] && users[username].password === simpleHash(eingegebenesPasswort)) {
+  // Login erfolgreich
 }
         // Initialisiere Standard-Benutzer, wenn noch keine existieren
         if (!localStorage.getItem('users')) {
