@@ -211,11 +211,30 @@
     </div>
 
     <script>
-       document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    // Dummy‑Login: Es wird immer zum Dashboard weitergeleitet.
-    window.location.href = 'Dashboard.html';
-  });
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  const users = JSON.parse(localStorage.getItem('users') || '{}');
+
+  if (users[username] && users[username].password === password) {
+    // Login erfolgreich
+    users[username].lastLogin = new Date().toISOString();
+    localStorage.setItem('users', JSON.stringify(users));
+    localStorage.setItem('currentUser', username);
+    localStorage.setItem('isLoggedIn', 'true');
+
+    // Session setzen
+    sessionStorage.setItem('sessionActive', 'true');
+
+    // Rufe die Ausblendung auf
+    doFadeOut();
+
+  } else {
+    alert('Ungültiger Benutzername oder Passwort');
+  }
+});
 
 // Diese Funktion startet das Fade-Out und verzögert die Weiterleitung
 function doFadeOut() {
@@ -233,19 +252,14 @@ document.addEventListener('DOMContentLoaded', () => {
   document.body.classList.add('fade-in');
 });
         function simpleHash(str) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash + str.charCodeAt(i)) & 0xFFFFFFFF;
-  }
-  return 'hash' + hash;
-}
-
-// Beim Registrieren:
-users[username].password = simpleHash(gewähltesPasswort);
-
-// Beim Login:
-if (users[username] && users[username].password === simpleHash(eingegebenesPasswort)) {
-  // Login erfolgreich
+    // Sehr einfache Pseudo-Hashfunktion NUR als Beispiel!
+    // Ersetzt jeden Buchstaben durch seinen charCode und summiert.
+    // Richtige Hashing würde eine Kryptolibrary benötigen.
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = (hash + str.charCodeAt(i)) & 0xFFFFFFFF;
+    }
+    return 'hash' + hash; // prefix 'hash' nur um zu zeigen dass es gehasht ist.
 }
         // Initialisiere Standard-Benutzer, wenn noch keine existieren
         if (!localStorage.getItem('users')) {
@@ -260,7 +274,35 @@ if (users[username] && users[username].password === simpleHash(eingegebenesPassw
         }
 
         // Login-Formular Event Listener
-    
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            const users = JSON.parse(localStorage.getItem('users'));
+            
+            if (users[username] && users[username].password === simpleHash(password)) {
+                // Login erfolgreich
+                const userData = users[username];
+                userData.lastLogin = new Date().toISOString();
+                users[username] = userData;
+                
+                // Update localStorage
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('currentUser', username);
+                localStorage.setItem('isLoggedIn', 'true');
+                
+                // Erfolgreiche Anmeldung Nachricht
+                alert('Erfolgreich angemeldet!');
+                
+                // Weiterleitung zum Dashboard
+                window.location.href = 'Dateipload.html';
+            } else {
+                // Login fehlgeschlagen
+                alert('Ungültiger Benutzername oder Passwort');
+            }
+        });
 
         // Registrierung anzeigen
         function showRegistration() {
@@ -360,7 +402,20 @@ function checkLoginStatus() {
     }
 }
 
-
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    // Einfacher Vergleich für die Präsentation
+    if (username === 'admin' && password === 'admin123') {
+        alert('Erfolgreich angemeldet!');
+        window.location.href = 'Dateipload.html'; // Weiterleitung zum Dashboard
+    } else {
+        alert('Ungültiger Benutzername oder Passwort');
+    }
+});
 
 // Manuelle Logout-Funktion
 function logout() {
