@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CO₂-Dashboard</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+  <!-- html2pdf.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+  <!-- SheetJS (XLSX) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <style>
+    /* ========================
+       1) Animations (Fade-In/-Out)
+       ======================== */
+    .fade-in {
+      animation: fadeIn 0.6s forwards;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    .fade-out {
+      animation: fadeOut 0.6s forwards;
+    }
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: scale(0.98);
+      }
+    }
+
+    /* ========================
+       2) Header / Navigation
+       ======================== */
+    header {
+      background: linear-gradient(90deg, #004d40, #00796b);
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      color: white;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    header img {
+      height: 45px;
+      transition: transform 0.3s ease;
+    }
+    header img:hover {
+      transform: scale(1.05);
+    }
+    nav {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+    header a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+      padding: 8px 15px;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    header a i {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+    header a:hover {
+      background: rgba(165, 214, 167, 0.15);
+      color: #a5d6a7;
+      transform: translateY(-2px);
+    }
+    header a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: #a5d6a7;
+      transform: translateX(-50%);
+      transition: width 0.3s ease;
+    }
+    header a:hover::after {
+      width: 80%;
+    }
+    header a.active {
+      background: rgba(165, 214, 167, 0.2);
+      color: #a5d6a7;
+    }
+    header a[href="Dashboard.html"] {
+      background: rgba(35, 213, 171, 0.15);
+      border: 1px solid rgba(35, 213, 171, 0.3);
+    }
+    header a[href="Dashboard.html"]:hover {
+      background: rgba(35, 213, 171, 0.25);
+      border-color: rgba(35, 213, 171, 0.5);
+    }
+
+    /* Responsive Nav */
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 20px;
+      }
+      nav {
+        gap: 15px;
+      }
+      header a {
+        padding: 6px 10px;
+        font-size: 14px;
+      }
+      header img {
+        height: 35px;
+      }
+    }
+
+    /* ========================
+       3) Body / Container
+       ======================== */
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #23d5ab, #23a6d5);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.2);
+      margin: 1rem 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    /* ========================
+       4) Buttons
+       ======================== */
+    .btn-container {
+      text-align: center; 
+      margin-bottom:20px;
+    }
+    .action-button {
+      display: inline-block;
+      margin: 0 10px;
+      background: #004d40;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      border: none;
+    }
+    .action-button:hover {
+      background: #00796b;
+    }
+
+    /* ========================
+       5) Tabellen
+       ======================== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+      margin-top: 1rem;
+    }
+    table th, table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+      font-size: 14px;
+    }
+    table th {
+      background: #23a6d5;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    /* ========================
+       6) Zusammenfassungen
+       ======================== */
+    .summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: space-around;
+      margin: 2rem 0;
+    }
+    .summary-item {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 1.5rem;
+      flex: 1 1 200px;
+      min-width: 200px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      font-size: 14px;
+    }
+    .summary-item h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.3rem;
+      color: #004d40;
+    }
+    .summary-item p {
+      margin: 0;
+      font-size: 1rem;
+      color: #333;
+      font-weight: bold;
+    }
+
+    /* ========================
+       7) Diagramme
+       ======================== */
+    .chart-container {
+      max-width: 600px;
+      margin: 2rem auto;
+    }
+    .charts-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .chart-box {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      text-align: center;
+      flex: 1 1 300px;
+    }
+    .chart-box h3 {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      color: #004d40;
+    }
+
+    /* ========================
+       8) Keine Daten
+       ======================== */
+    .no-data {
+      text-align: center;
+      color: #fff;
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    }
+
+    /* ========================
+       9) PDF-Header + Empfehlung
+       ======================== */
+    .pdf-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .pdf-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #004d40;
+      font-weight: bold;
+    }
+    .pdf-header p {
+      margin: 0.3rem 0;
+      font-size: 0.9rem;
+    }
+    .recommendation {
+      margin-top: 3rem;
+      padding: 1rem;
+      background: #e8f5e9;
+      border-radius: 8px;
+    }
+    .recommendation h3 {
+      margin-top: 0;
+      color: #004d40;
+      font-size: 1.2rem;
+    }
+    .recommendation ul {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 0.9rem;
+    }
+
+    /* ========================
+       10) Print / PDF-Styling
+       ======================== */
+    @media print {
+      body {
+        background: #fff !important;
+      }
+      .container {
+        box-shadow: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="fade-in">
+
+<!-- HEADER / NAV -->
+<header>
+  <a href="Dateipload.html">
+    <img src="https://digi-green-pilot.de/wp-content/uploads/2023/10/DGP-Logo-1024x438.png" alt="DigiGreen Pilot Logo">
+  </a>
+  
+  <nav>
+    <!-- Hier wurden die zwei zusätzlichen Buttons eingefügt: CO₂ Express & Chatbot -->
+    <a href="seite1/Dateipload.html" class="active">
+      <i class="fas fa-poll"></i> Umfrage
+    </a>
+    <a href="Co2express.html">
+      <i class="fas fa-bolt"></i> CO₂ Express
+    </a>
+    <a href="Chatbot.html">
+      <i class="fas fa-comments"></i> Chatbot
+    </a>
+    <a href="livecalc.html">
+      <i class="fas fa-poll"></i> Live Calculator
+    </a>
+    <a href="Dashboard.html">
+      <i class="fas fa-leaf"></i> Dashboard
+    </a>
+    <a href="https://moodle.digitalekompetenzen.org/login/index.php#module-483">
+      <i class="fas fa-envelope"></i> Lernplatform
+    </a>
+    <a href="Meinprofil.html">
+      <i class="fas fa-user"></i> Mein Profil
+    </a>
+  </nav>
+</header>
+
+
+
+<h1>CO₂-Dashboard</h1>
+<div class="container" id="pdfContent">
+  <!-- Download Buttons -->
+  <div class="btn-container">
+    <button class="action-button" onclick="downloadPDF()">Als PDF herunterladen</button>
+    <button class="action-button" onclick="downloadExcel()">Als Excel herunterladen</button>
+  </div>
+
+  <div id="dashboardContent"></div>
+</div>
+
+<script>
+  /********************************************************
+   * Fading-Effekte bei Seitenwechsel (optional)
+   ********************************************************/
+  document.addEventListener('DOMContentLoaded', () => {
+    // Body fade-in
+    document.body.classList.add('fade-in');
+  });
+
+  // Beispiel-Funktion zum Logout
+  function logout() {
+    document.body.classList.add('fade-out');
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 600);
+  }
+
+  /********************************************************
+   * Hilfsfunktionen zur Summierung
+   ********************************************************/
+  function sumEmissions(dataArray) {
+    let sum = 0;
+    dataArray.forEach(item => {
+      sum += parseFloat(item.co2Emissions) || 0;
+    });
+    return sum;
+  }
+
+  /********************************************************
+   * Dashboard-Logik
+   ********************************************************/
+  const data = localStorage.getItem('co2Data');
+  const dashboard = document.getElementById('dashboardContent');
+  let co2Data; // Globale Variable, damit downloadExcel() darauf zugreifen kann
+
+  // Beispielhafte „fiktive“ zusätzliche Werte
+  const lastYearEmissions = 30000; // Vorjahr-Gesamtemissionen (kg CO₂)
+  const employees = 100;           // Mitarbeiterzahl
+  const costPerTon = 50;          // Kosten pro Tonne CO₂ in Euro
+
+  if (!data) {
+    dashboard.innerHTML = '<div class="no-data">Keine Daten vorhanden. Bitte führen Sie zuerst die Umfrage durch.</div>';
+  } else {
+    co2Data = JSON.parse(data);
+    const { companyInfo, scope1, scope2, scope3 } = co2Data;
+
+    // Scope 1
+    const s1_vehicles    = sumEmissions(scope1.vehicles);
+    const s1_transport   = sumEmissions(scope1.transport);
+    const s1_heating     = sumEmissions(scope1.heating);
+    const s1_techGases   = sumEmissions(scope1.technicalGases);
+    const s1_other       = sumEmissions(scope1.otherEmitters);
+    const s1 = s1_vehicles + s1_transport + s1_heating + s1_techGases + s1_other;
+
+    // Scope 2
+    const s2_energy   = sumEmissions(scope2.energy);
+    const s2_indirect = sumEmissions(scope2.indirectEmissions);
+    const s2 = s2_energy + s2_indirect;
+
+    // Scope 3
+    const s3_businessTravel   = sumEmissions(scope3.businessTravel);
+    const s3_externalTransport= sumEmissions(scope3.externalTransport);
+    const s3_postal           = sumEmissions(scope3.postal);
+    const s3_chemicals        = sumEmissions(scope3.chemicals);
+    const s3_paper            = sumEmissions(scope3.paper);
+    const s3_plastics         = sumEmissions(scope3.plastics);
+    const s3_metals           = sumEmissions(scope3.metals || []);
+    const s3_minerals         = sumEmissions(scope3.minerals || []);
+    const s3_disposal         = sumEmissions(scope3.disposal || []);
+    const s3_water            = sumEmissions(scope3.water || []);
+    const s3 = s3_businessTravel + s3_externalTransport + s3_postal + s3_chemicals + s3_paper + s3_plastics + s3_metals + s3_minerals + s3_disposal + s3_water;
+
+    // Gesamt
+    const totalEmissions = s1 + s2 + s3;
+
+    // Prozentuale Anteile
+    const p1 = (s1/totalEmissions)*100 || 0;
+    const p2 = (s2/totalEmissions)*100 || 0;
+    const p3 = (s3/totalEmissions)*100 || 0;
+
+    // Vergleich zum Vorjahr
+    const difference = totalEmissions - lastYearEmissions;
+    const diffPercent = (difference/lastYearEmissions)*100 || 0;
+    const trend = difference > 0 ? "höher" : "niedriger";
+
+    // Kostenabschätzung
+    const costEstimate = (totalEmissions/1000)*costPerTon; // total in kg -> t
+
+    // Emissionen pro Mitarbeiter
+    const perEmployee = totalEmissions / employees;
+
+    // HTML zusammenbauen
+    let html = `
+      <div class="pdf-header">
+        <h2>CO₂-Bilanz Bericht</h2>
+        <p><strong>Firma:</strong> ${companyInfo.name}</p>
+        <p><strong>Bezugsjahr:</strong> ${companyInfo.year}</p>
+        <p><strong>Datum der Erfassung:</strong> ${new Date(companyInfo.date).toLocaleString()}</p>
+      </div>
+      <hr>
+      <table>
+        <tr><th>Scope</th><th>Emissionen (kg CO₂)</th><th>Anteil (%)</th></tr>
+        <tr><td>Scope 1</td><td>${s1.toFixed(2)}</td><td>${p1.toFixed(1)}%</td></tr>
+        <tr><td>Scope 2</td><td>${s2.toFixed(2)}</td><td>${p2.toFixed(1)}%</td></tr>
+        <tr><td>Scope 3</td><td>${s3.toFixed(2)}</td><td>${p3.toFixed(1)}%</td></tr>
+        <tr><th>Gesamt</th><th>${totalEmissions.toFixed(2)}</th><th>100%</th></tr>
+      </table>
+
+      <p>
+        <strong>Vorjahresemissionen:</strong> ${lastYearEmissions.toFixed(2)} kg CO₂<br>
+        <strong>Veränderung zum Vorjahr:</strong> ${difference.toFixed(2)} kg CO₂ (${diffPercent.toFixed(1)}% ${trend})
+      </p>
+
+      <p><strong>Kostenschätzung für Kompensation:</strong> ca. ${costEstimate.toFixed(2)} €</p>
+      <p><strong>Emissionen pro Mitarbeiter:</strong> ${perEmployee.toFixed(2)} kg CO₂</p>
+
+      <div class="summary">
+        <div class="summary-item">
+          <h2>Scope 1 (Gesamt)</h2>
+          <p>${s1.toFixed(2)} kg CO₂</p>
+        </div>
+        <div class="summary-item">
+          <h2>Scope 2 (Gesamt)</h2>
+          <p>${s2.toFixed(2)} kg CO₂</p>
+        </div>
+        <div class="summary-item">
+          <h2>Scope 3 (Gesamt)</h2>
+          <p>${s3.toFixed(2)} kg CO₂</p>
+        </div>
+      </div>
+
+      <h2 style="text-align:center; margin-bottom:1rem;">Gesamte Emissionen nach Scopes</h2>
+      <div class="chart-container">
+        <canvas id="allScopesChart"></canvas>
+      </div>
+
+      <h2 style="text-align:center; margin-bottom:1rem;">Details pro Scope</h2>
+      <div class="charts-grid">
+        <div class="chart-box">
+          <h3>Scope 1 Details</h3>
+          <canvas id="scope1Chart"></canvas>
+        </div>
+        <div class="chart-box">
+          <h3>Scope 2 Details</h3>
+          <canvas id="scope2Chart"></canvas>
+        </div>
+        <div class="chart-box">
+          <h3>Scope 3 Details</h3>
+          <canvas id="scope3Chart"></canvas>
+        </div>
+      </div>
+
+      <div class="recommendation">
+        <h3>Empfehlungen für Reduktion:</h3>
+        <ul>
+          <li>Umstieg auf erneuerbare Energien (Scope 2 reduzieren)</li>
+          <li>Optimierung der Lieferkette & Transportwege (Scope 3)</li>
+          <li>Förderung von E-Mobilität und Fahrgemeinschaften (Scope 1)</li>
+          <li>Steigerung der Energieeffizienz im Gebäude</li>
+          <li>Bewusstseinsbildung bei Mitarbeitern (Materialeinsparungen)</li>
+        </ul>
+      </div>
+    `;
+    dashboard.innerHTML = html;
+
+    /********************************************************
+     * Diagramme (Chart.js)
+     ********************************************************/
+    // 1) Alle Scopes
+    new Chart(document.getElementById('allScopesChart').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Scope 1', 'Scope 2', 'Scope 3'],
+        datasets: [{
+          data: [s1, s2, s3],
+          backgroundColor: [
+            'rgba(35,213,171,0.8)',
+            'rgba(35,166,213,0.8)',
+            'rgba(255,205,86,0.8)'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+
+    // 2) Scope 1
+    new Chart(document.getElementById('scope1Chart').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Fahrzeuge', 'Transport', 'Heizung', 'Techn. Gase', 'Sonst.'],
+        datasets: [{
+          data: [s1_vehicles, s1_transport, s1_heating, s1_techGases, s1_other],
+          backgroundColor: [
+            'rgba(54,162,235,0.7)',
+            'rgba(255,99,132,0.7)',
+            'rgba(75,192,192,0.7)',
+            'rgba(153,102,255,0.7)',
+            'rgba(255,159,64,0.7)'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+
+    // 3) Scope 2
+    new Chart(document.getElementById('scope2Chart').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Energie', 'Indirekt'],
+        datasets: [{
+          data: [s2_energy, s2_indirect],
+          backgroundColor: [
+            'rgba(54,162,235,0.7)',
+            'rgba(255,99,132,0.7)'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+
+    // 4) Scope 3
+    new Chart(document.getElementById('scope3Chart').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: [
+          'Geschäftsreisen',
+          'Externe Transporte',
+          'Post/Lieferservice',
+          'Chemikalien',
+          'Papier',
+          'Kunststoffe',
+          'Metalle',
+          'Mineralien',
+          'Entsorgung',
+          'Wasser'
+        ],
+        datasets: [{
+          data: [
+            s3_businessTravel,
+            s3_externalTransport,
+            s3_postal,
+            s3_chemicals,
+            s3_paper,
+            s3_plastics,
+            s3_metals,
+            s3_minerals,
+            s3_disposal,
+            s3_water
+          ],
+          backgroundColor: [
+            '#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd',
+            '#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+  }
+
+  /********************************************************
+   * PDF-Export
+   ********************************************************/
+  function downloadPDF() {
+    const element = document.getElementById('pdfContent');
+    const opt = {
+      filename: 'CO2-Bilanz.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 3 },
+      jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().from(element).set(opt).save();
+  }
+
+  /********************************************************
+   * Excel-Export
+   ********************************************************/
+  function downloadExcel() {
+    if (!co2Data) {
+      alert('Keine Daten vorhanden.');
+      return;
+    }
+    const { scope1, scope2, scope3 } = co2Data;
+
+    // Summen erneut berechnen
+    const s1_vehicles    = sumEmissions(scope1.vehicles);
+    const s1_transport   = sumEmissions(scope1.transport);
+    const s1_heating     = sumEmissions(scope1.heating);
+    const s1_techGases   = sumEmissions(scope1.technicalGases);
+    const s1_other       = sumEmissions(scope1.otherEmitters);
+    const s1 = s1_vehicles + s1_transport + s1_heating + s1_techGases + s1_other;
+
+    const s2_energy   = sumEmissions(scope2.energy);
+    const s2_indirect = sumEmissions(scope2.indirectEmissions);
+    const s2 = s2_energy + s2_indirect;
+
+    const s3_businessTravel   = sumEmissions(scope3.businessTravel);
+    const s3_externalTransport= sumEmissions(scope3.externalTransport);
+    const s3_postal           = sumEmissions(scope3.postal);
+    const s3_chemicals        = sumEmissions(scope3.chemicals);
+    const s3_paper            = sumEmissions(scope3.paper);
+    const s3_plastics         = sumEmissions(scope3.plastics);
+    const s3_metals           = sumEmissions(scope3.metals || []);
+    const s3_minerals         = sumEmissions(scope3.minerals || []);
+    const s3_disposal         = sumEmissions(scope3.disposal || []);
+    const s3_water            = sumEmissions(scope3.water || []);
+    const s3 = s3_businessTravel + s3_externalTransport + s3_postal + s3_chemicals + s3_paper + s3_plastics + s3_metals + s3_minerals + s3_disposal + s3_water;
+
+    const total = s1 + s2 + s3;
+
+    // Neues Workbook
+    const wb = XLSX.utils.book_new();
+    wb.Props = {
+      Title: "CO2 Bilanz",
+      Subject: "CO2 Emissionen",
+      Author: co2Data.companyInfo.name,
+      CreatedDate: new Date()
+    };
+
+    // Übersicht
+    const overviewData = [
+      ["CO₂-Bilanz Bericht"],
+      ["Firma", co2Data.companyInfo.name],
+      ["Bezugsjahr", co2Data.companyInfo.year],
+      ["Datum", new Date(co2Data.companyInfo.date).toLocaleString()],
+      [],
+      ["Scope", "Emissionen (kg CO₂)"],
+      ["Scope 1", s1.toFixed(2)],
+      ["Scope 2", s2.toFixed(2)],
+      ["Scope 3", s3.toFixed(2)],
+      ["Gesamt", total.toFixed(2)]
+    ];
+    const wsOverview = XLSX.utils.aoa_to_sheet(overviewData);
+    XLSX.utils.book_append_sheet(wb, wsOverview, 'Übersicht');
+
+    // Beispiel-Funktion: Detail-Sheet
+    function createDetailSheet(title, scopeDataArray, headers) {
+      const sheetData = [[title],[]];
+      sheetData.push(headers);
+      let sum = 0;
+      scopeDataArray.forEach(item => {
+        const row = headers.map(h => item[h] || "");
+        sheetData.push(row);
+        if (item.co2Emissions) {
+          sum += parseFloat(item.co2Emissions) || 0;
+        }
+      });
+      if (scopeDataArray.length > 0) {
+        sheetData.push([]);
+        sheetData.push(["Summe Emissionen", sum.toFixed(2)+" kg CO₂"]);
+      }
+      return XLSX.utils.aoa_to_sheet(sheetData);
+    }
+
+    // z.B. Scope1_Fahrzeuge
+    if ((scope1.vehicles||[]).length > 0) {
+      const wsVehicles = createDetailSheet("Scope 1 - Fahrzeuge", scope1.vehicles, 
+        ["employeeNumber","vehicleType","annualMileage","privateUsage","co2Emissions"]);
+      XLSX.utils.book_append_sheet(wb, wsVehicles, 'Scope1_Fahrzeuge');
+    }
+
+    // Scope2_Energie
+    if ((scope2.energy||[]).length > 0) {
+      const wsEnergy = createDetailSheet("Scope 2 - Energie", scope2.energy,
+        ["date","location","energyType","consumption","co2Emissions"]);
+      XLSX.utils.book_append_sheet(wb, wsEnergy, 'Scope2_Energie');
+    }
+
+    // Weitere Sheets nach Bedarf ...
+    XLSX.writeFile(wb, 'CO2-Bilanz.xlsx');
+  }
+</script>
+</body>
+</html>

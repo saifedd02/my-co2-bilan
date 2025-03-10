@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CO₂-Bilanz-Umfrage</title>
+  <link rel="stylesheet" href="Style1.css">   
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+</head>
+<body>
+
+  <header>
+    <a href="Dateipload.html">
+      <img src="https://digi-green-pilot.de/wp-content/uploads/2023/10/DGP-Logo-1024x438.png" alt="DigiGreen Pilot Logo">
+    </a>
+    <nav>
+      <a href="Dateipload.html" class="active">
+        <i class="fas fa-poll"></i> Umfrage
+      </a>
+      <a href="../Co2express.html">
+        <i class="fas fa-bolt"></i> CO₂ Express
+      </a>
+      <a href="../Chatbot.html">
+        <i class="fas fa-comments"></i> Chatbot
+      </a>
+      <a href="../livecalc.html">
+        <i class="fas fa-poll"></i> Live Calculator
+      </a>
+      <a href="../Dashboard.html">
+        <i class="fas fa-leaf"></i> Dashboard
+      </a>
+      <a href="../https://moodle.digitalekompetenzen.org/login/index.php#module-483">
+        <i class="fas fa-envelope"></i> Lernplatform
+      </a>
+      <a href="../Meinprofil.html">
+        <i class="fas fa-user"></i> Mein Profil
+      </a>
+    </nav>
+    <button class="toggle-btn" onclick="toggleMode()">Mode wechseln</button>
+  </header>
+
+  <!-- Chatbot -->
+  <div id="chatbot-bubble" class="chatbot-container">
+    <div class="chat-header" onclick="toggleChat()">
+      <div class="header-content">
+        <div class="small-avatar">
+          <img src="https://cdn.midjourney.com/98111e79-bd37-40a6-a49f-acf02ee74210/0_0.png" alt="CO2 Assistant">
+        </div>
+        <div class="chat-title">CO₂ Assistant</div>
+      </div>
+      <button class="minimize-btn">-</button>
+    </div>
+    <div class="chat-body">
+      <div class="quick-replies">
+        <button onclick="sendQuickReply('Was sind Scopes?')" class="quick-reply">Scopes?</button>
+        <button onclick="sendQuickReply('Scope 1 Details')" class="quick-reply">Scope 1</button>
+        <button onclick="sendQuickReply('Scope 2 Details')" class="quick-reply">Scope 2</button>
+        <button onclick="sendQuickReply('Scope 3 Details')" class="quick-reply">Scope 3</button>
+        <button onclick="sendQuickReply('CO₂ Tipps')" class="quick-reply">Tipps</button>
+        <button onclick="sendQuickReply('Berechnung')" class="quick-reply">Berechnung</button>
+        <button onclick="sendQuickReply('Best Practices')" class="quick-reply">Best Practices</button>
+        <button onclick="sendQuickReply('Förderung')" class="quick-reply">Förderung</button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">
+          Hallo! Wie kann ich Ihnen bei CO₂ und Nachhaltigkeit helfen?
+        </div>
+      </div>
+      <div class="quick-replies">
+        <button onclick="sendQuickReply('Was sind Scopes?')" class="quick-reply">Scopes?</button>
+        <button onclick="sendQuickReply('CO₂ Tipps')" class="quick-reply">CO₂ Tipps</button>
+        <button onclick="sendQuickReply('Hilfe')" class="quick-reply">Hilfe</button>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="userInput" placeholder="Frage stellen..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hauptformular -->
+  <form id="co2Survey" onsubmit="handleSubmit(event)">
+    <!-- Unternehmensdaten -->
+    <div class="form-section">
+      <h2>Unternehmensdaten</h2>
+      <div class="form-group">
+        <label>Firmenname</label>
+        <input type="text" id="companyName" required>
+      </div>
+      <div class="form-group">
+        <label>Bezugsjahr</label>
+        <select id="year" required>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+          <option value="2022">2022</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Dropdown zur Scope-Auswahl -->
+    <div class="form-group">
+      <label for="scopeDropdown"><strong>Welchen Scope möchtest du bearbeiten?</strong></label>
+      <select id="scopeDropdown" onchange="toggleScopeSections()">
+        <option value="">-- Bitte wählen --</option>
+        <option value="scope1Container">Scope 1</option>
+        <option value="scope2Container">Scope 2</option>
+        <option value="scope3Container">Scope 3</option>
+      </select>
+    </div>
+
+    <!-- SCOPE 1 Container -->
+    <div id="scope1Container" style="display: none;">
+      <h2>Scope 1: Direkte Emissionen</h2>
+      <!-- 1A -->
+      <div class="scope-section scope-card">
+        <h3>1A – Geschäftsreisen mit firmeneigenen Fahrzeugen</h3>
+        <button type="button" onclick="addVehicle()">Fahrzeug hinzufügen</button>
+        <div id="vehicleFields" class="dynamic-fields"></div>
+        <div id="totalVehicleEmissions" class="total-emissions"></div>
+      </div>
+      <!-- 1B -->
+      <div class="scope-section scope-card">
+        <h3>1B – Transporte mit firmeneigenen Transportern</h3>
+        <button type="button" onclick="addTransport1B()">Transport hinzufügen</button>
+        <div id="transport1BFields"></div>
+        <div id="totalTransport1B" style="font-weight:bold; margin-top:1rem;"></div>
+      </div>
+      <!-- 1C -->
+      <div class="scope-section scope-card">
+        <h3>1C – Einsatz von Energieträgern</h3>
+        <button type="button" onclick="addScope1C()">Energieträger hinzufügen</button>
+        <div id="scope1CFields"></div>
+        <div id="totalScope1CEmissions" style="font-weight: bold; margin-top: 1rem;"></div>
+      </div>
+      <!-- 1D Technische Gase -->
+      <div class="scope-section scope-card">
+        <h3>1D – Technische Gase</h3>
+        <button type="button" onclick="addScope1D()">Technisches Gas hinzufügen</button>
+        <div id="scope1DFields"></div>
+        <div id="totalScope1DEmissions" style="font-weight: bold; margin-top: 1rem;"></div>
+      </div>
+      <!-- 1D Sonstige Emittenten -->
+      <div class="scope-section scope-card">
+        <h3>1D – Sonstige Emittenten (frei)</h3>
+        <button type="button" onclick="addScope1DOther()">Sonstigen Emittent hinzufügen</button>
+        <div id="scope1DOtherFields"></div>
+        <div id="totalScope1DOtherEmissions" style="font-weight: bold; margin-top: 1rem;">
+          Gesamt (Sonstige) 1D-Emissionen: 0 kg CO₂
+        </div>
+      </div>
+    </div>
+
+    <!-- SCOPE 2 Container -->
+    <div id="scope2Container" style="display: none;">
+      <h2>Scope 2: Indirekte Emissionen</h2>
+      <!-- 2A -->
+      <div class="scope-section scope-card">
+        <h3>2A – Externe Energieversorgung (Strom, Fernwärme etc.)</h3>
+        <button type="button" onclick="addScope2A()">Energieverbrauch hinzufügen</button>
+        <div id="scope2AFields"></div>
+        <div id="totalScope2AEmissions" style="font-weight: bold; margin-top: 1rem;">
+          Gesamt 2A-Emissionen: 0 kg CO₂
+        </div>
+      </div>
+      <!-- 2B -->
+      <div class="scope-section scope-card">
+        <h3>2B – Sonstige indirekte Emissionen</h3>
+        <button type="button" onclick="addIndirectEmitter()">Indirekten Emittent hinzufügen</button>
+        <div id="indirectEmitterFields" class="dynamic-fields"></div>
+        <div id="totalIndirectEmissions" class="total-emissions"></div>
+      </div>
+    </div>
+
+    <!-- SCOPE 3 Container -->
+    <div id="scope3Container" style="display: none;">
+      <h2>Scope 3: Sonstige Emissionen</h2>
+      <!-- 3A -->
+      <div class="scope-section scope-card">
+        <h3>3A – Geschäftsreisen (extern)</h3>
+        <button type="button" onclick="addScope3A()">Geschäftsreise hinzufügen</button>
+        <div id="scope3AFields"></div>
+        <div id="totalScope3AEmissions" style="font-weight: bold; margin-top: 1rem;">
+          Gesamt 3A-Emissionen: 0 kg CO₂
+        </div>
+      </div>
+      <!-- 3B -->
+      <div class="scope-section scope-card">
+        <h3>3B – Transporte (externe Dienstleister)</h3>
+        <button type="button" onclick="addScope3B()">Transport hinzufügen</button>
+        <div id="scope3BFields"></div>
+        <div id="totalScope3BEmissions" style="font-weight: bold; margin-top: 1rem;">
+          Gesamt 3B-Emissionen: 0 kg CO₂
+        </div>
+      </div>
+      <!-- 3C -->
+      <div class="scope-section scope-card">
+        <h3>3C – Chemische Grundstoffe</h3>
+        <button type="button" onclick="addScope3C()">Chemisches Produkt hinzufügen</button>
+        <div id="scope3CFields"></div>
+        <div id="totalScope3CEmissions" style="font-weight: bold; margin-top: 1rem;">
+          Gesamt 3C-Emissionen: 0 kg CO₂
+        </div>
+      </div>
+      <!-- 3D -->
+      <div class="scope-section scope-card">
+        <h3>3D – Holz, Papier und Pappe</h3>
+        <button type="button" onclick="addScope3D()">Material hinzufügen</button>
+        <div id="scope3DFields"></div>
+        <div id="totalScope3DEmissions" style="font-weight: bold; margin-top: 1rem;">
+          Gesamt 3D-Emissionen: 0 kg CO₂
+        </div>
+      </div>
+      <!-- 3E -->
+      <div class="scope-section scope-card">
+        <h3>3E – Kunststoffe</h3>
+        <button type="button" onclick="addScope3E()">Kunststoff hinzufügen</button>
+        <div id="scope3EFields"></div>
+        <div id="totalScope3EEmissions" style="font-weight: bold; margin-top: 1rem;">
+          Gesamt 3E-Emissionen: 0 kg CO₂
+        </div>
+      </div>
+      <!-- 3F -->
+      <div class="scope-section scope-card">
+        <h3>3F – Metalle</h3>
+        <button type="button" onclick="addScope3F()">Metall hinzufügen</button>
+        <div id="scope3FFields"></div>
+        <div id="totalScope3FEmissions" style="font-weight: bold; margin-top: 1rem;">
+          Gesamt 3F-Emissionen: 0 kg CO₂
+        </div>
+      </div>
+      <!-- 3G -->
+      <div class="scope-section scope-card">
+        <h3>3G – Mineralien & Baustoffe</h3>
+        <button type="button" onclick="addScope3G()">Material hinzufügen</button>
+        <div id="scope3GFields"></div>
+        <div id="totalScope3GEmissions" style="font-weight: bold; margin-top: 1rem;">
+          Gesamt 3G-Emissionen: 0 kg CO₂
+        </div>
+      </div>
+      <!-- 3H -->
+      <div class="scope-section scope-card">
+        <h3>3H – Entsorgung</h3>
+        <button type="button" onclick="addScope3H()">Entsorgung hinzufügen</button>
+        <div id="scope3HFields"></div>
+        <div id="totalScope3HEmissions" style="font-weight: bold; margin-top: 1rem;">
+          Gesamt 3H-Emissionen: 0 kg CO₂
+        </div>
+      </div>
+      <!-- 3I -->
+      <div class="scope-section scope-card">
+        <h3>3I – Wasser</h3>
+        <button type="button" onclick="addScope3I()">Wasserverbrauch hinzufügen</button>
+        <div id="scope3IFields"></div>
+        <div id="totalScope3IEmissions" style="font-weight: bold; margin-top: 1rem;">
+          Gesamt 3I-Emissionen: 0 kg CO₂
+        </div>
+      </div>
+      <!-- 3J -->
+      <div class="scope-section scope-card">
+        <h3>3J – Mobilität & Kraftstoffe</h3>
+        <button type="button" onclick="addScope3J()">Transport/Kraftstoff hinzufügen</button>
+        <div id="scope3JFields"></div>
+        <div id="totalScope3JEmissions" style="font-weight: bold; margin-top: 1rem;">
+          Gesamt 3J-Emissionen: 0 kg CO₂
+        </div>
+      </div>
+      <!-- 3K -->
+      <div class="scope-section scope-card">
+        <h3>3K – Lebensmittel</h3>
+        <button type="button" onclick="addScope3KFood()">Lebensmittel hinzufügen</button>
+        <div id="scope3KFoodFields"></div>
+        <div id="totalScope3KFoodEmissions" style="font-weight: bold; margin-top: 1rem;">
+          Gesamt Lebensmittel-Emissionen: 0 kg CO₂
+        </div>
+      </div>
+      <!-- 3L -->
+      <div class="scope-section scope-card">
+        <h3>3L – Materialien & Vorprodukte</h3>
+        <button type="button" onclick="addScope3L()">Material hinzufügen</button>
+        <div id="scope3LFields"></div>
+        <div id="totalScope3LEmissions" style="font-weight: bold; margin-top: 1rem;">
+          Gesamt 3L-Emissionen: 0 kg CO₂
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons zum Berechnen und Herunterladen -->
+    <button type="submit" class="submit-button">Bilanz berechnen</button>
+    <button type="button" id="downloadDataBtn">Daten herunterladen</button>
+  </form>
+
+  <!-- Einbindung deines Skripts (z. B. script1.js) -->
+  <script src="script1.js"></script>
+
+  <!-- Dropdown-Funktionalität zum Umschalten der Scope-Container -->
+  <script>
+    function toggleScopeSections() {
+      const selectedScope = document.getElementById('scopeDropdown').value;
+      // Alle Container zunächst ausblenden
+      document.getElementById('scope1Container').style.display = 'none';
+      document.getElementById('scope2Container').style.display = 'none';
+      document.getElementById('scope3Container').style.display = 'none';
+      // Nur den ausgewählten Container anzeigen
+      if (selectedScope) {
+        document.getElementById(selectedScope).style.display = 'block';
+      }
+    }
+  </script>
+<script>
+  function toggleMode() {
+    const body = document.body;
+    // Ist aktuell Dark Mode an?
+    if (body.classList.contains('dark-mode')) {
+      // Dann wechsel zu Light
+      body.classList.remove('dark-mode');
+      body.classList.add('light-mode');
+    } else {
+      // Ansonsten wechsel zu Dark
+      body.classList.remove('light-mode');
+      body.classList.add('dark-mode');
+    }
+  }
+</script>
+
+</body>
+</html>
