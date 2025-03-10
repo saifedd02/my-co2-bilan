@@ -284,19 +284,1560 @@
         background: #fff;
       }
     }
+
+:root {
+    --primary: #23d5ab;
+    --secondary: #23a6d5;
+    --dark: #004d40;
+    --light: #e8f5e9;
+    --glow: rgba(35, 213, 171, 0.2);
+    --card: rgba(255, 255, 255, 0.95);
+    --text-dark: #2c3e50;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #23d5ab, #23a6d5, #23d5ab, #23a6d5);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    font-family: 'Arial', sans-serif;
+    color: var(--text-dark);
+}
+
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Header Styles */
+header {
+    background: linear-gradient(90deg, #004d40, #00796b);
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+header img {
+    height: 45px;
+    transition: transform 0.3s ease;
+}
+
+header img:hover {
+    transform: scale(1.05);
+}
+
+nav {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 15px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+header a i {
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+header a:hover {
+    background: rgba(165, 214, 167, 0.15);
+    color: #a5d6a7;
+    transform: translateY(-2px);
+}
+
+header a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #a5d6a7;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+header a:hover::after {
+    width: 80%;
+}
+
+header a.active {
+    background: rgba(165, 214, 167, 0.2);
+    color: #a5d6a7;
+}
+
+header a[href="Dashboard.html"] {
+    background: rgba(35, 213, 171, 0.15);
+    border: 1px solid rgba(35, 213, 171, 0.3);
+}
+
+header a[href="Dashboard.html"]:hover {
+    background: rgba(35, 213, 171, 0.25);
+    border-color: rgba(35, 213, 171, 0.5);
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 15px 20px;
+    }
+
+    nav {
+        gap: 15px;
+    }
+
+    header a {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    header img {
+        height: 35px;
+    }
+
+    @media (max-width: 480px) {
+        header a span {
+            display: none;
+        }
+        
+        header a i {
+            font-size: 20px;
+        }
+    }
+}
+
+/* Form Sections */
+.form-section {
+    background: var(--card);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    margin: 2rem auto;
+    padding: 2rem;
+    max-width: 1200px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transform-style: preserve-3d;
+    transition: all 0.6s ease;
+}
+
+.form-section:hover {
+    transform: translateY(-10px) rotateX(5deg);
+}
+
+/* Scope Sections */
+.scope-section {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(46, 204, 113, 0.1);
+}
+
+.scope-section:hover {
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.1);
+    transform: translateY(-3px);
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+/* Input Styles */
+input, select {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    box-shadow: 
+        inset 0 2px 5px rgba(0, 0, 0, 0.1),
+        0 0 0 2px var(--primary);
+    transform: translateY(-2px);
+}
+
+/* Buttons */
+button {
+    width: auto;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(45deg, #23d5ab, #23a6d5);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(35, 213, 171, 0.4);
+}
+
+button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
+}
+
+button[type="submit"] {
+    width: 100%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    display: block;
+    padding: 1rem;
+    font-weight: bold;
+}
+
+.remove-field {
+    
+    background: linear-gradient(45deg, #ff6b6b, #ee5253);
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+/* Dynamic Fields */
+.dynamic-field {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin: 1rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Result Section */
+.result-section {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 1200px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .form-section {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .dynamic-field {
+        grid-template-columns: 1fr;
+    }
+}
+
+.input-toggle {
+    margin-bottom: 1rem;
+    margin: 15px 0;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.calculation-method {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.energy-price-info {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
+.cost-input {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.emissions-summary {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.emissions-summary .total {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid #004d40;
+    font-weight: bold;
+}
+
+.tooltip-icon {
+    display: inline-block;
+    background: #004d40;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 20px;
+    margin-left: 5px;
+    cursor: pointer;
+    position: relative;
+}
+
+.tooltip-text {
+    display: none;
+    position: absolute;
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 14px;
+    top: 25px; 
+    left: 0;
+    width: 200px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+}
+
+.tooltip-icon:hover + .tooltip-text,
+.tooltip-icon:focus + .tooltip-text {
+    display: block;
+}
+
+/* Chatbot Styles */
+.chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    background: #004d40;
+    color: white;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.small-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.3);
+    flex-shrink: 0;
+}
+
+.small-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.chat-title {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.minimize-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.chat-body {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: #f8f9fa;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 15px;
+    max-width: 80%;
+}
+
+.bot-message {
+    background: #e3f2fd;
+    margin-right: auto;
+}
+
+.user-message {
+    background: #004d40;
+    color: white;
+    margin-left: auto;
+}
+
+.quick-replies {
+    padding: 10px;
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.quick-reply {
+    background: #f0f0f0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.quick-reply:hover {
+    background: #e0e0e0;
+}
+
+.chat-input {
+    display: flex;
+    padding: 10px;
+    gap: 5px;
+    border-top: 1px solid #eee;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+}
+
+.chat-input button {
+    background: #004d40;
+    color: white;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.chatbot-container.minimized .chat-body {
+    display: none;
+}
+
+/* Animiertes Icon */
+.fa-leaf {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+/*veränderung*/
+
+.scope-section {
+    position: relative; /* Für Pseudo-Elemente */
+    margin: 1rem 0;
+    padding: 1.5rem 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-left: 4px solid var(--primary); /* farbiger Balken links */
+    border-radius: 10px;
+  }
+  
+  /* Optional: Kleinen "Trennstrich" zwischen Abschnitten */
+  .scope-section + .scope-section::before {
+    content: "";
+    display: block;
+    width: 50%;
+    height: 2px;
+    margin: 2rem auto;
+    background: var(--primary);
+    opacity: 0.2;
+  }
+
+  @media (max-width: 480px) {
+    .dynamic-field {
+      grid-template-columns: 1fr; /* Alles untereinander */
+      gap: 0.5rem; /* etwas geringerer Abstand */
+    }
+  }
+  .remove-field {
+  background: linear-gradient(45deg, #ff6b6b, #ee5253);
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.remove-field:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+}
+
+button {
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    font-size: 14px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(35, 213, 171, 0.4);
+}
+
+/* Entfernen-Button in Rot */
+button.remove-button {
+    background: linear-gradient(45deg, #ff6b6b, #ee5253);
+}
+
+/* Größerer Submit-Button */
+button.submit-button {
+    width: 100%;
+    max-width: 1200px;
+    display: block;
+    margin: 2rem auto;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 1rem;
+}
+.add-button {
+    background: linear-gradient(45deg, #4caf50, #2ecc71); /* z.B. Grüner Ton */
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+/* Wenn du noch Hover-Effekt willst: */
+.add-button:hover {
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+}
+
+.scope-card {
+    background: #ffffff; /* oder var(--card), wenn du möchtest */
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Farbige Hintergründe für unterschiedliche Scopes */
+
+/* Scope 1 mit leichtem Grünhauch */
+.scope-1 {
+    background: #ecfdf5; /* helles Grün */
+    border-left: 5px solid #23d5ab; /* auffälliger Balken links */
+    margin-bottom: 2rem; 
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+  
+  /* Scope 2 mit hellblauer Tönung */
+  .scope-2 {
+    background: #f0f9ff; /* helles Blau */
+    border-left: 5px solid #23a6d5;
+    margin-bottom: 2rem; 
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+  
+  /* Scope 3 mit gelblicher Nuance */
+  .scope-3 {
+    background: #fffbeb; /* helles Gelb */
+    border-left: 5px solid #fcd34d;
+    margin-bottom: 2rem; 
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+  /* =========================
+   1) Grundlegende Variablen
+   ========================= */
+:root {
+    --bg-color: #1b1b1b;        /* Sehr dunkles Grau (fast Schwarz) */
+    --accent-color: #00ffd5;    /* Neon-Türkis */
+    --accent-color-2: #ff00ff;  /* Neon-Pink */
+    --text-color: #ffffff;      /* Weißer Text */
+    --text-color-light: #d1d1d1;/* Etwas hellerer Grauton für Labels */
+    --header-height: 60px;
+    --transition-speed: 0.3s;
+  }
+  
+  /* =========================
+     2) Allgemeines Layout
+     ========================= */
+  body {
+    margin: 0;
+    font-family: "Arial", sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    /* Kleiner animierter BG-Farbverlauf (subtil) */
+    background: radial-gradient(circle at center, #222 0%, #000 100%);
+    background-size: cover;
+    transition: background var(--transition-speed) ease;
+    overflow-x: hidden;
+  }
+  
+  /* Sanftes "rein-zoomen" */
+  @keyframes fadeInZoom {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* =========================
+     3) Header / Navigation
+     ========================= */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: var(--header-height);
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 255, 213, 0.1);
+    border-bottom: 1px solid rgba(0, 255, 213, 0.2);
+  }
+  
+  header img {
+    height: 40px;
+    transition: transform 0.2s;
+  }
+  
+  header img:hover {
+    transform: scale(1.05);
+  }
+  
+  nav {
+    display: flex;
+    gap: 15px;
+  }
+  
+  header a {
+    color: var(--accent-color);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  
+  header a:hover {
+    background: rgba(0,255,213,0.1);
+    transform: translateY(-2px);
+  }
+  
+  header a.active {
+    background: rgba(0,255,213,0.2);
+    color: #fff;
+    border: 1px solid rgba(0,255,213,0.3);
+  }
+  
+  /* Responsive Header-Anpassung */
+  @media (max-width: 768px) {
+    nav {
+      gap: 10px;
+    }
+    header a {
+      padding: 4px 8px;
+      font-size: 14px;
+    }
+  }
+  
+  /* =========================
+     4) Container & Karten
+     ========================= */
+  .container {
+    max-width: 1200px;
+    margin: 1.5rem auto;
+    padding: 1.5rem;
+    animation: fadeInZoom 0.5s ease forwards;
+  }
+  
+  .form-section,
+  .scope-section,
+  .scope-card {
+    background: #2a2a2a; /* Dunkles Grau */
+    border: 1px solid rgba(0,255,213,0.2);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 0 10px rgba(0,255,213,0.05);
+    animation: fadeInZoom 0.6s ease forwards;
+  }
+  
+  /* "Leuchtender" Rahmen bei Hover */
+  .form-section:hover,
+  .scope-section:hover,
+  .scope-card:hover {
+    box-shadow: 0 0 10px rgba(0,255,213,0.3), 0 0 20px rgba(255,0,255,0.1);
+    transform: translateY(-2px);
+  }
+  
+  /* =========================
+     5) Überschriften
+     ========================= */
+  h1, h2, h3 {
+    margin-top: 0;
+    color: var(--accent-color);
+    text-shadow: 0 0 5px rgba(0,255,213,0.4);
+  }
+  
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--accent-color-2);
+    text-shadow: 0 0 5px rgba(255,0,255,0.5);
+  }
+  
+  /* =========================
+     6) Formularelemente
+     ========================= */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--text-color-light);
+  }
+  
+  input, select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    background: #333;
+    color: #fff;
+    transition: box-shadow var(--transition-speed);
+  }
+  
+  input:focus, select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--accent-color);
+  }
+  
+  /* =========================
+     7) Buttons
+     ========================= */
+  button, .action-button {
+    display: inline-block;
+    background: var(--accent-color);
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: 0.5rem;
+  }
+  
+  button:hover, .action-button:hover {
+    background: var(--accent-color-2);
+    color: #fff;
+    box-shadow: 0 0 8px var(--accent-color-2);
+    transform: translateY(-2px);
+  }
+  
+  button.submit-button {
+    width: 100%;
+    margin-top: 1.5rem;
+    font-size: 16px;
+    background: var(--accent-color-2);
+    color: #fff;
+  }
+  
+  button.remove-field {
+    background: #ff0066; /* Kräftiges Pink/Rot */
+    margin-top: 1rem;
+  }
+  
+  button.remove-field:hover {
+    box-shadow: 0 0 10px #ff0066;
+  }
+  
+  /* =========================
+     8) Dynamische Felder
+     ========================= */
+  .dynamic-fields, .dynamic-field {
+    margin-top: 1rem;
+    background: #333;
+    border: 1px solid rgba(0,255,213,0.1);
+    border-radius: 6px;
+    padding: 1rem;
+    position: relative;
+    transition: box-shadow 0.3s;
+  }
+  
+  .dynamic-field:hover {
+    box-shadow: 0 0 8px rgba(0,255,213,0.3);
+  }
+  
+  /* Felder in Grid-Layout */
+  .dynamic-field {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+  
+  /* =========================
+     9) Chatbot
+     ========================= */
+  .chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 320px;
+    background: #2a2a2a;
+    border: 1px solid rgba(0,255,213,0.3);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,255,213,0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+    animation: fadeInZoom 0.5s ease forwards;
+  }
+  
+  .chat-header {
+    background: #333;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .chat-header .chat-title {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .chat-body {
+    display: flex;
+    flex-direction: column;
+    height: 380px;
+    background: #1b1b1b;
+  }
+  
+  .chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+  }
+  
+  .message {
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    max-width: 80%;
+    line-height: 1.3;
+  }
+  
+  .bot-message {
+    background: #004d40;
+    color: #fff;
+    margin-right: auto;
+    box-shadow: 0 0 5px rgba(0,255,213,0.3);
+  }
+  
+  .user-message {
+    background: var(--accent-color);
+    color: #000;
+    margin-left: auto;
+    box-shadow: 0 0 5px var(--accent-color);
+  }
+  
+  .quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    background: #222;
+    padding: 6px;
+  }
+  
+  .quick-reply {
+    background: #444;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  
+  .quick-reply:hover {
+    background: var(--accent-color);
+    color: #000;
+  }
+  
+  .chat-input {
+    display: flex;
+    gap: 5px;
+    padding: 8px;
+    background: #333;
+  }
+  
+  .chat-input input {
+    flex-grow: 1;
+    background: #222;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 8px;
+  }
+  
+  .chat-input input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--accent-color);
+  }
+  
+  .chat-input button {
+    background: var(--accent-color);
+    color: #000;
+    border-radius: 4px;
+    width: 40px;
+    border: none;
+    font-weight: bold;
+  }
+  
+  .chatbot-container.minimized .chat-body {
+    display: none;
+  }
+  
+  /* =========================
+     10) Medienabfragen
+     ========================= */
+  @media (max-width: 768px) {
+    .container {
+      margin: 1rem;
+      padding: 1rem;
+    }
+    .dynamic-field {
+      grid-template-columns: 1fr;
+    }
+    .chatbot-container {
+      width: 90%;
+      right: 5%;
+    }
+  }
+  
+  /* Kleiner Schimmer-Effekt */
+  @keyframes shimmer {
+    0% { background-position: -200px 0; }
+    100% { background-position: 200px 0; }
+  }
+  /* =============================
+   1) Standard-Variablen (Light Mode)
+   ============================= */
+:root {
+    --transition-speed: 0.3s;
+    --font-family: "Arial", sans-serif;
+  
+    /* Farben Light Mode */
+    --bg-color: #f0f0f0;         /* Hintergrund (hell) */
+    --text-color: #1b1b1b;       /* Text (dunkel) */
+    --accent-color: #0066cc;     /* Akzent (Blau) */
+    --accent-color-2: #00cc66;   /* 2. Akzent (Grün) */
+    --card-bg: #ffffff;          /* Karten/Box-Hintergrund */
+    --border-color: rgba(0,0,0,0.1);
+  
+    /* Optional: Größere Layout-Variablen */
+    --header-height: 60px;
+  }
+  
+  /* =============================
+     2) Dark Mode Variablen
+     Überschreiben dieselben Namen
+     ============================= */
+  .dark-mode {
+    --bg-color: #1b1b1b;         /* Hintergrund (dunkel) */
+    --text-color: #ffffff;       /* Text (hell) */
+    --accent-color: #00ffd5;     /* Neon-Türkis */
+    --accent-color-2: #ff00ff;   /* Neon-Pink */
+    --card-bg: #2a2a2a;          /* Kartenhintergrund (dunkler) */
+    --border-color: rgba(0,255,213,0.3);
+  }
+  
+  /* =============================
+     3) Globales Styling
+     (greift auf die Variablen zu)
+     ============================= */
+  
+  /* Body */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family);
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background var(--transition-speed), color var(--transition-speed);
+  }
+  
+  /* Header (Beispiel) */
+  header {
+    height: var(--header-height);
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  /* Ein Button, um den Mode zu toggeln */
+  .toggle-btn {
+    background: var(--accent-color);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background var(--transition-speed);
+  }
+  .toggle-btn:hover {
+    background: var(--accent-color-2);
+  }
+  
+  /* Beispiel: Container / Section / Card */
+  .container,
+  .form-section,
+  .scope-section,
+  .scope-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin: 1rem auto;
+    padding: 1rem;
+    max-width: 1200px;
+    transition: background var(--transition-speed), box-shadow var(--transition-speed);
+  }
+  
+  /* Buttons allgemein */
+  button, .action-button {
+    background: var(--accent-color);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    margin: 0.25rem 0;
+  }
+  button:hover, .action-button:hover {
+    background: var(--accent-color-2);
+  }
+  
+  /* Textfelder, Inputs, Selects */
+  input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    transition: background var(--transition-speed), color var(--transition-speed);
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid var(--accent-color);
+  }
+  
+  /* Überschriften */
+  h1, h2, h3, h4 {
+    color: var(--text-color);
+    margin: 0.5rem 0;
+  }
+  
+  /* Beispiel: Minimale Chatbot-Stile (vereinfacht) */
+  .chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    transition: background var(--transition-speed);
+  }
+  .chat-header {
+    background: var(--accent-color);
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+  }
+  .chat-body {
+    height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    background: var(--card-bg);
+  }
+  .message {
+    background: #e3f2fd;
+    margin: 5px 0;
+    padding: 8px;
+    border-radius: 8px;
+  }
+  
+  /* etc. … */
+  /* ==============================================
+   1) Standard (Light Mode) – Variablen & Basics
+   ============================================== */
+:root {
+    --transition-speed: 0.3s;
+    --font-family: 'Arial', sans-serif;
+  
+    /* Farben: Light Mode */
+    --bg-color: #f8f8f8;        /* Hintergrund hell */
+    --text-color: #2c3e50;      /* Dunkler Text */
+    --accent-color: #0066cc;    /* Akzent (Blau) */
+    --accent-color-2: #00cc66;  /* 2. Akzent (Grün) */
+    --card-bg: #ffffff;         /* Karten / Boxen */
+    --border-color: rgba(0,0,0,0.1);
+  
+    /* Layout-Größen */
+    --header-height: 60px;
+  }
+  
+  /* ==============================================
+     2) Dark Mode – überschreibt dieselben Variablen
+     ============================================== */
+  .dark-mode {
+    --bg-color: #1b1b1b;        /* Sehr dunkel */
+    --text-color: #ffffff;      /* Heller Text */
+    --accent-color: #00ffd5;    /* Neon-Türkis */
+    --accent-color-2: #ff00ff;  /* Neon-Pink */
+    --card-bg: #2a2a2a;         /* Dunkles Grau */
+    --border-color: rgba(0,255,213,0.3);
+  }
+  
+  /* ==============================================
+     3) Globales Styling
+     ============================================== */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family);
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background var(--transition-speed), color var(--transition-speed);
+  }
+  
+  /* Header-Beispiel */
+  header {
+    height: var(--header-height);
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  header img {
+    height: 40px;
+    transition: transform 0.2s;
+  }
+  header img:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Navigation */
+  nav {
+    display: flex;
+    gap: 15px;
+  }
+  
+  header a {
+    color: var(--accent-color);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  header a:hover {
+    background: rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+  }
+  header a.active {
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--text-color);
+  }
+  
+  /* ==============================================
+     4) Container, Sektionen, Karten
+     ============================================== */
+  .container,
+  .form-section,
+  .scope-section,
+  .scope-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin: 1rem auto;
+    padding: 1rem;
+    max-width: 1200px;
+    transition: background var(--transition-speed), box-shadow var(--transition-speed);
+  }
+  
+  /* Hover-Effekt bei Cards/Sektionen */
+  .form-section:hover,
+  .scope-section:hover,
+  .scope-card:hover {
+    box-shadow: 0 2px 8px var(--border-color);
+    transform: translateY(-2px);
+  }
+  
+  /* ==============================================
+     5) Überschriften
+     ============================================== */
+  h1, h2, h3, h4 {
+    color: var(--accent-color);
+    margin: 0.5rem 0;
+  }
+  h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: var(--accent-color-2);
+    margin-bottom: 1rem;
+  }
+  
+  /* ==============================================
+     6) Formularelemente
+     ============================================== */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: bold;
+    color: var(--text-color);
+  }
+  input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background var(--transition-speed), color var(--transition-speed);
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid var(--accent-color);
+  }
+  
+  /* ==============================================
+     7) Buttons
+     ============================================== */
+  button, .action-button {
+    background: var(--accent-color);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    margin: 0.25rem 0;
+  }
+  button:hover, .action-button:hover {
+    background: var(--accent-color-2);
+    transform: translateY(-2px);
+  }
+  button.submit-button {
+    width: 100%;
+    margin-top: 1.5rem;
+    font-size: 16px;
+    background: var(--accent-color-2);
+  }
+  
+  /* Entfernen-Button in Rot */
+  button.remove-field {
+    background: #ff0066;
+    margin-top: 1rem;
+  }
+  button.remove-field:hover {
+    box-shadow: 0 0 10px #ff0066;
+  }
+  
+  /* ==============================================
+     8) Dynamische Felder (z.B. .dynamic-field)
+     ============================================== */
+  .dynamic-fields,
+  .dynamic-field {
+    margin-top: 1rem;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1rem;
+    position: relative;
+    transition: box-shadow 0.3s;
+  }
+  
+  .dynamic-field {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+  .dynamic-field:hover {
+    box-shadow: 0 0 8px var(--border-color);
+  }
+  
+  /* ==============================================
+     9) Quick-Replies / Chatbot-Elemente
+     ============================================== */
+  .quick-reply {
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .quick-reply:hover {
+    background: var(--accent-color);
+    color: #fff;
+  }
+  
+  /* ==============================================
+     10) Chatbot-Container
+     ============================================== */
+  .chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 320px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    transition: background var(--transition-speed);
+  }
+  
+  .chat-header {
+    background: var(--accent-color);
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .chat-body {
+    height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    background: var(--bg-color);
+  }
+  
+  .chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+  }
+  
+  .message {
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    max-width: 80%;
+    line-height: 1.3;
+    color: var(--text-color);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+  }
+  
+  .bot-message {
+    margin-right: auto;
+    border-left: 3px solid var(--accent-color);
+  }
+  .user-message {
+    margin-left: auto;
+    border-left: 3px solid var(--accent-color-2);
+  }
+  
+  .chat-input {
+    display: flex;
+    gap: 5px;
+    padding: 8px;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .chat-input input {
+    flex-grow: 1;
+    background: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 25px;
+    padding: 8px;
+  }
+  .chat-input button {
+    background: var(--accent-color);
+    color: #fff;
+    border-radius: 25px;
+    width: 40px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .chatbot-container.minimized .chat-body {
+    display: none;
+  }
+  
+  /* ==============================================
+     11) Responsive Anpassungen
+     ============================================== */
+  @media (max-width: 768px) {
+    .container {
+      margin: 1rem;
+      padding: 1rem;
+    }
+    .dynamic-field {
+      grid-template-columns: 1fr;
+    }
+    .chatbot-container {
+      width: 90%;
+      right: 5%;
+    }
+  }
+  ::-webkit-input-placeholder { 
+    color: rgba(255,255,255,0.5); /* z.B. in Dark Mode */
+  }
+  :-ms-input-placeholder {
+    color: rgba(255,255,255,0.5);
+  }
+  ::placeholder {
+    color: rgba(255,255,255,0.5);
+  }
   </style>
 </head>
 <body>
 
   <!-- HEADER -->
   <header>
-    <a href="seite1/Dateipload.html">
+    <a href="Dateipload.html">
       <img src="https://digi-green-pilot.de/wp-content/uploads/2023/10/DGP-Logo-1024x438.png" alt="DigiGreen Pilot Logo">
     </a>
     
     <nav>
       <!-- Hier wurden die zwei zusätzlichen Buttons eingefügt: CO₂ Express & Chatbot -->
-      <a href="seite1/Dateipload.html" >
+      <a href="Dateipload.html" >
         <i class="fas fa-poll"></i> Umfrage
       </a>
       <a href="Co2express.html" class="active">
