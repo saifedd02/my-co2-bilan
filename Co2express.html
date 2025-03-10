@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>CO₂ Express –  CSV-Tool</title>
+
+  <!-- PapaParse für CSV -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+  <!-- Chart.js für Diagramme -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+  <!-- html2pdf.js für PDF-Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+  <!-- SheetJS für Excel-Export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <style>
+    /********************************************************************
+     * 1) Allgemeines Layout & Navigation
+     ********************************************************************/
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #23d5ab, #23a6d5);
+      color: #333;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    header {
+      background: linear-gradient(90deg, #004d40, #00796b);
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #fff;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+    header img {
+      height: 45px;
+      transition: transform 0.3s ease;
+    }
+    header img:hover {
+      transform: scale(1.05);
+    }
+    nav {
+      display: flex;
+      gap: 20px;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 8px 15px;
+      border-radius: 25px;
+      transition: background 0.3s;
+    }
+    nav a:hover {
+      background: rgba(165,214,167,0.2);
+    }
+    nav a.active {
+      background: rgba(35,213,171,0.3);
+    }
+
+    /********************************************************************
+     * 2) Container, Überschriften & Buttons
+     ********************************************************************/
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+    h1.title {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+      color: #004d40;
+    }
+    p.description {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #444;
+      line-height: 1.4;
+      max-width: 900px;
+      margin: 0.5rem auto 1rem auto;
+    }
+    .btn {
+      background: linear-gradient(45deg, #23d5ab, #23a6d5);
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      margin: 0.2rem 0;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(35,213,171,0.4);
+    }
+    .btn-row {
+      text-align: center; 
+      margin-top: 1rem;
+    }
+    .template-link {
+      display: inline-block;
+      margin: 0.5rem 0;
+      color: #00796b;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    /********************************************************************
+     * 3) CSV-Bereich (mit ausführlicher Anleitung)
+     ********************************************************************/
+    .csv-section {
+      border: 1px dashed #bbb;
+      padding: 1rem;
+      border-radius: 8px;
+      background: #f9f9f9;
+      margin-bottom: 1.5rem;
+    }
+    .csv-section h2 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+    .csv-section p {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 0.5rem;
+    }
+    .csv-section label {
+      display: inline-block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    .csv-help {
+      background: #e8f5e9;
+      border-left: 5px solid #2e7d32;
+      padding: 1rem;
+      border-radius: 5px;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: #004d40;
+    }
+    #csvError {
+      margin-top: 0.5rem;
+      color: #b71c1c;
+      font-weight: bold;
+    }
+
+    /* CSV-Preview (Debug) */
+    #csvPreview {
+      margin-top: 1rem;
+      max-height: 250px;
+      overflow-y: auto;
+      font-size: 0.85rem;
+    }
+    #csvPreviewTable {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    #csvPreviewTable th, #csvPreviewTable td {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+    }
+    #csvPreviewTable th {
+      background: #eee;
+      font-weight: bold;
+    }
+
+    /********************************************************************
+     * 4) Dashboard
+     ********************************************************************/
+    #dashboard {
+      display: none; /* Wird dynamisch eingeblendet */
+      margin-top: 2rem;
+    }
+    #pdfContent {
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .scope-summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .scope-box {
+      flex: 1 1 200px;
+      background: #f2f2f2;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      min-width: 200px;
+    }
+    .scope-box h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+      color: #004d40;
+    }
+    .scope-box p {
+      font-size: 0.9rem;
+      margin: 0;
+    }
+    table.scope-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+    table.scope-table th, table.scope-table td {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+    }
+    table.scope-table th {
+      background: #e3f2fd;
+      color: #333;
+      font-weight: bold;
+    }
+    .chart-container {
+      max-width: 500px;
+      margin: 2rem auto;
+    }
+    .chart-container canvas {
+      width: 100% !important;
+      height: auto !important;
+    }
+    .chart-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .chart-box {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      min-width: 280px;
+      flex: 1 1 280px;
+      text-align: center;
+    }
+    .chart-box h4 {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      color: #004d40;
+    }
+    .dash-btns {
+      text-align: center;
+      margin: 1rem 0;
+    }
+    .dash-btns .btn {
+      margin: 0 0.5rem;
+    }
+
+    /********************************************************************
+     * 5) PDF / Print Zusätze
+     ********************************************************************/
+    @media print {
+      .btn, header, .template-link, .csv-section {
+        display: none !important;
+      }
+      body {
+        background: #fff;
+      }
+      #pdfContent {
+        border: none;
+        background: #fff;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <a href="seite1/Dateipload.html">
+      <img src="https://digi-green-pilot.de/wp-content/uploads/2023/10/DGP-Logo-1024x438.png" alt="DigiGreen Pilot Logo">
+    </a>
+    
+    <nav>
+      <!-- Hier wurden die zwei zusätzlichen Buttons eingefügt: CO₂ Express & Chatbot -->
+      <a href="seite1/Dateipload.html" >
+        <i class="fas fa-poll"></i> Umfrage
+      </a>
+      <a href="Co2express.html" class="active">
+        <i class="fas fa-bolt"></i> CO₂ Express
+      </a>
+      <a href="Chatbot.html">
+        <i class="fas fa-comments"></i> Chatbot
+      </a>
+      <a href="livecalc.html">
+        <i class="fas fa-poll"></i> Live Calculator
+      </a>
+      <a href="Dashboard.html">
+        <i class="fas fa-leaf"></i> Dashboard
+      </a>
+      <a href="https://moodle.digitalekompetenzen.org/login/index.php#module-483">
+        <i class="fas fa-envelope"></i> Lernplatform
+      </a>
+      <a href="Meinprofil.html">
+        <i class="fas fa-user"></i> Mein Profil
+      </a>
+    </nav>
+  </header>
+
+
+  <!-- HAUPT-CONTAINER -->
+  <div class="container">
+    <h1 class="title">CO₂ Express – Umfangreiches CSV-Tool</h1>
+    <p class="description">
+      Willkommen bei Ihrem umfangreichen CO₂-Express-Tool. Laden Sie unser vorbereitetes
+      CSV-Template herunter, füllen Sie die Tabellenzeilen in Excel oder Google Sheets
+      (inkl. Ihrer Emissionsfaktoren, Mengen etc.) und laden Sie die Datei anschließend
+      wieder hoch. Das Tool erstellt automatisch ein Dashboard mit Diagrammen und bietet
+      PDF- und Excel-Export an.
+    </p>
+
+    <!-- CSV-Bereich -->
+    <div class="csv-section">
+      <h2>1) CSV-Template herunterladen</h2>
+      <p>Dieses Template enthält bereits Beispielzeilen für Scope 1, 2 und 3 sowie Sub-Kategorien (z.B. <code>3B_postal</code>). Öffnen Sie die Datei in Excel, ergänzen oder überschreiben Sie die Daten, und speichern Sie erneut als CSV.</p>
+      <button class="btn" onclick="downloadTemplate()">CSV-Template herunterladen</button>
+
+      <div class="csv-help">
+        <strong>Was tun bei Formatierungen oder Farben?</strong><br>
+        CSV-Dateien unterstützen leider keine Farb- oder Tabellenformatierungen. Wenn Sie in Excel Farben/Bedingte Formatierungen anlegen, werden diese in der CSV nicht gespeichert. Die Daten bleiben jedoch erhalten. 
+      </div>
+
+      <hr style="margin:1rem 0;">
+
+      <h2>2) Ausgefüllte CSV hochladen</h2>
+      <label for="csvFileInput">Datei wählen (CSV, UTF-8):</label><br>
+      <input type="file" id="csvFileInput" accept=".csv">
+      <p class="info-msg">
+        <strong>Hinweis:</strong> Das CSV muss mindestens die Spalte <code>scope</code> enthalten. Weitere Spalten (z.B. <code>emissionFactor</code>, <code>quantity</code>, <code>co2Emissions</code>) siehe Template.
+      </p>
+      <div id="csvError"></div>
+
+      <div class="btn-row">
+        <button class="btn" onclick="processCSV()">CSV verarbeiten</button>
+      </div>
+
+      <!-- CSV-Preview (Debug) -->
+      <div id="csvPreview"></div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard">
+      <div id="pdfContent">
+        <h2>CO₂-Bilanz Ergebnis</h2>
+        <p id="companyInfo" style="font-size:0.9rem;color:#444;"></p>
+
+        <!-- Summen pro Scope (kleine Boxen) -->
+        <div class="scope-summary" id="scopeSummary"></div>
+
+        <!-- Tabelle (Scope-Übersicht) -->
+        <table class="scope-table" id="scopeTable">
+          <thead>
+            <tr>
+              <th>Scope</th>
+              <th>Emissionen (kg CO₂)</th>
+              <th>Anteil (%)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr>
+              <th>Gesamt</th>
+              <th id="totalEmissionCell"></th>
+              <th>100%</th>
+            </tr>
+          </tfoot>
+        </table>
+
+        <!-- Diagramm: Doughnut (Scope-Verteilung) -->
+        <div class="chart-container">
+          <canvas id="scopeChart"></canvas>
+        </div>
+
+        <!-- Subscope-Diagramm: Balken pro Subscope -->
+        <div class="chart-grid">
+          <div class="chart-box">
+            <h4>Subscope-Emissionen</h4>
+            <canvas id="subscopeChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-btns">
+        <button class="btn" onclick="toggleSubscopeChartType()">Chart-Typ wechseln</button>
+        <button class="btn" onclick="downloadPDF()">PDF Export</button>
+        <button class="btn" onclick="downloadExcel()">Excel Export</button>
+      </div>
+    </div>
+
+  </div> <!-- Ende container -->
+
+  <script>
+  /* ####################################################################
+   * (A) CSV-TEMPLATE ZUM DOWNLOAD
+   * #################################################################### */
+  /**
+ * downloadTemplate()
+ *
+ * Diese Funktion erzeugt eine CSV-Datei mit UTF-8-Kodierung und
+ * lädt sie als "co2_express_template.csv" herunter. Die Datei
+ * enthält die Spalten aus deinem Screenshot und die Beispiel-Daten
+ * für Scope 1, 2 und 3.
+ */
+/**
+ * downloadTemplate()
+ *
+ * Diese Funktion erstellt ein CSV-Template mit den Spalten:
+ *   scope, subCategory, activityName, emissionFactor, quantity, unit,
+ *   co2Emissions, companyName, year
+ * 
+ * Sie enthält Beispielzeilen für Scope 1, 2 und 3 (1A–1E, 2A–2B, 3A–3L),
+ * so wie in deinem Excel-Screenshot. Das UTF-8-BOM (Byte Order Mark) wird
+ * hinzugefügt, damit Excel die Datei korrekt erkennt.
+ */
+/**
+ * downloadTemplate()
+ *
+ * Erstellt ein umfangreiches CSV-Template mit folgenden Spalten:
+ *   scope, subCategory, activityName, description, emissionFactor, quantity, unit,
+ *   co2Emissions, companyName, year, notes, cost, supplier, location, invoiceNumber
+ *
+ * Für jeden Scope (1A, 1B, 1C, 1D, 1E, 2A, 2B, 3A–3L) gibt es eine Beispielzeile.
+ * Der Nutzer kann diese Felder in Excel/Google Sheets ausfüllen und später als CSV
+ * wieder hochladen.
+ */
+ /**
+ * downloadTemplate()
+ *
+ * Erstellt eine CSV-Datei mit Semikolon als Spaltentrenner, damit Excel
+ * (in einer deutschsprachigen Umgebung) die Daten automatisch in mehrere
+ * Spalten aufteilt. Enthält Beispielzeilen für Scope 1A–1E, 2A–2B und 3A–3L.
+ * Alle Spalten sind in doppelte Anführungszeichen eingeschlossen.
+ */
+function downloadTemplate() {
+  try {
+    // UTF-8 BOM hinzufügen (wichtig, damit Umlaute in Excel korrekt dargestellt werden)
+    const BOM = "\uFEFF";
+
+    // CSV-Inhalt (mit Semikolon als Trenner und "..." um jeden Wert)
+    const csvContent = BOM +
+`# CO2 Express – CSV-Template (mit Semikolon)
+# Bitte jede Zeile mit Werten füllen. 
+# Wichtig: "scope" ist Pflicht. Weitere empfohlene Spalten: subCategory, activityName, emissionFactor, quantity, unit, co2Emissions, companyName, year
+# Optional: notes, cost, supplier, location, invoiceNumber
+# 
+#   Scope 1 (direkte Emissionen): 1A, 1B, 1C, 1D, 1E
+#   Scope 2 (indirekte Energieemissionen): 2A, 2B
+#   Scope 3 (sonstige Emissionen): 3A, 3B, 3C, 3D, 3E, 3F, 3G, 3H, 3I, 3J, 3K, 3L
+#
+"scope";"subCategory";"activityName";"description";"emissionFactor";"quantity";"unit";"co2Emissions";"companyName";"year";"notes";"cost";"supplier";"location";"invoiceNumber"
+"1A";"";"Firmen-PKW Diesel";"Dieselkraftstoffverbrauch für Geschäftsreisen";"2.64";"1000";"Liter";"";"GreatCorp";"2023";"PKW-Flotte";"2000";"Tankstelle X";"Hauptsitz";"INV-001"
+"1B";"";"Firmen-LKW Diesel";"Dieselkraftstoff für firmeneigene LKW";"2.68";"1200";"Liter";"";"GreatCorp";"2023";"LKW-Flotte";"2500";"Spedition Y";"Lager";"INV-002"
+"1C";"";"Heizung Erdgas";"Erdgasverbrauch für Heizungsanlage";"0.201";"20000";"kWh";"";"GreatCorp";"2023";"Heizung Hauptgebäude";"4000";"Stadtwerke Energie";"Hauptsitz";"INV-003"
+"1D";"";"Kältemittel R134a";"Verlust im Kältemittelkreislauf";"1430";"5";"kg";"";"GreatCorp";"2023";"Klimaanlage Wartung";"1500";"KälteService GmbH";"Hauptsitz";"INV-004"
+"1E";"";"Notstromaggregat Diesel";"Dieselkraftstoff für Notstromgenerator";"2.50";"100";"Liter";"";"GreatCorp";"2023";"Backup-System";"300";"Tankstelle X";"Nebengebäude";"INV-005"
+"2A";"";"Strombezug Mix";"Zugekaufter Strom aus Strommix";"0.356";"4000";"kWh";"";"GreatCorp";"2023";"Strom Büro";"800";"Stadtwerke Strom";"Hauptsitz";"INV-006"
+"2B";"";"Fernwärme extern";"Zugekaufte Fernwärme für Heizung";"0.28";"3000";"kWh";"";"GreatCorp";"2023";"Wärme Nebengebäude";"600";"Fernwärme Verbund";"Nebengebäude";"INV-007"
+"3A";"";"Geschäftsreise Bahn";"Externe Bahnreisen (Dienstreisen)";"0.06";"1000";"km";"";"GreatCorp";"2023";"DB-Tickets";"400";"Bahn AG";"Diverse Strecken";"INV-008"
+"3B";"postal";"Pakete DHL";"Paketversand über DHL";"1.374";"50";"Stück";"";"GreatCorp";"2023";"Postversand";"200";"DHL";"Hauptsitz";"INV-009"
+"3B";"postal";"Briefe";"Externer Briefversand";"0.02";"200";"Stück";"";"GreatCorp";"2023";"Briefpost";"50";"DHL";"Hauptsitz";"INV-010"
+"3B";"transport";"Externer Gütertransport";"Spedition (7,5-12t) pro km";"0.09367";"300";"km";"";"GreatCorp";"2023";"Zulieferung";"500";"Spedition ABC";"Lager";"INV-011"
+"3C";"";"Chemische Grundstoffe";"Verbrauch chemischer Rohstoffe";"1.01";"500";"kg";"";"GreatCorp";"2023";"Rohmaterial A";"2000";"ChemieCo";"Werk";"INV-012"
+"3D";"";"Papier A4";"Büro-Papierverbrauch in Blatt";"0.82";"10000";"Blatt";"";"GreatCorp";"2023";"Druckerpapier";"150";"Paper Inc.";"Büro";"INV-013"
+"3E";"";"Kunststoffverpackung";"Verbrauch von Kunststoffverpackungen in kg";"1.90";"200";"kg";"";"GreatCorp";"2023";"Verpackungsmaterial";"400";"Packaging GmbH";"Lager";"INV-014"
+"3F";"";"Metall Aluminium";"Aluminiumverbrauch in Produktion";"10";"30";"kg";"";"GreatCorp";"2023";"Alu-Teile";"300";"Metall AG";"Werk";"INV-015"
+"3G";"";"Beton";"Betonverbrauch in kg (Baustoff)";"0.0612";"2000";"kg";"";"GreatCorp";"2023";"Baustelle X";"500";"Baustoff XXL";"Baustelle";"INV-016"
+"3H";"";"Restmüll Deponie";"Entsorgung von Restmüll auf Deponie";"2.63";"1000";"Liter";"";"GreatCorp";"2023";"Gemischter Müll";"200";"WasteCo";"Hauptsitz";"INV-017"
+"3I";"";"Wasserverbrauch";"Trinkwasserverbrauch in m³";"0.00229";"200";"m³";"";"GreatCorp";"2023";"Büro Wasser";"120";"Wasserwerke";"Hauptsitz";"INV-018"
+"3I";"";"Abwasser";"Abwasserbehandlung in m³";"0.000274";"180";"m³";"";"GreatCorp";"2023";"Kanalisation";"90";"Wasserwerke";"Hauptsitz";"INV-019"
+"3J";"";"Mobilität/Kraftstoffe";"Benzinverbrauch externer Dienstreisen";"2.31";"300";"Liter";"";"GreatCorp";"2023";"PKW privat Dienstfahrt";"700";"Tankstelle Z";"Diverse";"INV-020"
+"3K";"";"Lebensmittel (Beispiel)";"Kantinenbedarf (Fleisch, etc.)";"5.00";"100";"kg";"";"GreatCorp";"2023";"Kantine Verbrauch";"500";"FoodSupplier";"Kantine";"INV-021"
+"3L";"";"Material & Vorprodukte (Beispiel)";"Zukauf von Holzpaletten (Transport)";"1.10";"500";"kg";"";"GreatCorp";"2023";"Paletten Lager";"600";"WoodCo";"Lager";"INV-022"
+`;
+
+    // Blob erzeugen
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    // Temporäre URL
+    const url = URL.createObjectURL(blob);
+
+    // Download-Link simulieren
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "co2_express_template.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // URL-Objekt wieder freigeben
+    URL.revokeObjectURL(url);
+
+  } catch (error) {
+    console.error("Fehler beim Erstellen des CSV-Templates:", error);
+    alert("Beim Download des CSV-Templates ist ein Fehler aufgetreten.");
+  }
+}
+
+  /* ####################################################################
+   * (B) CSV einlesen und validieren
+   * #################################################################### */
+  let parsedData = [];
+
+  function processCSV() {
+    const fileInput = document.getElementById('csvFileInput');
+    const errorEl = document.getElementById('csvError');
+    errorEl.style.display = 'none';
+    errorEl.textContent = '';
+
+    if (!fileInput.files || fileInput.files.length === 0) {
+      errorEl.textContent = 'Bitte eine CSV-Datei auswählen.';
+      return;
+    }
+
+    const file = fileInput.files[0];
+    Papa.parse(file, {
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      complete: function(results) {
+        if (results.errors && results.errors.length > 0) {
+          errorEl.textContent = 'CSV-Fehler: ' + results.errors[0].message;
+          return;
+        }
+        parsedData = results.data;
+
+        // Minimale Prüfung: "scope" muss existieren
+        const hasScope = parsedData.some(row => row.scope !== undefined && row.scope !== '');
+        if (!hasScope) {
+          errorEl.textContent = 'Spalte "scope" nicht gefunden oder leer. Bitte Template beachten.';
+          return;
+        }
+
+        // Debug-Preview
+        showCSVPreview(parsedData);
+
+        // Dashboard
+        generateDashboard(parsedData);
+      }
+    });
+  }
+
+  /* ####################################################################
+   * (C) CSV-Vorschau (Debug)
+   * #################################################################### */
+  function showCSVPreview(data) {
+    const previewEl = document.getElementById('csvPreview');
+    previewEl.innerHTML = '';
+    if (!data || data.length === 0) {
+      previewEl.innerHTML = '<p class="info-msg">Keine Daten oder leere CSV.</p>';
+      return;
+    }
+    let tableHTML = '<table id="csvPreviewTable"><thead><tr>';
+    const columns = Object.keys(data[0]);
+    columns.forEach(col => { tableHTML += `<th>${col}</th>`; });
+    tableHTML += '</tr></thead><tbody>';
+
+    // Nur die ersten 15 Zeilen
+    data.slice(0, 15).forEach(row => {
+      tableHTML += '<tr>';
+      columns.forEach(col => {
+        tableHTML += `<td>${row[col]||''}</td>`;
+      });
+      tableHTML += '</tr>';
+    });
+    tableHTML += '</tbody></table>';
+    previewEl.innerHTML = tableHTML;
+  }
+
+  /* ####################################################################
+   * (D) Dashboard-Logik & Diagramme
+   * #################################################################### */
+  function sumEmissions(arr, key="co2Emissions") {
+    let sum = 0;
+    arr.forEach(obj => {
+      let val = parseFloat(obj[key]) || 0;
+      // Falls co2Emissions leer, rechne: emissionFactor * quantity
+      if (val === 0 && obj.emissionFactor && obj.quantity) {
+        val = parseFloat(obj.emissionFactor) * parseFloat(obj.quantity) || 0;
+      }
+      sum += val;
+    });
+    return sum;
+  }
+
+  function getScopeLabel(scopeCode) {
+    if (!scopeCode || scopeCode.length === 0) return "Unbekannt";
+    const main = scopeCode.charAt(0);
+    if (main === '1') return "Scope 1";
+    if (main === '2') return "Scope 2";
+    if (main === '3') return "Scope 3";
+    return "Unbekannt";
+  }
+
+  function generateDashboard(data) {
+    if (!data || data.length === 0) return;
+    document.getElementById('dashboard').style.display = 'block';
+
+    // (1) Firmeninfo
+    let companyName = "Unbekannte Firma";
+    let year = "???";
+    for (let i=0; i<data.length; i++) {
+      if (data[i].companyName && data[i].year) {
+        companyName = data[i].companyName;
+        year = data[i].year;
+        break;
+      }
+    }
+    const infoEl = document.getElementById('companyInfo');
+    infoEl.textContent = `Firma: ${companyName}, Bezugsjahr: ${year} (Datensätze: ${data.length})`;
+
+    // (2) Gruppierung nach scope
+    const scopeGroups = {};
+    data.forEach(row => {
+      let sc = (row.scope || '').toString().trim();
+      if (sc === '3B' && row.subCategory) {
+        sc += '_' + row.subCategory.trim().toLowerCase();
+      }
+      if (!scopeGroups[sc]) scopeGroups[sc] = [];
+      scopeGroups[sc].push(row);
+    });
+
+    // (3) Summen pro Scope
+    const scopeSums = { "Scope 1": 0, "Scope 2": 0, "Scope 3": 0 };
+    const subScopeSums = {};
+
+    for (let scCode in scopeGroups) {
+      const subSum = sumEmissions(scopeGroups[scCode], "co2Emissions");
+      subScopeSums[scCode] = subSum;
+      const mainLabel = getScopeLabel(scCode);
+      scopeSums[mainLabel] += subSum;
+    }
+    const total = scopeSums["Scope 1"] + scopeSums["Scope 2"] + scopeSums["Scope 3"];
+
+    // (4) Kleine Boxen pro Scope
+    const scopeSummaryEl = document.getElementById('scopeSummary');
+    scopeSummaryEl.innerHTML = `
+      <div class="scope-box">
+        <h3>Scope 1</h3>
+        <p>${scopeSums["Scope 1"].toFixed(2)} kg CO₂</p>
+      </div>
+      <div class="scope-box">
+        <h3>Scope 2</h3>
+        <p>${scopeSums["Scope 2"].toFixed(2)} kg CO₂</p>
+      </div>
+      <div class="scope-box">
+        <h3>Scope 3</h3>
+        <p>${scopeSums["Scope 3"].toFixed(2)} kg CO₂</p>
+      </div>
+    `;
+
+    // (5) Tabelle
+    const scopeTableBody = document.querySelector('#scopeTable tbody');
+    scopeTableBody.innerHTML = '';
+    ["Scope 1","Scope 2","Scope 3"].forEach(scope => {
+      const val = scopeSums[scope];
+      const perc = (total>0) ? (val/total*100).toFixed(1) : 0;
+      scopeTableBody.innerHTML += `
+        <tr>
+          <td>${scope}</td>
+          <td>${val.toFixed(2)}</td>
+          <td>${perc}%</td>
+        </tr>
+      `;
+    });
+    document.getElementById('totalEmissionCell').textContent = total.toFixed(2);
+
+    // (6) Diagramme
+    createScopeChart(scopeSums);
+    const subLabels = [];
+    const subValues = [];
+    for (let ssc in subScopeSums) {
+      subLabels.push(ssc);
+      subValues.push(subScopeSums[ssc]);
+    }
+    createSubscopeChart(subLabels, subValues);
+  }
+
+  /* Diagramm: Doughnut (Scopes) */
+  let scopeChartRef = null;
+  function createScopeChart(scopeSums) {
+    const ctx = document.getElementById('scopeChart').getContext('2d');
+    if (scopeChartRef) scopeChartRef.destroy();
+    const s1 = scopeSums["Scope 1"]||0;
+    const s2 = scopeSums["Scope 2"]||0;
+    const s3 = scopeSums["Scope 3"]||0;
+
+    scopeChartRef = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Scope 1', 'Scope 2', 'Scope 3'],
+        datasets: [{
+          data: [s1, s2, s3],
+          backgroundColor: [
+            'rgba(54,162,235,0.7)',
+            'rgba(255,99,132,0.7)',
+            'rgba(75,192,192,0.7)'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+  }
+
+  /* Diagramm: Balkendiagramm (Subscopes) */
+  let subscopeChartRef = null;
+  function createSubscopeChart(labels, values) {
+    const ctx = document.getElementById('subscopeChart').getContext('2d');
+    if (subscopeChartRef) subscopeChartRef.destroy();
+    subscopeChartRef = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'CO₂ (kg)',
+          data: values,
+          backgroundColor: 'rgba(153,102,255,0.7)'
+        }]
+      },
+      options: {
+        responsive: true,
+        indexAxis: 'x',
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: { ticks: { autoSkip: false, maxRotation: 45, minRotation: 0 } },
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  }
+
+  /* ####################################################################
+   * (E) PDF-Export (html2pdf)
+   * #################################################################### */
+  function downloadPDF() {
+    const element = document.getElementById('pdfContent');
+    const opt = {
+      filename: 'CO2_Express_Bilanz.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 3 },
+      jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().from(element).set(opt).save();
+  }
+
+  /* ####################################################################
+   * (F) Excel-Export (SheetJS)
+   * #################################################################### */
+  function downloadExcel() {
+    if (!parsedData || parsedData.length===0) {
+      alert('Keine Daten vorhanden.');
+      return;
+    }
+
+    const wb = XLSX.utils.book_new();
+    wb.Props = {
+      Title: "CO2 Express Bilanz",
+      Subject: "CO2 Bilanz",
+      Author: "CO2 Express",
+      CreatedDate: new Date()
+    };
+
+    // 1) Rohdaten
+    const rawDataSheet = XLSX.utils.json_to_sheet(parsedData);
+    XLSX.utils.book_append_sheet(wb, rawDataSheet, "Rohdaten");
+
+    // 2) Summen pro Scope
+    const scopeGroups = {};
+    parsedData.forEach(row => {
+      let sc = (row.scope || '').toString().trim();
+      if (sc==='3B' && row.subCategory) {
+        sc += '_'+row.subCategory.trim().toLowerCase();
+      }
+      if (!scopeGroups[sc]) scopeGroups[sc] = [];
+      scopeGroups[sc].push(row);
+    });
+
+    const scopeSums = { "Scope 1":0, "Scope 2":0, "Scope 3":0 };
+    const subScopeSums = {};
+    for (let scCode in scopeGroups) {
+      const sumVal = sumEmissions(scopeGroups[scCode]);
+      subScopeSums[scCode] = sumVal;
+      const mainScope = getScopeLabel(scCode);
+      scopeSums[mainScope] += sumVal;
+    }
+    const total = scopeSums["Scope 1"] + scopeSums["Scope 2"] + scopeSums["Scope 3"];
+
+    // 3) Worksheet: Summen
+    const sumSheetData = [
+      ["Scope","CO2 (kg)","Anteil (%)"],
+      ["Scope 1", scopeSums["Scope 1"], (scopeSums["Scope 1"]/total*100).toFixed(1)],
+      ["Scope 2", scopeSums["Scope 2"], (scopeSums["Scope 2"]/total*100).toFixed(1)],
+      ["Scope 3", scopeSums["Scope 3"], (scopeSums["Scope 3"]/total*100).toFixed(1)],
+      ["Gesamt", total, "100%"]
+    ];
+    const sumSheet = XLSX.utils.aoa_to_sheet(sumSheetData);
+    XLSX.utils.book_append_sheet(wb, sumSheet, "Scope_Summen");
+
+    // 4) Worksheet: Subscope-Details
+    const subSheetData = [["Subscope","CO2 (kg)"]];
+    for (let ssc in subScopeSums) {
+      subSheetData.push([ssc, subScopeSums[ssc]]);
+    }
+    const subSheet = XLSX.utils.aoa_to_sheet(subSheetData);
+    XLSX.utils.book_append_sheet(wb, subSheet, "Subscope_Details");
+
+    // 5) Speichern
+    XLSX.writeFile(wb, "CO2_Express_Bilanz.xlsx");
+  }
+  /**
+ * Zusätzliche Dictionarys für Standardwerte (z. B. verschiedene Kraftstoffe).
+ * Du kannst beliebig viele Dictionarys anlegen und in sumEmissions() darauf zugreifen.
+ */
+const DEFAULT_FUEL_FACTORS = {
+  // Beispiele: kg CO2 pro Liter
+  "Diesel": 2.65,
+  "Benzin": 2.32,
+  "Biodiesel": 1.84
+};
+
+// Du kannst dein sumEmissions() anpassen, um bei passender activityName (z. B. "Firmen-PKW Diesel")
+// oder unit "Liter" -> Diesel fallback zu ziehen. Beispiel:
+function sumEmissionsWithFuelFallback(arr, co2Key = "co2Emissions") {
+  let sum = 0;
+  arr.forEach(obj => {
+    let val = parseFloat(obj[co2Key]) || 0;
+
+    // 1) Falls co2Emissions leer
+    if (val === 0) {
+      let factor = parseFloat(obj.emissionFactor) || 0;
+      let qty = parseFloat(obj.quantity) || 0;
+
+      // 2) Falls emissionFactor nicht da -> Kraftstoff- oder Einheiten-Fallback
+      if (factor === 0) {
+        // z. B. Prüfung auf activityName: "Firmen-PKW Diesel", "Firmen-PKW Benzin", ...
+        if (obj.activityName && DEFAULT_FUEL_FACTORS[obj.activityName.split(" ").pop()]) {
+          // "Firmen-PKW Diesel" => letztes Wort "Diesel"
+          let lastWord = obj.activityName.split(" ").pop(); 
+          factor = DEFAULT_FUEL_FACTORS[lastWord] || 0;
+        }
+      }
+
+      // 3) Multiplikation
+      val = factor * qty;
+    }
+    sum += val;
+  });
+  return sum;
+}
+/**
+ * toggleSubscopeChartType:
+ *  - Wechselt den Chart-Type zwischen 'bar' und 'line'.
+ */
+ function toggleSubscopeChartType() {
+  if (!subscopeChartRef) return;
+  // subscopeChartRef.config.type -> 'bar' oder 'line'
+  const currentType = subscopeChartRef.config.type;
+  subscopeChartRef.destroy(); // Altes Chart zerstören
+
+  // Neues Chart anlegen, toggeln
+  const newType = (currentType === 'bar') ? 'line' : 'bar';
+  subscopeChartRef = new Chart(document.getElementById('subscopeChart').getContext('2d'), {
+    type: newType,
+    data: {
+      labels: subscopeChartRef.config.data.labels,
+      datasets: subscopeChartRef.config.data.datasets
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { autoSkip: false, maxRotation: 45, minRotation: 0 } },
+        y: { beginAtZero: true }
+      }
+    }
+  });
+}
+
+  </script>
+</body>
+</html>
