@@ -319,7 +319,7 @@ if (users[username] && users[username].password === simpleHash(eingegebenesPassw
         // Prüfe Login-Status beim Laden der Seite
         document.addEventListener('DOMContentLoaded', function() {
             if (localStorage.getItem('isLoggedIn') === 'true') {
-                window.location.href = 'Dashboard.html';
+                window.location.href = 'Dateipload.html';
             }
         });
 
