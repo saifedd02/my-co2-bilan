@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - DigiGreenPilot</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -185,6 +187,71 @@
   }
 }
 
+        /* Neue Styles für verbesserte UX */
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .password-strength {
+            height: 4px;
+            margin-top: 8px;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .strength-weak { background: #ff4444; width: 33%; }
+        .strength-medium { background: #ffbb33; width: 66%; }
+        .strength-strong { background: #00C851; width: 100%; }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2ecc71;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .error-message {
+            color: #ff4444;
+            margin-top: 10px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 
@@ -192,202 +259,118 @@
     
     <div class="container">
         <div class="card">
-            <img src="https://digi-green-pilot.de/wp-content/uploads/2023/10/DGP-Logo-1024x438.png" alt="DigiGreen Pilot Logo" class="logo">
+            <img src="https://lh3.googleusercontent.com/sgi-eph/AAxiof5e2mNVhdIEpcoInasC6nUTls8osDBRKrbMjo1hJ669VOGpK2nxEvbFDybNv4Tb3JOgL-BKxmqb63Cm1zIpc7Pfg6kDk7m99NHE0TQaCdRQ2tIZD8beU124uZSesn8wpVhRhlyMcNsu2uh2CtY8Utr97cI5_Nl3z24=s925" alt="DigiGreen Pilot Logo" class="logo">
             <div class="header-text">
                 <h1>Willkommen beim DigiGreenPilot</h1>
                 <p>Bitte melden Sie sich an, um Ihre CO₂-Bilanz zu verwalten.</p>
             </div>
             <form id="loginForm">
                 <div class="input-group">
-                    <input type="text" id="username" name="username" placeholder="Benutzername" required>
+                    <input type="text" id="username" name="username" placeholder="Benutzername" required autocomplete="username">
                 </div>
                 <div class="input-group">
-                    <input type="password" id="password" name="password" placeholder="Passwort" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Passwort" required autocomplete="current-password">
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
+                <div class="error-message" id="errorMessage"></div>
                 <button type="submit" class="btn">Anmelden</button>
             </form>
-            <p class="info">Noch keinen Zugang? <a href="Registrierung.html">Jetzt registrieren</a></p>            <p class="info"><a href="#" onclick="forgotPassword()">Passwort vergessen?</a></p>
+            <p class="info">Noch keinen Zugang? <a href="Registrierung.html">Jetzt registrieren</a></p>
+            <p class="info"><a href="#" onclick="forgotPassword()">Passwort vergessen?</a></p>
         </div>
     </div>
 
     <script>
-       document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    // Dummy‑Login: Es wird immer zum Dashboard weitergeleitet.
-    window.location.href = 'Dashboard.html';
-  });
-
-// Diese Funktion startet das Fade-Out und verzögert die Weiterleitung
-function doFadeOut() {
-  // Body bekommt die fade-out-Klasse
-  document.body.classList.add('fade-out');
-
-  // Warte die Animationsdauer (hier: 600ms), dann leite weiter:
-  setTimeout(() => {
-    window.location.href = 'Dateipload.html'; 
-  }, 600);
-}
-
-// Optional: Beim Laden die fade-in-Klasse setzen
-document.addEventListener('DOMContentLoaded', () => {
-  document.body.classList.add('fade-in');
-});
-        function simpleHash(str) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash + str.charCodeAt(i)) & 0xFFFFFFFF;
-  }
-  return 'hash' + hash;
-}
-
-// Beim Registrieren:
-users[username].password = simpleHash(gewähltesPasswort);
-
-// Beim Login:
-if (users[username] && users[username].password === simpleHash(eingegebenesPasswort)) {
-  // Login erfolgreich
-}
-        // Initialisiere Standard-Benutzer, wenn noch keine existieren
-        if (!localStorage.getItem('users')) {
-            users[username] = {
-    password: simpleHash(password),  // Hier jetzt gehashter Wert
-    email: email,
-    company: company,
-    registrationDate: new Date().toISOString(),
-    lastLogin: null
-};
-            localStorage.setItem('users', JSON.stringify(defaultUsers));
+        // UI-Feedback Funktionen
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.classList.add('show');
+            setTimeout(() => errorEl.classList.remove('show'), 3000);
         }
 
-        // Login-Formular Event Listener
-    
+        function showLoading() {
+            const loading = document.createElement('div');
+            loading.className = 'loading';
+            loading.innerHTML = '<div class="loading-spinner"></div>';
+            document.body.appendChild(loading);
+        }
 
-        // Registrierung anzeigen
-        function showRegistration() {
-            const username = prompt('Wählen Sie einen Benutzernamen:');
-            if (!username) return;
+        function hideLoading() {
+            const loading = document.querySelector('.loading');
+            if (loading) loading.remove();
+        }
 
-            const users = JSON.parse(localStorage.getItem('users'));
-            if (users[username]) {
-                alert('Dieser Benutzername existiert bereits!');
-                return;
+        // Passwort Toggle
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleBtn = document.querySelector('.password-toggle i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleBtn.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                toggleBtn.className = 'fas fa-eye';
             }
-
-            const password = prompt('Wählen Sie ein Passwort:');
-            if (!password) return;
-
-            const email = prompt('Ihre E-Mail-Adresse:');
-            if (!email) return;
-
-            const company = prompt('Ihr Unternehmensname:');
-            if (!company) return;
-
-            users[username] = {
-                password: password,
-                email: email,
-                company: company,
-                registrationDate: new Date().toISOString(),
-                lastLogin: null
-            };
-
-            localStorage.setItem('users', JSON.stringify(users));
-            alert('Registrierung erfolgreich! Sie können sich jetzt anmelden.');
         }
+
+        // Vereinfachter Login-Handler
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            showLoading();
+
+            try {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                // Direkte Prüfung für Admin-Zugangsdaten
+                if (username === 'admin' && password === 'admin123') {
+                    // Login erfolgreich
+                    sessionStorage.setItem('sessionActive', 'true');
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('currentUser', 'admin');
+
+                    // Sanfte Überblendung
+                    document.body.classList.add('fade-out');
+                    setTimeout(() => {
+                        window.location.href = 'intro.html';
+                    }, 600);
+                } else {
+                    throw new Error('Ungültiger Benutzername oder Passwort');
+                }
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                hideLoading();
+            }
+        });
 
         // Passwort vergessen Funktion
         function forgotPassword() {
-            const username = prompt('Geben Sie Ihren Benutzernamen ein:');
-            if (!username) return;
-
-            const users = JSON.parse(localStorage.getItem('users'));
-            if (!users[username]) {
-                alert('Benutzername nicht gefunden!');
-                return;
-            }
-
-            const email = prompt('Geben Sie Ihre E-Mail-Adresse zur Bestätigung ein:');
-            if (email === users[username].email) {
-                const newPassword = Math.random().toString(36).slice(-8);
-                users[username].password = newPassword;
-                localStorage.setItem('users', JSON.stringify(users));
-                alert(`Ihr neues temporäres Passwort lautet: ${newPassword}`);
-            } else {
-                alert('Die eingegebene E-Mail-Adresse stimmt nicht überein!');
-            }
+            alert('Bitte kontaktieren Sie den Administrator für Hilfe beim Zurücksetzen des Passworts.');
         }
 
-        // Prüfe Login-Status beim Laden der Seite
-        document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('isLoggedIn') === 'true') {
+        // Session-Management
+        window.addEventListener('load', function() {
+            if (localStorage.getItem('isLoggedIn') === 'true' && 
+                sessionStorage.getItem('sessionActive') === 'true') {
                 window.location.href = 'Dateipload.html';
             }
         });
 
-        // Füge diesen Code in die login.html
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Setze einen Flag im sessionStorage beim Login
-    sessionStorage.setItem('sessionActive', 'true');
-
-    // Prüfe auf neue Registrierung
-    const newRegistration = sessionStorage.getItem('newRegistration');
-    if (newRegistration) {
-        const { username, password } = JSON.parse(newRegistration);
-        document.getElementById('username').value = username;
-        document.getElementById('password').value = password;
-        sessionStorage.removeItem('newRegistration');
-    }
-});
-
-// Event-Listener für das Schließen des Tabs/Browsers
-window.addEventListener('beforeunload', function() {
-    // Lösche Session-Daten
-    sessionStorage.clear();
-    localStorage.setItem('isLoggedIn', 'false');
-    localStorage.removeItem('currentUser');
-});
-
-// Prüfe beim Laden jeder Seite den Login-Status
-function checkLoginStatus() {
-    // Prüfe ob eine aktive Session existiert
-    const isSessionActive = sessionStorage.getItem('sessionActive');
-    
-    if (!isSessionActive) {
-        // Keine aktive Session - User ausloggen
-        localStorage.setItem('isLoggedIn', 'false');
-        localStorage.removeItem('currentUser');
-        window.location.href = 'login.html';
-    }
-}
-
-
-
-// Manuelle Logout-Funktion
-function logout() {
-    sessionStorage.clear();
-    localStorage.setItem('isLoggedIn', 'false');
-    localStorage.removeItem('currentUser');
-    window.location.href = 'login.html';
-}
-// Beispiel mit fiktiver hashFunktion:
-const hashFunktion = (input) => {
-    // hier müsstest du eine Hashfunktion einbinden oder implementieren
-    return yourHashLib.hash(input);
-}
-
-// Beim Registrieren:
-const password = prompt('Wählen Sie ein Passwort:');
-const hashedPassword = hashFunktion(password);
-users[username].password = hashedPassword;
-
-// Beim Login:
-if (users[username] && users[username].password === hashFunktion(password)) {
-    // Login erfolgreich
-}
-
+        window.addEventListener('beforeunload', function() {
+            if (!document.getElementById('loginForm').checkValidity()) {
+                sessionStorage.clear();
+                localStorage.setItem('isLoggedIn', 'false');
+            }
+        });
     </script>
     
 </body>
 
 </html>
-

@@ -1,229 +1,26 @@
-const botKnowledge = {
-    'scopes_general': {
-        pattern: /was sind scopes|scopes erklären|scope bedeutung/i,
-        response: `Die CO₂-Emissionen werden in drei Scopes eingeteilt:
-
-        Scope 1 - Direkte Emissionen:
-        • Emissionen aus eigenen Anlagen
-        • Firmeneigene Fahrzeuge
-        • Eigene Heizungsanlagen
-
-        Scope 2 - Indirekte Energieemissionen:
-        • Zugekaufter Strom
-        • Fernwärme
-        • Dampf und Kühlung
-
-        Scope 3 - Sonstige indirekte Emissionen:
-        • Geschäftsreisen
-        • Pendeln der Mitarbeiter
-        • Logistik & Transport
-        • Abfälle & Materialien`
-    },
-
-    'scope1_details': {
-        pattern: /scope 1|direkte emissionen|firmeneigene/i,
-        response: `Scope 1 umfasst alle direkten Emissionen:
-
-        1. Stationäre Verbrennung:
-        • Heizungsanlagen
-        • Produktionsanlagen
-        • Notstromaggregate
-
-        2. Mobile Verbrennung:
-        • Firmenfahrzeuge
-        • Gabelstapler
-        • Baumaschinen
-
-        3. Prozessemissionen:
-        • Chemische Reaktionen
-        • Produktion
-        • Verarbeitung
-
-        4. Flüchtige Emissionen:
-        • Klimaanlagen
-        • Kältemittel
-        • Lecks`
-    },
-
-    'scope2_details': {
-        pattern: /scope 2|indirekte energie|strom|fernwärme/i,
-        response: `Scope 2 betrifft zugekaufte Energie:
-
-        1. Stromverbrauch:
-        • Bürogebäude
-        • Produktionsanlagen
-        • IT-Infrastruktur
-
-        2. Fernwärme:
-        • Heizung
-        • Warmwasser
-        • Prozesswärme
-
-        3. Optimierungsmöglichkeiten:
-        • Grünstrom-Bezug
-        • Energieeffizienz
-        • Eigenproduktion`
-    },
-
-    'scope3_details': {
-        pattern: /scope 3|indirekte emissionen|lieferkette/i,
-        response: `Scope 3 umfasst weitere indirekte Emissionen:
-
-        1. Vorgelagerte Aktivitäten:
-        • Rohstoffe & Materialien
-        • Verpackung
-        • Transport & Logistik
-
-        2. Nachgelagerte Aktivitäten:
-        • Produktnutzung
-        • Entsorgung
-        • Recycling
-
-        3. Sonstige:
-        • Geschäftsreisen
-        • Pendeln
-        • Abfallentsorgung`
-    },
-
-    'reduction_tips': {
-        pattern: /reduzieren|einsparen|vermeiden|tipps/i,
-        response: `Tipps zur CO₂-Reduktion:
-
-        1. Energieeffizienz:
-        • LED-Beleuchtung
-        • Energieeffiziente Geräte
-        • Intelligente Steuerung
-
-        2. Mobilität:
-        • E-Fahrzeuge
-        • Fahrgemeinschaften
-        • Video-Konferenzen
-
-        3. Gebäude:
-        • Dämmung verbessern
-        • Heizungsoptimierung
-        • Grünstrom nutzen
-
-        4. Prozesse:
-        • Digitalisierung
-        • Materialeffizienz
-        • Abfallvermeidung`
-    },
-
-    'calculation_help': {
-        pattern: /berechnung|berechnen|kalkulation/i,
-        response: `Hilfe zur CO₂-Berechnung:
-
-        1. Emissionsfaktoren:
-        • Strom: 0,420 kg CO₂/kWh
-        • Erdgas: 0,201 kg CO₂/kWh
-        • Diesel: 2,65 kg CO₂/L
-        • Benzin: 2,37 kg CO₂/L
-
-        2. Grundformel:
-        Aktivitätsdaten × Emissionsfaktor = CO₂-Emissionen
-
-        3. Beispiel:
-        10.000 kWh Strom × 0,420 kg CO₂/kWh = 4.200 kg CO₂`
-    },
-
-    'best_practices': {
-        pattern: /best practice|beispiele|erfolgsbeispiele/i,
-        response: `Best Practices für Unternehmen:
-
-        1. Energie:
-        • Photovoltaik-Anlagen
-        • Energiemanagementsysteme
-        • Wärmerückgewinnung
-
-        2. Mobilität:
-        • E-Ladesäulen
-        • Jobtickets
-        • Homeoffice-Konzepte
-
-        3. Materialien:
-        • Kreislaufwirtschaft
-        • Recycling-Konzepte
-        • Verpackungsoptimierung`
-    },
-
-    'reporting': {
-        pattern: /reporting|berichten|dokumentation/i,
-        response: `CO₂-Berichterstattung:
-
-        1. Standards:
-        • GHG Protocol
-        • ISO 14064
-        • CDP
-
-        2. Wichtige Elemente:
-        • Systemgrenzen
-        • Bezugsjahr
-        • Vollständigkeit
-
-        3. Dokumentation:
-        • Datenquellen
-        • Berechnungsmethoden
-        • Annahmen`
-    },
-
-    'certification': {
-        pattern: /zertifizierung|standard|iso/i,
-        response: `Relevante Zertifizierungen:
-
-        1. Umweltmanagement:
-        • ISO 14001
-        • EMAS
-        • ISO 50001
-
-        2. CO₂-Bilanzierung:
-        • ISO 14064
-        • PAS 2060
-        • GHG Protocol
-
-        3. Produkte:
-        • Carbon Footprint
-        • PCF (Product Carbon Footprint)
-        • Klimaneutrale Produkte`
-    },
-
-    'funding': {
-        pattern: /förderung|zuschüsse|unterstützung/i,
-        response: `Fördermöglichkeiten:
-
-        1. Energieeffizienz:
-        • BAFA-Förderungen
-        • KfW-Programme
-        • Länderförderungen
-
-        2. Erneuerbare Energien:
-        • EEG-Vergütung
-        • Investitionszuschüsse
-        • Steuervorteile
-
-        3. Beratung:
-        • Energieberatung
-        • Klimaschutzberatung
-        • Transformationsberatung`
-    }
-};
+// CO₂ Assistant standardmäßig geschlossen – Toggle-Funktion
 function toggleChat() {
-    document.getElementById('chatbot-bubble').classList.toggle('minimized');
+  const chatContainer = document.getElementById('chatbot-bubble');
+  const toggleBtn = document.getElementById('toggle-chat-btn');
+  
+  if (chatContainer.classList.contains('open')) {
+      chatContainer.classList.remove('open');
+      toggleBtn.textContent = "CO₂ Assistant öffnen";
+  } else {
+      chatContainer.classList.add('open');
+      toggleBtn.textContent = "CO₂ Assistant schließen";
+  }
 }
 
+// Nachricht absenden und verarbeiten
 function sendMessage() {
     const input = document.getElementById('userInput');
     const message = input.value.trim();
-    if (message) {
+  if (message !== "") {
         addMessage(message, 'user');
         processMessage(message);
-        input.value = '';
+      input.value = "";
     }
-}
-
-function sendQuickReply(message) {
-    addMessage(message, 'user');
-    processMessage(message);
 }
 
 function processMessage(message) {
@@ -235,7 +32,7 @@ function processMessage(message) {
             break;
         }
     }
-
+  // Bot-Antwort mit kleiner Verzögerung anzeigen
     setTimeout(() => addMessage(response, 'bot'), 500);
 }
 
@@ -245,6 +42,7 @@ function addMessage(text, sender) {
     messageDiv.className = `message ${sender}-message`;
     messageDiv.textContent = text;
     messages.appendChild(messageDiv);
+  // Scrollt automatisch zum neuesten Eintrag
     messages.scrollTop = messages.scrollHeight;
 }
 
@@ -277,7 +75,7 @@ function addGas() {
             </div>
             <div class="form-group">
                 <label>Menge (kg)</label>
-                <input type="number" class="amount" min="0" step="0.01" 
+                <input type="number" class="amount" min="0" step="0.000001" 
                        placeholder="Menge in kg" required onchange="calculateGasEmissions('${gasId}')">
             </div>
             <div class="form-group">
@@ -303,7 +101,7 @@ function calculateGasEmissions(gasId) {
     const factor = TECHNICAL_GAS_FACTORS[gasType];
     
     const co2Equivalent = amount * factor;
-    container.querySelector('.co2-equivalent').value = co2Equivalent.toFixed(2);
+  container.querySelector('.co2-equivalent').value = co2Equivalent.toFixed(5);
     
     updateTotalEmissions();
 }
@@ -320,7 +118,7 @@ function updateTotalEmissions() {
     // Update the total emissions display
     const totalDisplay = document.getElementById('totalGasEmissions');
     if (totalDisplay) {
-        totalDisplay.textContent = `Gesamt CO₂-Äquivalent: ${totalEmissions.toFixed(2)} kg`;
+      totalDisplay.textContent = `Gesamt CO₂-Äquivalent: ${totalEmissions.toFixed(5)} kg`;
     }
 }
 
@@ -332,170 +130,124 @@ function updateGasFields(gasId) {
 
 
 // Emissionsfaktoren für verschiedene Fahrzeugtypen (kg CO2/Einheit)
+// Beispiel-Richtwerte für Scope 1A (Direkte Emissionen – Treibstoffverbrauch für Fahrzeuge)
+// (Stand 2022/2023 – bitte die aktuellen Werte in den Originalquellen prüfen!)
 const EMISSION_FACTORS = {
-    
-'benzin': 0.18374,
-'diesel': 0.20716,
-'hybrid': 0.20716, // Basis-Diesel-Faktor, wird mit Stromanteil verrechnet
-'vollstromer': 0.442, // Faktor für Strommix Deutschland
-'PKW-Benzin-klein':   0.18,
-'PKW-Benzin-mittel':  0.20,
-'PKW-Benzin-groß':    0.22,
-'PKW-Diesel-klein':   0.19,
-'PKW-Diesel-mittel':  0.21,
-'PKW-Diesel-groß':    0.24
+// Kraftstoffe (Abrechnung pro Liter bzw. pro kg):
+"Benzin in L":          { factor: 2.32, defaultUnit: "Liter" },
+"Diesel in L":          { factor: 2.65, defaultUnit: "Liter" },
+"Erdgas (CNG) in kg":   { factor: 2.27, defaultUnit: "kg"    },
+"LPG in L":             { factor: 1.63, defaultUnit: "Liter" },
+
+// PKW-Klassen (Abrechnung pro km):
+"PKW-Benzin-klein":     { factor: 0.18, defaultUnit: "km" },
+"PKW-Benzin-mittel":    { factor: 0.20, defaultUnit: "km" },
+"PKW-Benzin-groß":      { factor: 0.22, defaultUnit: "km" },
+"PKW-Diesel-klein":     { factor: 0.19, defaultUnit: "km" },
+"PKW-Diesel-mittel":    { factor: 0.21, defaultUnit: "km" },
+"PKW-Diesel-groß":      { factor: 0.24, defaultUnit: "km" },
+
+// Hybrid und E-Fahrzeuge (pro km, grob):
+"hybrid":               { factor: 0.20716, defaultUnit: "km" },
+"vollstromer":          { factor: 0.18,   defaultUnit: "kWh/Km" }
 };
 
-// Funktion zum Hinzufügen eines neuen Fahrzeugs
-function addVehicle() {
-const vehicleFields = document.getElementById('vehicleFields');
-const vehicleId = 'vehicle-' + Date.now();
-
-const vehicleHtml = `
-<div class="dynamic-field" id="${vehicleId}">
+// Funktion zum Hinzufügen eines neuen Scope 1A-Eintrags
+function addScope1A() {
+const container = document.getElementById("scope1AFields");
+const id = "scope1A-" + Date.now();
+const html = `
+  <div class="dynamic-field" id="${id}">
     <div class="form-group">
-        <label>Mitarbeiternummer</label>
-        <input type="number" class="employee-number" required>
+      <label>Datum</label>
+      <input type="date" class="scope1a-date" required>
     </div>
     <div class="form-group">
-        <label>Fahrzeugtyp</label>
-        <select class="vehicle-type" required onchange="updateVehicleFields('${vehicleId}')">
-            <option value="benzin">Benzin</option>
-            <option value="diesel">Diesel</option>
-            <option value="hybrid">Hybrid</option>
-            <option value="vollstromer">Vollstromer</option>
-            <option value="PKW-Benzin-klein">PKW-Benzin-klein</option>
-                <option value="PKW-Benzin-mittel">PKW-Benzin-mittel</option>
-                <option value="PKW-Benzin-groß">PKW-Benzin-groß</option>
-                <option value="PKW-Diesel-klein">PKW-Diesel-klein</option>
-                <option value="PKW-Diesel-mittel">PKW-Diesel-mittel</option>
-                <option value="PKW-Diesel-groß">PKW-Diesel-groß</option>
+      <label>Emittent (1A)</label>
+      <select class="scope1a-type" required onchange="updateScope1AFields('${id}')">
+        ${Object.keys(EMISSION_FACTORS).map(type => `<option value="${type}">${type}</option>`).join('')}
         </select>
     </div>
     <div class="form-group">
-        <label>Jahresleistung (km)</label>
-        <input type="number" class="annual-mileage" min="0" required 
-               onchange="calculateVehicleEmissions('${vehicleId}')">
+      <label>Menge</label>
+      <input type="number" class="scope1a-amount" min="0" step="0.000001" placeholder="z. B. 1000" onchange="calculateScope1A('${id}')">
     </div>
     <div class="form-group">
-        <label>Privatnutzung (%)</label>
-        <input type="number" class="private-usage" min="0" max="100" required 
-               onchange="calculateVehicleEmissions('${vehicleId}')">
+      <label>Einheit</label>
+      <input type="text" class="scope1a-unit" required>
     </div>
-    <div class="hybrid-fields" style="display: none;">
         <div class="form-group">
-            <label>Stromanteil (%)</label>
-            <input type="number" class="electricity-share" min="0" max="100" 
-                   onchange="calculateVehicleEmissions('${vehicleId}')">
-        </div>
-        <div class="form-group">
-            <label>Stromverbrauch (kWh/100km)</label>
-            <input type="number" class="electricity-consumption" min="0" 
-                   onchange="calculateVehicleEmissions('${vehicleId}')">
-        </div>
+      <label>Emissionsfaktor (kg CO₂ pro Einheit)</label>
+      <input type="number" class="scope1a-factor" step="0.0000001" required placeholder="z. B. 2.64" onchange="calculateScope1A('${id}')">
     </div>
     <div class="form-group">
         <label>CO₂-Emissionen (kg)</label>
-        <input type="number" class="co2-emissions" readonly>
+      <input type="number" class="scope1a-co2" readonly>
     </div>
-    <button type="button" class="remove-field" onclick="removeVehicle('${vehicleId}')">Entfernen</button>
+    <button type="button" class="remove-field" onclick="removeScope1A('${id}')">Entfernen</button>
 </div>
 `;
-
-vehicleFields.insertAdjacentHTML('beforeend', vehicleHtml);
+container.insertAdjacentHTML("beforeend", html);
+updateScope1AFields(id);
 }
 
-// Aktualisiert die Felder basierend auf dem Fahrzeugtyp
-function updateVehicleFields(vehicleId) {
-const container = document.getElementById(vehicleId);
-const vehicleType = container.querySelector('.vehicle-type').value;
-const hybridFields = container.querySelector('.hybrid-fields');
-
-hybridFields.style.display = (vehicleType === 'hybrid') ? 'block' : 'none';
-calculateVehicleEmissions(vehicleId);
+// Aktualisiert bei Auswahl des Treibstofftyps automatisch Einheit und Faktor
+function updateScope1AFields(id) {
+const el = document.getElementById(id);
+const selected = el.querySelector(".scope1a-type").value;
+const data = EMISSION_FACTORS[selected];
+if (data) {
+  el.querySelector(".scope1a-unit").value = data.defaultUnit;
+  el.querySelector(".scope1a-factor").value = data.factor;
+}
+calculateScope1A(id);
 }
 
-// Berechnet die CO2-Emissionen für ein einzelnes Fahrzeug
-function calculateVehicleEmissions(vehicleId) {
-const container = document.getElementById(vehicleId);
-const vehicleType = container.querySelector('.vehicle-type').value;
-const annualMileage = parseFloat(container.querySelector('.annual-mileage').value) || 0;
-const privateUsage = parseFloat(container.querySelector('.private-usage').value) || 0;
-
-let emissions = 0;
-const businessUsageShare = (100 - privateUsage) / 100;
-
-if (vehicleType === 'hybrid') {
-const electricityShare = parseFloat(container.querySelector('.electricity-share').value) || 0;
-const electricityConsumption = parseFloat(container.querySelector('.electricity-consumption').value) || 0;
-
-// Berechnung für Hybridfahrzeuge
-const electricKm = annualMileage * (electricityShare / 100);
-const fuelKm = annualMileage * (1 - electricityShare / 100);
-
-emissions = (
-    (fuelKm * EMISSION_FACTORS.diesel / 100) +
-    (electricKm * electricityConsumption / 100 * EMISSION_FACTORS.vollstromer)
-) * businessUsageShare;
-} else {
-// Berechnung für andere Fahrzeugtypen
-emissions = annualMileage * EMISSION_FACTORS[vehicleType] * businessUsageShare;
+// Berechnet die CO₂-Emissionen für den jeweiligen Scope 1A-Eintrag
+function calculateScope1A(id) {
+const el = document.getElementById(id);
+const amount = parseFloat(el.querySelector(".scope1a-amount").value) || 0;
+const factor = parseFloat(el.querySelector(".scope1a-factor").value) || 0;
+const emissions = amount * factor;
+el.querySelector(".scope1a-co2").value = emissions.toFixed(5);
+updateTotalScope1A();
 }
 
-container.querySelector('.co2-emissions').value = emissions.toFixed(2);
-updateTotalEmissions();
-}
-
-// Aktualisiert die Gesamtemissionen
-function updateTotalEmissions() {
-const allVehicles = document.querySelectorAll('#vehicleFields .dynamic-field');
-let totalEmissions = {
-benzin: 0,
-diesel: 0,
-hybrid: 0,
-vollstromer: 0
-};
-
-allVehicles.forEach(vehicle => {
-const type = vehicle.querySelector('.vehicle-type').value;
-const emissions = parseFloat(vehicle.querySelector('.co2-emissions').value) || 0;
-totalEmissions[type] += emissions;
+// Aktualisiert die Gesamtemissionen aller Scope 1A-Einträge
+function updateTotalScope1A() {
+const allFields = document.querySelectorAll("#scope1AFields .dynamic-field");
+let total = 0;
+allFields.forEach(field => {
+  const val = parseFloat(field.querySelector(".scope1a-co2").value) || 0;
+  total += val;
 });
-
-// Aktualisiere die Summenanzeige
-document.getElementById('totalVehicleEmissions').innerHTML = `
-<div class="totals-grid">
-    <div>Benzin: ${totalEmissions.benzin.toFixed(2)} kg CO₂</div>
-    <div>Diesel: ${totalEmissions.diesel.toFixed(2)} kg CO₂</div>
-    <div>Hybrid: ${totalEmissions.hybrid.toFixed(2)} kg CO₂</div>
-    <div>Vollstromer: ${totalEmissions.vollstromer.toFixed(2)} kg CO₂</div>
-    <div class="total-sum">Gesamt: ${Object.values(totalEmissions).reduce((a, b) => a + b, 0).toFixed(2)} kg CO₂</div>
-</div>
-`;
+const totalDisplay = document.getElementById("totalScope1AEmissions");
+if (totalDisplay) {
+  totalDisplay.textContent = "Gesamt 1A-Emissionen: " + total.toFixed(5) + " kg CO₂";
+}
 }
 
-// Entfernt ein Fahrzeug
-function removeVehicle(vehicleId) {
-document.getElementById(vehicleId).remove();
-updateTotalEmissions();
+// Entfernt einen Scope 1A-Eintrag
+function removeScope1A(id) {
+document.getElementById(id).remove();
+updateTotalScope1A();
 }
 
-// Exportiert die Fahrzeugdaten
-function exportVehicleData() {
-const vehicleData = [];
-const allVehicles = document.querySelectorAll('#vehicleFields .dynamic-field');
-
-allVehicles.forEach(vehicle => {
-vehicleData.push({
-    employeeNumber: vehicle.querySelector('.employee-number').value,
-    vehicleType: vehicle.querySelector('.vehicle-type').value,
-    annualMileage: vehicle.querySelector('.annual-mileage').value,
-    privateUsage: vehicle.querySelector('.private-usage').value,
-    co2Emissions: vehicle.querySelector('.co2-emissions').value
+// Exportiert alle Scope 1A-Daten (z. B. für den Submit)
+function exportScope1AData() {
+const data = [];
+const allFields = document.querySelectorAll("#scope1AFields .dynamic-field");
+allFields.forEach(field => {
+  data.push({
+    date: field.querySelector(".scope1a-date").value,
+    fuelType: field.querySelector(".scope1a-type").value,
+    amount: field.querySelector(".scope1a-amount").value,
+    unit: field.querySelector(".scope1a-unit").value,
+    factor: field.querySelector(".scope1a-factor").value,
+    co2Emissions: field.querySelector(".scope1a-co2").value
 });
 });
-
-return vehicleData;
+return data;
 }
 // Emissionsfaktoren für verschiedene LKW-Typen (kg CO2/km)
 
@@ -528,13 +280,13 @@ function addTransport1B() {
         </div>
         <div class="form-group">
           <label>Menge</label>
-          <input type="number" class="transport1b-amount" min="0" step="0.1"
+          <input type="number" class="transport1b-amount" min="0" step="0.000001"
                  onchange="calculateTransport1B('${id}')"
                  placeholder="z.B. 100">
         </div>
         <div class="form-group">
           <label>Emissionsfaktor (kg CO₂ pro Einheit)</label>
-          <input type="number" class="transport1b-factor" step="0.0001"
+          <input type="number" class="transport1b-factor" step="any"
                  onchange="calculateTransport1B('${id}')"
                  required>
         </div>
@@ -571,7 +323,7 @@ function addTransport1B() {
   
     // CO₂ = Menge × Faktor
     const co2 = amount * factor;
-    el.querySelector(".transport1b-co2").value = co2.toFixed(2);
+  el.querySelector(".transport1b-co2").value = co2.toFixed(5);
   
     updateTotalTransport1B();
   }
@@ -586,7 +338,7 @@ function addTransport1B() {
   
     // Anzeige aktualisieren (z.B. in <div id="totalTransport1B"></div>)
     document.getElementById("totalTransport1B").textContent =
-      `Gesamt 1B-Emissionen: ${total.toFixed(2)} kg CO₂`;
+    `Gesamt 1B-Emissionen: ${total.toFixed(5)} kg CO₂`;
   }
 
   function removeTransport1B(id) {
@@ -735,8 +487,8 @@ const SCOPE1C_FACTORS = {
           <label>Emittent (1C)</label>
           <select class="scope1c-type" onchange="updateScope1CFields('${id}')">
             ${Object.keys(SCOPE1C_FACTORS).map(type => `
-              <option value="${type}">${type}</option>
-            `).join('')}
+            <option value="${type}">${type}</option>`
+          ).join('')}
           </select>
         </div>
         <div class="form-group">
@@ -751,7 +503,7 @@ const SCOPE1C_FACTORS = {
         </div>
         <div class="form-group">
           <label>Emissionsfaktor (kg CO₂ pro Einheit)</label>
-          <input type="number" class="scope1c-factor" step="0.0001"
+        <input type="number" class="scope1c-factor" step="any"
                  onchange="calculateScope1C('${id}')"
                  required>
         </div>
@@ -789,7 +541,7 @@ function updateScope1CFields(id) {
     const factor = parseFloat(el.querySelector(".scope1c-factor").value) || 0;
   
     const emissions = amount * factor;
-    el.querySelector(".scope1c-co2").value = emissions.toFixed(2);
+  el.querySelector(".scope1c-co2").value = emissions.toFixed(5);
   
     updateTotalScope1C();
   }
@@ -805,7 +557,7 @@ function updateScope1CFields(id) {
   
     // Ausgabe z.B. in <div id="totalScope1CEmissions"></div>
     document.getElementById("totalScope1CEmissions").textContent =
-      `Gesamt 1C-Emissionen: ${total.toFixed(2)} kg CO₂`;
+    `Gesamt 1C-Emissionen: ${total.toFixed(5)} kg CO₂`;
   }
   function removeScope1C(id) {
     document.getElementById(id).remove();
@@ -1097,7 +849,7 @@ function addScope1D() {
         <input type="text" class="scope1d-location" required placeholder="z.B. Dortmund">
       </div>
       <div class="form-group">
-        <label>Technisches Gas</label>
+        <label>Emittent (1D)</label>
         <select class="scope1d-type" onchange="updateScope1DFields('${id}')">
           ${Object.keys(SCOPE1D_FACTORS).map(gas => `<option value="${gas}">${gas}</option>`).join('')}
         </select>
@@ -1112,7 +864,7 @@ function addScope1D() {
       </div>
       <div class="form-group">
         <label>Emissionsfaktor (kg CO₂ pro Einheit)</label>
-        <input type="number" class="scope1d-factor" step="0.0001" required onchange="calculateScope1D('${id}')">
+      <input type="number" class="scope1d-factor" step="any" required onchange="calculateScope1D('${id}')">
       </div>
       <div class="form-group">
         <label>CO₂-Emissionen (kg)</label>
@@ -1130,7 +882,7 @@ function calculateScope1D(id) {
     const amount = parseFloat(el.querySelector(".scope1d-amount").value) || 0;
     const factor = parseFloat(el.querySelector(".scope1d-factor").value) || 0;
     const co2 = amount * factor;
-    el.querySelector(".scope1d-co2").value = co2.toFixed(2);
+  el.querySelector(".scope1d-co2").value = co2.toFixed(5);
     updateTotalScope1D();
   }
 
@@ -1159,7 +911,7 @@ function updateTotalScope1D() {
       total += val;
     });
     document.getElementById("totalScope1DEmissions").textContent =
-      "Gesamt 1D-Emissionen: " + total.toFixed(2) + " kg CO₂";
+    "Gesamt 1D-Emissionen: " + total.toFixed(5) + " kg CO₂";
   }
 
 
@@ -1209,7 +961,7 @@ function addScope1DOther() {
       </div>
       <div class="form-group">
         <label>CO₂-Faktor (kg CO₂ / Einheit)</label>
-        <input type="number" class="scope1d-other-factor" step="0.0001" required
+      <input type="number" class="scope1d-other-factor" step="any" required
                onchange="calculateScope1DOther('${id}')"
                placeholder="z.B. 2.65">
       </div>
@@ -1238,7 +990,7 @@ function calculateScope1DOther(id) {
   const factor = parseFloat(el.querySelector(".scope1d-other-factor").value) || 0;
 
   const co2 = amount * factor;
-  el.querySelector(".scope1d-other-co2").value = co2.toFixed(2);
+el.querySelector(".scope1d-other-co2").value = co2.toFixed(5);
 
   updateTotalScope1DOther();
 }
@@ -1251,7 +1003,7 @@ function updateTotalScope1DOther() {
     total += val;
   });
   document.getElementById("totalScope1DOtherEmissions").textContent =
-    "Gesamt (Sonstige) 1D-Emissionen: " + total.toFixed(2) + " kg CO₂";
+  "Gesamt (Sonstige) 1D-Emissionen: " + total.toFixed(5) + " kg CO₂";
 }
 
 function removeScope1DOther(id) {
@@ -1353,7 +1105,7 @@ function addScope2A() {
         <input type="text" class="scope2a-location" required placeholder="z.B. Dortmund">
       </div>
       <div class="form-group">
-        <label>Energietyp</label>
+        <label>Emittent (2A)</label>
         <select class="scope2a-type" onchange="updateScope2AFields('${id}')">
           ${Object.keys(SCOPE2A_FACTORS).map(type => 
             `<option value="${type}">${type}</option>`
@@ -1372,7 +1124,7 @@ function addScope2A() {
       </div>
       <div class="form-group">
         <label>CO₂-Faktor (kg CO₂ pro Einheit)</label>
-        <input type="number" class="scope2a-factor" step="0.0001" required
+      <input type="number" class="scope2a-factor" step="0.000001" required
                onchange="calculateScope2A('${id}')"
                placeholder="z.B. 0.36">
       </div>
@@ -1394,7 +1146,7 @@ function calculateScope2A(id) {
     const factor = parseFloat(el.querySelector(".scope2a-factor").value) || 0;
   
     const emissions = amount * factor;
-    el.querySelector(".scope2a-co2").value = emissions.toFixed(2);
+  el.querySelector(".scope2a-co2").value = emissions.toFixed(5);
   
     updateTotalScope2A();
   } 
@@ -1406,7 +1158,7 @@ function calculateScope2A(id) {
       total += val;
     });
     document.getElementById("totalScope2AEmissions").textContent =
-      "Gesamt 2A-Emissionen: " + total.toFixed(2) + " kg CO₂";
+    "Gesamt 2A-Emissionen: " + total.toFixed(5) + " kg CO₂";
   }
 
 function updateScope2AFields(id) {
@@ -1481,7 +1233,7 @@ const emitterHtml = `
     </div>
     <div class="form-group">
         <label>CO₂-Faktor (kg CO₂/kg)</label>
-        <input type="number" class="emission-factor" step="0.01" required
+        <input type="number" class="emission-factor" step="any" required
                placeholder="z.B. 0.25" onchange="calculateIndirectEmissions('${emitterId}')">
     </div>
     <div class="form-group">
@@ -1515,7 +1267,7 @@ const factor = parseFloat(container.querySelector('.emission-factor').value) || 
 
 // Berechne die Emissionen
 const emissions = amount * factor;
-container.querySelector('.co2-emissions').value = emissions.toFixed(2);
+container.querySelector('.co2-emissions').value = emissions.toFixed(5);
 
 // Aktualisiere Gesamtsumme
 updateTotalIndirectEmissions();
@@ -1548,8 +1300,8 @@ if (data.emissions > 0) {
     summaryHtml += `
         <div class="emitter-summary">
             <div>${name}:</div>
-            <div>Menge: ${data.amount.toFixed(2)} kg</div>
-            <div>Emissionen: ${data.emissions.toFixed(2)} kg CO₂</div>
+          <div>Menge: ${data.amount.toFixed(5)} kg</div>
+          <div>Emissionen: ${data.emissions.toFixed(5)} kg CO₂</div>
         </div>
     `;
 }
@@ -1560,8 +1312,8 @@ const totalEmissionsSum = Object.values(totalEmissions).reduce((sum, data) => su
 const totalAmount = Object.values(totalEmissions).reduce((sum, data) => sum + data.amount, 0);
 summaryHtml += `
 <div class="total-sum">
-    <div>Gesamtmenge: ${totalAmount.toFixed(2)} kg</div>
-    <div>Gesamtemissionen: ${totalEmissionsSum.toFixed(2)} kg CO₂</div>
+  <div>Gesamtmenge: ${totalAmount.toFixed(5)} kg</div>
+  <div>Gesamtemissionen: ${totalEmissionsSum.toFixed(5)} kg CO₂</div>
 </div>
 </div>`;
 
@@ -1702,19 +1454,13 @@ const SCOPE3A_FACTORS = {
     // 4) Bahnreisen
     //    Quelle: UBA (Nah-/Fernverkehr, Diesel vs. E)
     // --------------------------------
-    "Personenzug (Diesel-Nahverkehr)": {
-      factor: 0.08,        // ~0,08 kg CO₂/pkm
+
+ 
+  "Personenzug (Nahverkehr)": {
+    factor: 0.053,        // ~0,04 kg CO₂/pkm
       defaultUnit: "pkm"
     },
-    "Personenzug (Diesel-Fernverkehr)": {
-      factor: 0.07,        // ~0,07 kg CO₂/pkm
-      defaultUnit: "pkm"
-    },
-    "Personenzug (e-Nahverkehr)": {
-      factor: 0.04,        // ~0,04 kg CO₂/pkm
-      defaultUnit: "pkm"
-    },
-    "Personenzug (e-Fernverkehr)": {
+  "Personenzug (Fernverkehr)": {
       factor: 0.03,        // ~0,03 kg CO₂/pkm
       defaultUnit: "pkm"
     },
@@ -1753,7 +1499,7 @@ function addScope3A() {
           <input type="date" class="scope3a-date" required>
         </div>
         <div class="form-group">
-          <label>Emittent</label>
+          <label>Emittent (3A)</label>
           <select class="scope3a-type" required onchange="updateScope3AFields('${id}')">
             ${Object.keys(SCOPE3A_FACTORS).map(type => 
               `<option value="${type}">${type}</option>`
@@ -1769,10 +1515,10 @@ function addScope3A() {
         <div class="form-group">
           <label>Einheit</label>
           <input type="text" class="scope3a-unit" required>
-        </div>
+      </div>z
         <div class="form-group">
           <label>CO₂-Faktor (kg CO₂ / Einheit)</label>
-          <input type="number" class="scope3a-factor" step="0.0001" required
+        <input type="number" class="scope3a-factor" step="any" required
                  placeholder="z.B. 2.32"
                  onchange="calculateScope3A('${id}')">
         </div>
@@ -1795,7 +1541,7 @@ function addScope3A() {
     const factor = parseFloat(el.querySelector(".scope3a-factor").value) || 0;
   
     const emissions = amount * factor;
-    el.querySelector(".scope3a-co2").value = emissions.toFixed(2);
+  el.querySelector(".scope3a-co2").value = emissions.toFixed();
   
     updateTotalScope3A();
   }
@@ -1819,7 +1565,7 @@ function updateTotalScope3A() {
       total += val;
     });
     document.getElementById("totalScope3AEmissions").textContent =
-      "Gesamt 3A-Emissionen: " + total.toFixed(2) + " kg CO₂";
+    "Gesamt 3A-Emissionen: " + total.toFixed(5) + " kg CO₂";
   }
 
   function removeScope3A(id) {
@@ -1980,7 +1726,7 @@ function exportScope3AData() {
           <input type="date" class="scope3b-date" required>
         </div>
         <div class="form-group">
-          <label>Emittent</label>
+          <label>Emittent (3B)</label>
           <select class="scope3b-type" required onchange="updateScope3BFields('${id}')">
             ${Object.keys(SCOPE3B_FACTORS).map(type => 
               `<option value="${type}">${type}</option>`
@@ -1999,8 +1745,8 @@ function exportScope3AData() {
         </div>
         <div class="form-group">
           <label>CO₂-Faktor (kg CO₂ / Einheit)</label>
-          <input type="number" class="scope3b-factor" step="0.0001" required
-                 placeholder="z.B. 0.05"
+        <input type="number" class="scope3b-factor" step="any" required
+                 placeholder="z.B. 2.70"
                  onchange="calculateScope3B('${id}')">
         </div>
         <div class="form-group">
@@ -2032,7 +1778,7 @@ function exportScope3AData() {
     const factor = parseFloat(el.querySelector(".scope3b-factor").value) || 0;
   
     const emissions = amount * factor;
-    el.querySelector(".scope3b-co2").value = emissions.toFixed(2);
+  el.querySelector(".scope3b-co2").value = emissions.toFixed(5);
   
     updateTotalScope3B();
   }
@@ -2046,7 +1792,7 @@ function exportScope3AData() {
       total += val;
     });
     document.getElementById("totalScope3BEmissions").textContent =
-      "Gesamt 3B-Emissionen: " + total.toFixed(2) + " kg CO₂";
+    "Gesamt 3B-Emissionen: " + total.toFixed(5) + " kg CO₂";
   }
 
   function removeScope3B(id) {
@@ -2208,7 +1954,7 @@ const SCOPE3C_FACTORS = {
     defaultUnit: "kg"
   },
   "Isopropylbenzol (C9H12) (EEW) 2022": {
-    factor: 3.0, // auch „Cumol“ genannt
+  factor: 3.0, // auch "Cumol" genannt
     defaultUnit: "kg"
   },
   "Magnesiumsulfat (MgSO4), Bittersalz (EEW) 2022": {
@@ -2359,7 +2105,7 @@ const SCOPE3C_FACTORS = {
           <input type="date" class="scope3c-date" required>
         </div>
         <div class="form-group">
-          <label>Name / Emittent</label>
+          <label>Emittent (3C)</label>
           <select class="scope3c-type" required onchange="updateScope3CFields('${id}')">
             ${Object.keys(SCOPE3C_FACTORS).map(type => 
               `<option value="${type}">${type}</option>`
@@ -2378,7 +2124,7 @@ const SCOPE3C_FACTORS = {
         </div>
         <div class="form-group">
           <label>CO₂-Faktor (kg CO₂ / Einheit)</label>
-          <input type="number" class="scope3c-factor" step="0.0001" required
+        <input type="number" class="scope3c-factor" step="any" required
                  placeholder="z.B. 2.70"
                  onchange="calculateScope3C('${id}')">
         </div>
@@ -2412,7 +2158,7 @@ const SCOPE3C_FACTORS = {
     const factor = parseFloat(el.querySelector(".scope3c-factor").value) || 0;
   
     const emissions = amount * factor;
-    el.querySelector(".scope3c-co2").value = emissions.toFixed(2);
+  el.querySelector(".scope3c-co2").value = emissions.toFixed(5);
   
     updateTotalScope3C();
   }
@@ -2425,7 +2171,7 @@ const SCOPE3C_FACTORS = {
       total += val;
     });
     document.getElementById("totalScope3CEmissions").textContent =
-      "Gesamt 3C-Emissionen: " + total.toFixed(2) + " kg CO₂";
+    "Gesamt 3C-Emissionen: " + total.toFixed(5) + " kg CO₂";
   }
 
   function removeScope3C(id) {
@@ -2586,7 +2332,7 @@ const SCOPE3D_FACTORS = {
           <input type="date" class="scope3d-date" required>
         </div>
         <div class="form-group">
-          <label>Holz/Papier/Pappe Typ</label>
+          <label>Emittent (3D)</label>
           <select class="scope3d-type" required onchange="updateScope3DFields('${id}')">
             ${Object.keys(SCOPE3D_FACTORS).map(type =>
               `<option value="${type}">${type}</option>`
@@ -2605,7 +2351,7 @@ const SCOPE3D_FACTORS = {
         </div>
         <div class="form-group">
           <label>CO₂-Faktor (kg CO₂ / Einheit)</label>
-          <input type="number" class="scope3d-factor" step="0.0001" required
+        <input type="number" class="scope3d-factor" step="any" required
                  placeholder="z.B. 0.90"
                  onchange="calculateScope3D('${id}')">
         </div>
@@ -2643,7 +2389,7 @@ const SCOPE3D_FACTORS = {
     const factor = parseFloat(el.querySelector(".scope3d-factor").value) || 0;
   
     const emissions = amount * factor;
-    el.querySelector(".scope3d-co2").value = emissions.toFixed(2);
+  el.querySelector(".scope3d-co2").value = emissions.toFixed(5);
   
     updateTotalScope3D();
   }
@@ -2659,7 +2405,7 @@ const SCOPE3D_FACTORS = {
   
     const totalDisplay = document.getElementById("totalScope3DEmissions");
     if (totalDisplay) {
-      totalDisplay.textContent = "Gesamt 3D-Emissionen: " + total.toFixed(2) + " kg CO₂";
+    totalDisplay.textContent = "Gesamt 3D-Emissionen: " + total.toFixed(5) + " kg CO₂";
     }
   }
 
@@ -2746,7 +2492,7 @@ const SCOPE3E_FACTORS = {
           <input type="date" class="scope3e-date" required>
         </div>
         <div class="form-group">
-          <label>Kunststoff / Emittent</label>
+          <label>Emittent (3E)</label>
           <select class="scope3e-type" required onchange="updateScope3EFields('${id}')">
             ${Object.keys(SCOPE3E_FACTORS).map(k => 
               `<option value="${k}">${k}</option>`
@@ -2764,7 +2510,7 @@ const SCOPE3E_FACTORS = {
         </div>
         <div class="form-group">
           <label>CO₂-Faktor (kg CO₂ / kg)</label>
-          <input type="number" class="scope3e-factor" step="0.0001" required
+          <input type="number" class="scope3e-factor" step="any" required
                  placeholder="z.B. 1.80" onchange="calculateScope3E('${id}')">
         </div>
         <div class="form-group">
@@ -2800,7 +2546,7 @@ const SCOPE3E_FACTORS = {
     const factor = parseFloat(el.querySelector(".scope3e-factor").value) || 0;
   
     const emissions = amount * factor;
-    el.querySelector(".scope3e-co2").value = emissions.toFixed(2);
+  el.querySelector(".scope3e-co2").value = emissions.toFixed(5);
   
     updateTotalScope3E();
   }
@@ -2816,7 +2562,7 @@ const SCOPE3E_FACTORS = {
   
     const totalDisplay = document.getElementById("totalScope3EEmissions");
     if (totalDisplay) {
-      totalDisplay.textContent = "Gesamt 3E-Emissionen: " + total.toFixed(2) + " kg CO₂";
+    totalDisplay.textContent = "Gesamt 3E-Emissionen: " + total.toFixed(5) + " kg CO₂";
     }
   }
 
@@ -2937,7 +2683,7 @@ const SCOPE3F_FACTORS = {
           <input type="date" class="scope3f-date" required>
         </div>
         <div class="form-group">
-          <label>Metall / Emittent</label>
+          <label>Emittent (3F)</label>
           <select class="scope3f-type" required onchange="updateScope3FFields('${id}')">
             ${Object.keys(SCOPE3F_FACTORS).map(metal => 
               `<option value="${metal}">${metal}</option>`
@@ -2955,7 +2701,7 @@ const SCOPE3F_FACTORS = {
         </div>
         <div class="form-group">
           <label>CO₂-Faktor (kg CO₂ / kg)</label>
-          <input type="number" class="scope3f-factor" step="0.0001" required
+        <input type="number" class="scope3f-factor" step="any" required
                  placeholder="z.B. 16.0" onchange="calculateScope3F('${id}')">
         </div>
         <div class="form-group">
@@ -2978,7 +2724,7 @@ const SCOPE3F_FACTORS = {
     const factor = parseFloat(el.querySelector(".scope3f-factor").value) || 0;
   
     const emissions = amount * factor;
-    el.querySelector(".scope3f-co2").value = emissions.toFixed(2);
+  el.querySelector(".scope3f-co2").value = emissions.toFixed(5);
   
     updateTotalScope3F();
   }
@@ -3007,7 +2753,7 @@ function updateScope3FFields(id) {
   
     const totalDisplay = document.getElementById("totalScope3FEmissions");
     if (totalDisplay) {
-      totalDisplay.textContent = "Gesamt 3F-Emissionen: " + total.toFixed(2) + " kg CO₂";
+    totalDisplay.textContent = "Gesamt 3F-Emissionen: " + total.toFixed(5) + " kg CO₂";
     }
   }
 
@@ -3121,7 +2867,7 @@ const SCOPE3G_FACTORS = {
           <input type="date" class="scope3g-date" required>
         </div>
         <div class="form-group">
-          <label>Material / Baustoff</label>
+          <label>Emittent (3G)</label>
           <select class="scope3g-type" required onchange="updateScope3GFields('${id}')">
           ${Object.keys(SCOPE3G_FACTORS).map(item =>
             `<option value="${item}">${item}</option>`
@@ -3139,7 +2885,7 @@ const SCOPE3G_FACTORS = {
         </div>
         <div class="form-group">
           <label>CO₂-Faktor (kg CO₂/kg)</label>
-          <input type="number" class="scope3g-factor" step="0.0001" required
+          <input type="number" class="scope3g-factor" step="any" required
                  placeholder="z.B. 0.11" onchange="calculateScope3G('${id}')">
         </div>
         <div class="form-group">
@@ -3173,7 +2919,7 @@ const SCOPE3G_FACTORS = {
     const factor = parseFloat(el.querySelector(".scope3g-factor").value) || 0;
   
     const emissions = amount * factor;
-    el.querySelector(".scope3g-co2").value = emissions.toFixed(2);
+  el.querySelector(".scope3g-co2").value = emissions.toFixed(5);
   
     updateTotalScope3G();
   }
@@ -3188,7 +2934,7 @@ const SCOPE3G_FACTORS = {
   
     const totalDisplay = document.getElementById("totalScope3GEmissions");
     if (totalDisplay) {
-      totalDisplay.textContent = "Gesamt 3G-Emissionen: " + total.toFixed(2) + " kg CO₂";
+    totalDisplay.textContent = "Gesamt 3G-Emissionen: " + total.toFixed(5) + " kg CO₂";
     }
   }
   
@@ -3268,7 +3014,7 @@ function addScope3H() {
           <input type="date" class="scope3h-date" required>
         </div>
         <div class="form-group">
-          <label>Entsorgungstyp</label>
+          <label>Emittent (3H)</label>
           <select class="scope3h-type" required onchange="updateScope3HFields('${id}')">
             ${Object.keys(SCOPE3H_FACTORS).map(item =>
               `<option value="${item}">${item}</option>`
@@ -3277,7 +3023,7 @@ function addScope3H() {
         </div>
         <div class="form-group">
           <label>Menge</label>
-          <input type="number" class="scope3h-amount" min="0" step="0.01" 
+        <input type="number" class="scope3h-amount" min="0" step="0.000001" 
                  placeholder="z.B. 100" onchange="calculateScope3H('${id}')">
         </div>
         <div class="form-group">
@@ -3286,7 +3032,7 @@ function addScope3H() {
         </div>
         <div class="form-group">
           <label>CO₂-Faktor (kg CO₂/Einheit)</label>
-          <input type="number" class="scope3h-factor" step="0.0001" required
+        <input type="number" class="scope3h-factor" step="any" required
                  placeholder="z.B. 2.63" onchange="calculateScope3H('${id}')">
         </div>
         <div class="form-group">
@@ -3320,7 +3066,7 @@ function addScope3H() {
     const factor = parseFloat(el.querySelector(".scope3h-factor").value) || 0;
   
     const emissions = amount * factor;
-    el.querySelector(".scope3h-co2").value = emissions.toFixed(2);
+  el.querySelector(".scope3h-co2").value = emissions.toFixed(5);
   
     updateTotalScope3H();
   }
@@ -3335,7 +3081,7 @@ function addScope3H() {
     });
     const totalDisplay = document.getElementById("totalScope3HEmissions");
     if (totalDisplay) {
-      totalDisplay.textContent = "Gesamt 3H-Emissionen: " + total.toFixed(2) + " kg CO₂";
+    totalDisplay.textContent = "Gesamt 3H-Emissionen: " + total.toFixed(5) + " kg CO₂";
     }
   }
   
@@ -3399,7 +3145,7 @@ const SCOPE3I_FACTORS = {
           <input type="date" class="scope3i-date" required>
         </div>
         <div class="form-group">
-          <label>Wassertyp</label>
+          <label>Emittent (3I)</label>
           <select class="scope3i-type" required onchange="updateScope3IFields('${id}')">
             ${Object.keys(SCOPE3I_FACTORS).map(item =>
               `<option value="${item}">${item}</option>`
@@ -3408,7 +3154,7 @@ const SCOPE3I_FACTORS = {
         </div>
         <div class="form-group">
           <label>Verbrauch (m³)</label>
-          <input type="number" class="scope3i-consumption" min="0" step="0.01" 
+        <input type="number" class="scope3i-consumption" min="0" step="0.000001" 
                  placeholder="z.B. 500" onchange="calculateScope3I('${id}')">
         </div>
         <div class="form-group">
@@ -3417,7 +3163,7 @@ const SCOPE3I_FACTORS = {
         </div>
         <div class="form-group">
           <label>CO₂-Faktor (kg CO₂/m³)</label>
-          <input type="number" class="scope3i-factor" step="0.0001" required
+        <input type="number" class="scope3i-factor" step="any" required
                  placeholder="z.B. 0.23" onchange="calculateScope3I('${id}')">
         </div>
         <div class="form-group">
@@ -3449,7 +3195,7 @@ const SCOPE3I_FACTORS = {
     const factor = parseFloat(el.querySelector(".scope3i-factor").value) || 0;
   
     const emissions = consumption * factor;
-    el.querySelector(".scope3i-co2").value = emissions.toFixed(2);
+  el.querySelector(".scope3i-co2").value = emissions.toFixed(5);
   
     updateTotalScope3I();
   }
@@ -3463,7 +3209,7 @@ const SCOPE3I_FACTORS = {
     });
     const totalDisplay = document.getElementById("totalScope3IEmissions");
     if (totalDisplay) {
-      totalDisplay.textContent = "Gesamt 3I-Emissionen: " + total.toFixed(2) + " kg CO₂";
+    totalDisplay.textContent = "Gesamt 3I-Emissionen: " + total.toFixed(5) + " kg CO₂";
     }
   }
   
@@ -3530,7 +3276,7 @@ function addScope3J() {
           <input type="date" class="scope3j-date" required>
         </div>
         <div class="form-group">
-          <label>Transport/Kraftstoff</label>
+          <label>Emittent (3J)</label>
           <select class="scope3j-type" required onchange="updateScope3JFields('${id}')">
             ${Object.keys(SCOPE3J_FACTORS).map(item =>
               `<option value="${item}">${item}</option>`
@@ -3539,7 +3285,7 @@ function addScope3J() {
         </div>
         <div class="form-group">
           <label>Menge / Distanz</label>
-          <input type="number" class="scope3j-amount" min="0" step="0.01" placeholder="z.B. 100" onchange="calculateScope3J('${id}')">
+        <input type="number" class="scope3j-amount" min="0" step="0.000001" placeholder="z.B. 100" onchange="calculateScope3J('${id}')">
         </div>
         <div class="form-group">
           <label>Einheit</label>
@@ -3547,7 +3293,7 @@ function addScope3J() {
         </div>
         <div class="form-group">
           <label>CO₂-Faktor (kg CO₂ / Einheit)</label>
-          <input type="number" class="scope3j-factor" step="0.0001" required placeholder="z.B. 2.31" onchange="calculateScope3J('${id}')">
+        <input type="number" class="scope3j-factor" step="any" required placeholder="z.B. 0.23" onchange="calculateScope3J('${id}')">
         </div>
         <div class="form-group">
           <label>CO₂-Emissionen (kg)</label>
@@ -3578,7 +3324,7 @@ function addScope3J() {
     const amount = parseFloat(el.querySelector(".scope3j-amount").value) || 0;
     const factor = parseFloat(el.querySelector(".scope3j-factor").value) || 0;
     const emissions = amount * factor;
-    el.querySelector(".scope3j-co2").value = emissions.toFixed(2);
+  el.querySelector(".scope3j-co2").value = emissions.toFixed(5);
     updateTotalScope3J();
   }
   
@@ -3592,7 +3338,7 @@ function addScope3J() {
     });
     const totalDisplay = document.getElementById("totalScope3JEmissions");
     if (totalDisplay) {
-      totalDisplay.textContent = "Gesamt 3J-Emissionen: " + total.toFixed(2) + " kg CO₂";
+    totalDisplay.textContent = "Gesamt 3J-Emissionen: " + total.toFixed(5) + " kg CO₂";
     }
   }
   
@@ -3682,7 +3428,7 @@ function addScope3KFood() {
           <input type="date" class="scope3kfood-date" required>
         </div>
         <div class="form-group">
-          <label>Lebensmittel</label>
+          <label>Emittent (3K)</label>
           <select class="scope3kfood-type" required onchange="updateScope3KFoodFields('${id}')">
             ${Object.keys(SCOPE3K_FOOD_FACTORS).map(item =>
               `<option value="${item}">${item}</option>`
@@ -3691,7 +3437,7 @@ function addScope3KFood() {
         </div>
         <div class="form-group">
           <label>Menge (kg)</label>
-          <input type="number" class="scope3kfood-amount" min="0" step="0.01" placeholder="z.B. 5" onchange="calculateScope3KFood('${id}')">
+        <input type="number" class="scope3kfood-amount" min="0" step="0.000001" placeholder="z.B. 5" onchange="calculateScope3KFood('${id}')">
         </div>
         <div class="form-group">
           <label>Einheit</label>
@@ -3699,7 +3445,7 @@ function addScope3KFood() {
         </div>
         <div class="form-group">
           <label>CO₂-Faktor (kg CO₂ / Einheit)</label>
-          <input type="number" class="scope3kfood-factor" step="0.0001" required placeholder="z.B. 1.2" onchange="calculateScope3KFood('${id}')">
+        <input type="number" class="scope3kfood-factor" step="any" required placeholder="z.B. 1.2" onchange="calculateScope3KFood('${id}')">
         </div>
         <div class="form-group">
           <label>CO₂-Emissionen (kg)</label>
@@ -3730,7 +3476,7 @@ function addScope3KFood() {
     const amount = parseFloat(el.querySelector(".scope3kfood-amount").value) || 0;
     const factor = parseFloat(el.querySelector(".scope3kfood-factor").value) || 0;
     const emissions = amount * factor;
-    el.querySelector(".scope3kfood-co2").value = emissions.toFixed(2);
+  el.querySelector(".scope3kfood-co2").value = emissions.toFixed(5);
     updateTotalScope3KFood();
   }
   
@@ -3744,7 +3490,7 @@ function addScope3KFood() {
     });
     const totalDisplay = document.getElementById("totalScope3KFoodEmissions");
     if (totalDisplay) {
-      totalDisplay.textContent = "Gesamt Lebensmittel-Emissionen: " + total.toFixed(2) + " kg CO₂";
+    totalDisplay.textContent = "Gesamt Lebensmittel-Emissionen: " + total.toFixed(5) + " kg CO₂";
     }
   }
   
@@ -3851,7 +3597,7 @@ function addScope3L() {
           <input type="date" class="scope3l-date" required>
         </div>
         <div class="form-group">
-          <label>Material / Vorprodukt</label>
+          <label>Emittent (3L)</label>
           <select class="scope3l-type" required onchange="updateScope3LFields('${id}')">
             ${Object.keys(SCOPE3L_FACTORS).map(item =>
               `<option value="${item}">${item}</option>`
@@ -3860,7 +3606,7 @@ function addScope3L() {
         </div>
         <div class="form-group">
           <label>Menge</label>
-          <input type="number" class="scope3l-amount" min="0" step="0.01" placeholder="z.B. 100" onchange="calculateScope3L('${id}')">
+        <input type="number" class="scope3l-amount" min="0" step="0.000001" placeholder="z.B. 100" onchange="calculateScope3L('${id}')">
         </div>
         <div class="form-group">
           <label>Einheit</label>
@@ -3868,7 +3614,7 @@ function addScope3L() {
         </div>
         <div class="form-group">
           <label>CO₂-Faktor (kg CO₂ / Einheit)</label>
-          <input type="number" class="scope3l-factor" step="0.0001" required placeholder="z.B. 3.2" onchange="calculateScope3L('${id}')">
+        <input type="number" class="scope3l-factor" step="any" required placeholder="z.B. 0.23" onchange="calculateScope3L('${id}')">
         </div>
         <div class="form-group">
           <label>CO₂-Emissionen (kg)</label>
@@ -3899,7 +3645,7 @@ function addScope3L() {
     const amount = parseFloat(el.querySelector(".scope3l-amount").value) || 0;
     const factor = parseFloat(el.querySelector(".scope3l-factor").value) || 0;
     const emissions = amount * factor;
-    el.querySelector(".scope3l-co2").value = emissions.toFixed(2);
+  el.querySelector(".scope3l-co2").value = emissions.toFixed(5);
     updateTotalScope3L();
   }
   
@@ -3913,7 +3659,7 @@ function addScope3L() {
     });
     const totalDisplay = document.getElementById("totalScope3LEmissions");
     if (totalDisplay) {
-      totalDisplay.textContent = "Gesamt 3L-Emissionen: " + total.toFixed(2) + " kg CO₂";
+    totalDisplay.textContent = "Gesamt 3L-Emissionen: " + total.toFixed(5) + " kg CO₂";
     }
   }
   
@@ -3939,12 +3685,108 @@ function addScope3L() {
     });
     return data;
   }
+// Beispiel-Richtwerte für sonstige Emittenten in Scope 3
+const DEFAULT_SCOPE3_OTHER_FACTORS = {
+"3M": {
+  factor: 2.50,      // Beispielwert in kg CO₂ pro Einheit – bitte anpassen
+  defaultUnit: "Liter" // Beispiel: Einheit "Liter"; passe dies bei Bedarf an
+}
+};
 
+// Funktion zum Hinzufügen eines neuen sonstigen Emittenten in Scope 3
+function addScope3Other() {
+const container = document.getElementById("scope3OtherFields");
+const id = "scope3Other-" + Date.now();
+
+const html = `
+  <div class="dynamic-field" id="${id}">
+    <div class="form-group">
+      <label>Emittent (sonstige, z. B. 3M)</label>
+      <input type="text" class="scope3-other-name" value="3M" required placeholder="z.B. 3M">
+    </div>
+    <div class="form-group">
+      <label>Funktionelle Einheit</label>
+      <input type="text" class="scope3-other-unit" value="${DEFAULT_SCOPE3_OTHER_FACTORS["3M"].defaultUnit}" required placeholder="z.B. Liter, kg, kWh...">
+    </div>
+    <div class="form-group">
+      <label>Menge</label>
+      <input type="number" class="scope3-other-amount" min="0" step="0.1" placeholder="z.B. 100" onchange="calculateScope3Other('${id}')">
+    </div>
+    <div class="form-group">
+      <label>CO₂-Faktor (kg CO₂ / Einheit)</label>
+      <input type="number" class="scope3-other-factor" step="any" required placeholder="z.B. 2.50" onchange="calculateScope3Other('${id}')">
+    </div>
+    <div class="form-group">
+      <label>kg CO₂e</label>
+      <input type="number" class="scope3-other-co2" readonly>
+    </div>
+    <div class="form-group">
+      <label>Kommentar</label>
+      <input type="text" class="scope3-other-comment" placeholder="z.B. Notizen oder Besonderheiten">
+    </div>
+    <div class="form-group">
+      <label>Datenquelle</label>
+      <input type="text" class="scope3-other-source" placeholder="z.B. IPCC, UBA, interne Messung...">
+    </div>
+    <button type="button" class="remove-field" onclick="removeScope3Other('${id}')">Entfernen</button>
+  </div>
+`;
+
+container.insertAdjacentHTML("beforeend", html);
+}
+
+// Berechnet die CO₂-Emissionen für einen einzelnen Scope 3‑sonstigen Emittenten
+function calculateScope3Other(id) {
+const el = document.getElementById(id);
+const amount = parseFloat(el.querySelector(".scope3-other-amount").value) || 0;
+const factor = parseFloat(el.querySelector(".scope3-other-factor").value) || 0;
+const emissions = amount * factor;
+el.querySelector(".scope3-other-co2").value = emissions.toFixed(5);
+updateTotalScope3Other();
+}
+
+// Aktualisiert die Gesamtsumme aller Scope 3‑sonstigen Emittenten
+function updateTotalScope3Other() {
+const allFields = document.querySelectorAll("#scope3OtherFields .dynamic-field");
+let total = 0;
+allFields.forEach(field => {
+  const val = parseFloat(field.querySelector(".scope3-other-co2").value) || 0;
+  total += val;
+});
+const totalDisplay = document.getElementById("totalScope3OtherEmissions");
+if (totalDisplay) {
+  totalDisplay.textContent = "Gesamt (Sonstige) Scope 3-Emissionen: " + total.toFixed(5) + " kg CO₂";
+}
+}
+
+// Entfernt einen Eintrag für sonstige Emittenten in Scope 3
+function removeScope3Other(id) {
+document.getElementById(id).remove();
+updateTotalScope3Other();
+}
+
+// Exportiert alle Scope 3‑sonstigen Emittent-Daten (z. B. für den Submit)
+function exportScope3OtherData() {
+const data = [];
+const allFields = document.querySelectorAll("#scope3OtherFields .dynamic-field");
+allFields.forEach(field => {
+  data.push({
+    name: field.querySelector(".scope3-other-name").value,
+    unit: field.querySelector(".scope3-other-unit").value,
+    amount: field.querySelector(".scope3-other-amount").value,
+    factor: field.querySelector(".scope3-other-factor").value,
+    co2Emissions: field.querySelector(".scope3-other-co2").value,
+    comment: field.querySelector(".scope3-other-comment").value,
+    source: field.querySelector(".scope3-other-source").value
+  });
+});
+return data;
+}
 
   function handleSubmit(event) {
-    event.preventDefault(); // Standardformular-Submit verhindern
+  event.preventDefault();
   
-    // Erzeuge ein JSON-Objekt mit den gesammelten Daten
+  // Sammle alle Daten
     const formData = {
       companyInfo: {
         name: document.getElementById('companyName').value,
@@ -3952,7 +3794,7 @@ function addScope3L() {
         date: new Date().toISOString()
       },
       scope1: {
-        vehicles: exportVehicleData() || [],
+      vehicles: exportScope1AData() || [],
         transport1B: exportTransport1BData() || [],
         scope1C: exportScope1CData() || [],
         scope1D: exportScope1DData() || [],
@@ -3978,11 +3820,299 @@ function addScope3L() {
       }
     };
   
-    // Speichere das Ergebnis im localStorage (als String)
+  // Generiere CSV
+  const csvContent = convertToCSV(formData);
+  
+  // Erstelle Dateinamen mit aktuellem Datum und Firmennamen
+  const date = new Date();
+  const fileName = `CO2_Bilanz_${formData.companyInfo.name}_${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}.csv`;
+  
+  // Downloade CSV
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  
+  // Erstelle Download-Link
+  const link = document.createElement('a');
+  if (navigator.msSaveBlob) { // IE 10+
+    navigator.msSaveBlob(blob, fileName);
+  } else {
+    const url = URL.createObjectURL(blob);
+    link.href = url;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  // Speichere auch im localStorage für das Dashboard
     localStorage.setItem('co2Data', JSON.stringify(formData));
   
-    alert('Ihre CO₂-Bilanz wurde erfolgreich gespeichert!');
+  // Zeige Erfolgsmeldung
+  alert('Ihre CO₂-Bilanz wurde erfolgreich als CSV exportiert!');
+
+  // Optional: Weiterleitung zum Dashboard
+  // window.location.href = 'dashboard.html';
+}
+
+// Hilfsfunktion zum Formatieren des Datums (YYYY-MM)
+function formatMonthYear(date) {
+  if (!date) return '';
+  return date.substring(0, 7); // Extrahiert YYYY-MM aus YYYY-MM-DD
+}
+
+// Hilfsfunktion zum Summieren von Emissionen
+function sumEmissions(entries) {
+  if (!Array.isArray(entries)) return 0;
+  return entries.reduce((sum, entry) => {
+    return sum + (parseFloat(entry.co2Emissions) || 0);
+  }, 0);
+}
+
+// Hilfsfunktion zum Gruppieren von Emissionen nach Monat
+function groupEmissionsByMonth(emissions) {
+  if (!Array.isArray(emissions)) return {};
   
-    // Weiterleitung zum Dashboard (oder eine andere Zielseite)
-    window.location.href = 'Dashboard.html';
+  const monthly = {};
+  emissions.forEach(entry => {
+    if (!entry.date) return;
+    
+    const monthYear = formatMonthYear(entry.date);
+    if (!monthly[monthYear]) {
+      monthly[monthYear] = 0;
+    }
+    monthly[monthYear] += parseFloat(entry.co2Emissions) || 0;
+  });
+  
+  return monthly;
+}
+
+function createDetailedCharts(s1_vehicles, s1_transport, s1_heating, s1_techGases, s1_other,
+                            s2_energy, s2_indirect,
+                            s3_businessTravel, s3_externalTransport, s3_chemicals, s3_paper,
+                            s3_plastics, s3_metals, s3_minerals, s3_disposal, s3_water, s3_otherTransport, s3_food, s3_otherEmitters) {
+// Detailliertes Scope 1 Diagramm (Doughnut)
+new Chart(document.getElementById('detailedScope1Chart').getContext('2d'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Fahrzeuge', 'Transport', 'Heizung', 'Technische Gase', 'Sonstiges'],
+    datasets: [{
+      data: [s1_vehicles, s1_transport, s1_heating, s1_techGases, s1_other],
+      backgroundColor: [
+        'rgba(54,162,235,0.7)',
+        'rgba(255,99,132,0.7)',
+        'rgba(75,192,192,0.7)',
+        'rgba(153,102,255,0.7)',
+        'rgba(255,159,64,0.7)'
+      ]
+    }]
+  },
+  options: { plugins: { legend: { position: 'bottom' } } }
+});
+
+// Detailliertes Scope 2 Diagramm (Pie)
+new Chart(document.getElementById('detailedScope2Chart').getContext('2d'), {
+  type: 'pie',
+  data: {
+    labels: ['Energie', 'Indirekt'],
+    datasets: [{
+      data: [s2_energy, s2_indirect],
+      backgroundColor: [
+        'rgba(54,162,235,0.7)',
+        'rgba(255,99,132,0.7)'
+      ]
+    }]
+  },
+  options: { plugins: { legend: { position: 'bottom' } } }
+});
+
+// Detailliertes Scope 3 Diagramm (Balkendiagramm)
+new Chart(document.getElementById('detailedScope3Chart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: ['Geschäftsreisen', 'Externe Transporte', 'Chemikalien', 'Papier', 'Kunststoffe', 'Metalle', 'Mineralien', 'Entsorgung', 'Wasser', 'Andere Transporte', 'Lebensmittel', 'Andere Emittenten'],
+    datasets: [{
+      label: 'CO₂-Emissionen (kg)',
+      data: [s3_businessTravel, s3_externalTransport, s3_chemicals, s3_paper, s3_plastics, s3_metals, s3_minerals, s3_disposal, s3_water, s3_otherTransport, s3_food, s3_otherEmitters],
+      backgroundColor: [
+        '#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd',
+        '#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf',
+        '#bcbd22','#17becf','#ffbb78'
+      ]
+    }]
+  },
+  options: {
+    scales: {
+      y: { beginAtZero: true, title: { display: true, text: 'kg CO₂' } }
+    },
+    plugins: { legend: { display: false } }
+  }
+});
+}
+
+function initDashboard() {
+const jsonData = localStorage.getItem('co2Data');
+const dashboard = document.getElementById('dashboardContent');
+
+if (!jsonData) {
+  dashboard.innerHTML = '<div class="no-data">Keine Daten vorhanden. Bitte führen Sie zuerst die Umfrage durch.</div>';
+  return;
+}
+
+const co2Data = JSON.parse(jsonData);
+const { companyInfo, scope1, scope2, scope3 } = co2Data;
+
+// --- Berechnung der Summen für Scope 1 ---
+const s1_vehicles    = sumEmissions(scope1.vehicles);
+const s1_transport   = sumEmissions(scope1.transport1B);
+const s1_heating     = sumEmissions(scope1.scope1C);
+const s1_techGases   = sumEmissions(scope1.scope1D);
+const s1_other       = sumEmissions(scope1.scope1DOther);
+const s1 = s1_vehicles + s1_transport + s1_heating + s1_techGases + s1_other;
+
+// --- Berechnung der Summen für Scope 2 ---
+const s2_energy   = sumEmissions(scope2.energy);
+const s2_indirect = sumEmissions(scope2.indirectEmissions);
+const s2 = s2_energy + s2_indirect;
+
+// --- Berechnung der Summen für Scope 3 ---
+const s3_businessTravel    = sumEmissions(scope3.businessTravel);
+const s3_externalTransport = sumEmissions(scope3.transport);
+const s3_chemicals         = sumEmissions(scope3.chemicals);
+const s3_paper             = sumEmissions(scope3.paper);
+const s3_plastics          = sumEmissions(scope3.plastics);
+const s3_metals            = sumEmissions(scope3.metals || []);
+const s3_minerals          = sumEmissions(scope3.minerals || []);
+const s3_disposal          = sumEmissions(scope3.disposal || []);
+const s3_water             = sumEmissions(scope3.water || []);
+const s3_otherTransport    = sumEmissions(scope3.otherTransport || []);
+const s3_food              = sumEmissions(scope3.food || []);
+const s3_otherEmitters     = sumEmissions(scope3.otherEmitters || []);
+
+const s3 = s3_businessTravel + s3_externalTransport + s3_chemicals + s3_paper + s3_plastics + s3_metals + s3_minerals + s3_disposal + s3_water + s3_otherTransport + s3_food + s3_otherEmitters;
+
+const totalEmissions = s1 + s2 + s3;
+
+const p1 = (s1/totalEmissions)*100 || 0;
+const p2 = (s2/totalEmissions)*100 || 0;
+const p3 = (s3/totalEmissions)*100 || 0;
+
+// Vergleich zum Vorjahr (fiktive Werte)
+const lastYearEmissions = 30000;
+const difference = totalEmissions - lastYearEmissions;
+const diffPercent = (difference/lastYearEmissions)*100 || 0;
+const trend = difference > 0 ? "höher" : "niedriger";
+
+// Kostenschätzung und Emissionen pro Mitarbeiter (fiktive Werte)
+const costPerTon = 50;
+const employees = 100;
+const costEstimate = (totalEmissions/1000) * costPerTon;
+const perEmployee = totalEmissions / employees;
+
+// Zusammenfassung HTML
+let html = `
+  <div class="pdf-header">
+    <h2>CO₂-Bilanz Bericht</h2>
+    <p><strong>Firma:</strong> ${companyInfo.name}</p>
+    <p><strong>Bezugsjahr:</strong> ${companyInfo.year}</p>
+    <p><strong>Erfassungsdatum:</strong> ${new Date(companyInfo.date).toLocaleString()}</p>
+  </div>
+  <hr>
+  <table>
+    <tr><th>Scope</th><th>Emissionen (kg CO₂)</th><th>Anteil (%)</th></tr>
+    <tr><td>Scope 1</td><td>${s1.toFixed(2)}</td><td>${p1.toFixed(1)}%</td></tr>
+    <tr><td>Scope 2</td><td>${s2.toFixed(2)}</td><td>${p2.toFixed(1)}%</td></tr>
+    <tr><td>Scope 3</td><td>${s3.toFixed(2)}</td><td>${p3.toFixed(1)}%</td></tr>
+    <tr><th>Gesamt</th><th>${totalEmissions.toFixed(2)}</th><th>100%</th></tr>
+  </table>
+
+  <p>
+    <strong>Vorjahresemissionen:</strong> ${lastYearEmissions.toFixed(2)} kg CO₂<br>
+    <strong>Veränderung:</strong> ${difference.toFixed(2)} kg CO₂ (${diffPercent.toFixed(1)}% ${trend})
+  </p>
+  <p><strong>Kostenschätzung (Kompensation):</strong> ca. ${costEstimate.toFixed(2)} €</p>
+  <p><strong>Emissionen pro Mitarbeiter:</strong> ${perEmployee.toFixed(2)} kg CO₂</p>
+`;
+dashboard.innerHTML = html;
+
+// Diagramme erstellen
+createScopeChart(s1, s2, s3);
+createDetailedCharts(s1_vehicles, s1_transport, s1_heating, s1_techGases, s1_other,
+                     s2_energy, s2_indirect,
+                     s3_businessTravel, s3_externalTransport, s3_chemicals, s3_paper,
+                     s3_plastics, s3_metals, s3_minerals, s3_disposal, s3_water, s3_otherTransport, s3_food, s3_otherEmitters);
+
+// Beispiel-Trend-Diagramm (Aktuell vs. Vorjahr)
+createTrendChart(totalEmissions, lastYearEmissions);
+}
+
+// Neue Funktion: Exportiert alle Bilanzdaten als JSON in eine .digi-Datei
+function exportData() {
+// Beispiel: Sammle alle Bilanzdaten (hier aus localStorage - passe ggf. an)
+const data = {
+  bilanzierungen: JSON.parse(localStorage.getItem('co2Data')) || [],
+  zeitstempel: new Date().toISOString()
+};
+const json = JSON.stringify(data, null, 2);
+const blob = new Blob([json], { type: 'application/json' });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = "daten.digi";
+a.click();
+URL.revokeObjectURL(url);
+}
+
+// Neue Funktion: Liest eine ausgewählte .digi-Datei ein und lädt die Bilanzdaten
+function importData(event) {
+const file = event.target.files[0];
+if (!file) {
+  alert("Keine Datei ausgewählt!");
+  return;
+}
+const reader = new FileReader();
+reader.onload = function(e) {
+  try {
+    const json = e.target.result;
+    const data = JSON.parse(json);
+    // Beispiel: Lade die Bilanzdaten in die App (z. B. in den localStorage)
+    if (data.bilanzierungen) {
+      localStorage.setItem('co2Data', JSON.stringify(data.bilanzierungen));
+      alert("Daten erfolgreich importiert!");
+      // Optional: Dashboard aktualisieren
+      const grouped = groupDataByMonth(data.bilanzierungen);
+      renderDashboard(grouped);
+    } else {
+      alert("Die Datei enthält keine Bilanzdaten!");
+    }
+  } catch (error) {
+    alert("Fehler beim Laden der Datei: " + error);
+  }
+};
+reader.readAsText(file);
+}
+
+// Hilfsfunktion: Gruppiert Bilanzdaten nach Monat (Beispiel: Datum im Eintrag muss als "datum" vorhanden sein)
+function groupDataByMonth(bilanzData) {
+const grouped = {};
+bilanzData.forEach(entry => {
+  // Annahme: entry.datum enthält ein gültiges Datumsformat
+  const month = new Date(entry.datum).toLocaleDateString('de-DE', { year: 'numeric', month: 'long' });
+  if (!grouped[month]) {
+    grouped[month] = [];
+  }
+  grouped[month].push(entry);
+});
+return grouped;
+}
+
+function renderDashboard(groupedData) {
+const dashboard = document.getElementById("dashboard");
+if (!dashboard) return;
+dashboard.innerHTML = "";
+for (const [month, entries] of Object.entries(groupedData)) {
+  const total = entries.reduce((sum, entry) => sum + (parseFloat(entry.wert) || 0), 0);
+  const section = document.createElement("div");
+  section.innerHTML = `<h3>${month}</h3><p>Gesamt: ${total.toFixed(2)} kg CO₂</p>`;
+  dashboard.appendChild(section);
+}
   }

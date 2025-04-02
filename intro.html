@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Willkommen bei DigiGreenPilot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary: #23d5ab;
+            --secondary: #23a6d5;
+            --dark: #004d40;
+            --light: #e8f5e9;
+            --white: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(-45deg, var(--primary), var(--secondary));
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+            color: var(--dark);
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .welcome-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            width: 400px;
+            height: auto;
+            margin: 0 auto 2rem;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        h1 {
+            color: var(--dark);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .intro-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .step-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px var(--shadow);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
+
+        .step-number {
+            font-size: 3rem;
+            color: var(--primary);
+            opacity: 0.2;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-weight: bold;
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .step-description {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(35, 213, 171, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(35, 213, 171, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--dark);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light);
+            transform: translateY(-2px);
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-list i {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem auto;
+            }
+            
+            .welcome-card {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* New styles for pages navigation */
+        .pages-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .page-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-dot.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+
+        .pages-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .contact-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .contact-section h3 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .contact-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+
+        .contact-section p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--dark);
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 2px solid transparent;
+            font-weight: 500;
+            min-width: 250px;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .contact-link:hover::before {
+            opacity: 0.1;
+        }
+
+        .contact-link:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            box-shadow: 0 6px 20px rgba(35, 213, 171, 0.2);
+        }
+
+        .contact-link i {
+            font-size: 1.4rem;
+            color: var(--primary);
+            transition: transform 0.3s ease;
+            z-index: 2;
+        }
+
+        .contact-link:hover i {
+            transform: scale(1.1);
+        }
+
+        .contact-link span {
+            z-index: 2;
+        }
+
+        .contact-link.email-link {
+            background: linear-gradient(45deg, #23d5ab11, #23a6d511);
+        }
+
+        .contact-link.linkedin-link {
+            background: linear-gradient(45deg, #0077b511, #0a66c211);
+        }
+
+        .contact-link.email-link i {
+            color: #23d5ab;
+        }
+
+        .contact-link.linkedin-link i {
+            color: #0077b5;
+        }
+
+        @media (max-width: 768px) {
+            .contact-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .contact-link {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        .start-options {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .option-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .option-btn {
+            background: var(--white);
+            border: 2px solid var(--primary);
+            color: var(--dark);
+            padding: 1rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .option-btn:hover {
+            background: var(--light);
+            transform: translateY(-2px);
+        }
+
+        .option-btn i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="pages-container">
+            <!-- Page 1: Welcome -->
+            <div class="page active" id="page1">
+                <div class="welcome-card">
+                    <img src="https://lh3.googleusercontent.com/sgi-eph/AAxiof5e2mNVhdIEpcoInasC6nUTls8osDBRKrbMjo1hJ669VOGpK2nxEvbFDybNv4Tb3JOgL-BKxmqb63Cm1zIpc7Pfg6kDk7m99NHE0TQaCdRQ2tIZD8beU124uZSesn8wpVhRhlyMcNsu2uh2CtY8Utr97cI5_Nl3z24=s925" 
+                        alt="DigiGreen Pilot Logo" 
+                        class="logo" 
+                        style="width: 400px; height: auto; margin: 0 auto 2rem; display: block; transition: transform 0.3s ease;">
+                    <h1>Willkommen bei DigiGreenPilot</h1>
+                    <p class="intro-text">
+                        Ihr digitaler Assistent für professionelle CO₂-Bilanzierung. 
+                        Entdecken Sie unsere intuitive Plattform und beginnen Sie noch heute 
+                        mit Ihrer Nachhaltigkeitsreise.
+                    </p>
+                </div>
+
+                <div class="steps-container">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">Datenerfassung</h3>
+                        <p class="step-description">
+                            Erfassen Sie Ihre Emissionsdaten in drei Kategorien:
+                        </p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-industry"></i> Scope 1: Direkte Emissionen</li>
+                            <li><i class="fas fa-bolt"></i> Scope 2: Energiebezug</li>
+                            <li><i class="fas fa-truck"></i> Scope 3: Indirekte Emissionen</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">Analyse & Auswertung</h3>
+                        <p class="step-description">
+                            Nutzen Sie unsere fortschrittlichen Analyse-Tools:
+                        </p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-chart-pie"></i> Interaktive Diagramme</li>
+                            <li><i class="fas fa-file-export"></i> Export-Funktionen</li>
+                            <li><i class="fas fa-history"></i> Historische Vergleiche</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">Optimierung</h3>
+                        <p class="step-description">
+                            Verbessern Sie Ihre CO₂-Bilanz:
+                        </p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-lightbulb"></i> Handlungsempfehlungen</li>
+                            <li><i class="fas fa-bullseye"></i> Zieldefinition</li>
+                            <li><i class="fas fa-chart-line"></i> Fortschrittsverfolgung</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 2: Detailed Explanation -->
+            <div class="page" id="page2">
+                <div class="welcome-card">
+                    <h2>Detaillierte Funktionen</h2>
+                    <div class="steps-container">
+                        <div class="step-card">
+                            <h3>Scope 1 - Direkte Emissionen</h3>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-car"></i> Fahrzeugflotte</li>
+                                <li><i class="fas fa-fire"></i> Heizungsanlagen</li>
+                                <li><i class="fas fa-snowflake"></i> Kältemittel</li>
+                                <li><i class="fas fa-industry"></i> Produktionsprozesse</li>
+                            </ul>
+                        </div>
+                        <div class="step-card">
+                            <h3>Scope 2 - Energiebezug</h3>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-plug"></i> Stromverbrauch</li>
+                                <li><i class="fas fa-temperature-high"></i> Fernwärme</li>
+                                <li><i class="fas fa-solar-panel"></i> Erneuerbare Energien</li>
+                            </ul>
+                        </div>
+                        <div class="step-card">
+                            <h3>Scope 3 - Indirekte Emissionen</h3>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-plane"></i> Geschäftsreisen</li>
+                                <li><i class="fas fa-box"></i> Logistik</li>
+                                <li><i class="fas fa-recycle"></i> Abfallentsorgung</li>
+                                <li><i class="fas fa-users"></i> Mitarbeiter-Pendeln</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 3: Features & Tools -->
+            <div class="page" id="page3">
+                <div class="welcome-card">
+                    <h2>Features & Tools</h2>
+                    <div class="steps-container">
+                        <div class="step-card">
+                            <h3>Datenmanagement</h3>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-database"></i> Automatische Datenspeicherung</li>
+                                <li><i class="fas fa-file-import"></i> Import/Export-Funktionen</li>
+                                <li><i class="fas fa-history"></i> Versionierung</li>
+                            </ul>
+                        </div>
+                        <div class="step-card">
+                            <h3>Analyse-Tools</h3>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-chart-bar"></i> Interaktive Dashboards</li>
+                                <li><i class="fas fa-file-pdf"></i> PDF-Reports</li>
+                                <li><i class="fas fa-file-excel"></i> Excel-Export</li>
+                            </ul>
+                        </div>
+                        <div class="step-card">
+                            <h3>Unterstützung</h3>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-robot"></i> CO₂-Assistent</li>
+                                <li><i class="fas fa-question-circle"></i> Hilfe-Center</li>
+                                <li><i class="fas fa-book"></i> Dokumentation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Navigation -->
+        <div class="pages-nav">
+            <div class="page-dot active" onclick="showPage(1)"></div>
+            <div class="page-dot" onclick="showPage(2)"></div>
+            <div class="page-dot" onclick="showPage(3)"></div>
+        </div>
+
+        <!-- Start Options -->
+        <div class="start-options">
+            <h3>Wie möchten Sie beginnen?</h3>
+            <div class="option-buttons">
+                <a href="Dashboard.html" class="option-btn" id="dashboardBtn" style="display: none;">
+                    <i class="fas fa-chart-bar"></i>
+                    Mein Dashboard anzeigen
+                </a>
+                <a href="Dateipload.html" class="option-btn">
+                    <i class="fas fa-plus-circle"></i>
+                    Neue CO₂-Bilanz erstellen
+                </a>
+            </div>
+        </div>
+
+        <!-- Backup Reminder Card -->
+        <div class="step-card" style="margin: 2rem auto; max-width: 800px;">
+            <div class="step-number"><i class="fas fa-shield-alt"></i></div>
+            <h3 class="step-title">Wichtige Hinweise zur Datensicherung</h3>
+            <p class="step-description">Schützen Sie Ihre wertvollen CO₂-Bilanzdaten:</p>
+            <ul class="feature-list">
+                <li><i class="fas fa-download"></i> Exportieren Sie Ihre Daten regelmäßig</li>
+                <li><i class="fas fa-lock"></i> Bewahren Sie Sicherungskopien an einem sicheren Ort auf</li>
+                <li><i class="fas fa-exclamation-triangle"></i> Vermeiden Sie das Löschen des Browser-Caches ohne vorherige Sicherung</li>
+                <li><i class="fas fa-clock"></i> Nutzen Sie die automatische Backup-Funktion</li>
+            </ul>
+            <div class="action-buttons" style="margin-top: 1rem;">
+                <button onclick="createBackup()" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Backup erstellen
+                </button>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="contact-section">
+            <h3>Benötigen Sie Hilfe?</h3>
+            <p>Kontaktieren Sie uns bei Fragen oder Schwierigkeiten:</p>
+            <div class="contact-links">
+                <a href="mailto:s.khayati@mpool-consulting.de" class="contact-link email-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>s.khayati@mpool-consulting.de</span>
+                </a>
+                <a href="https://www.linkedin.com/in/sif-eddine-khayati-4a39b7255/" target="_blank" class="contact-link linkedin-link">
+                    <i class="fab fa-linkedin"></i>
+                    <span>LinkedIn Profil</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Page Navigation
+        function showPage(pageNum) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            // Show selected page
+            document.getElementById('page' + pageNum).classList.add('active');
+            
+            // Update dots
+            document.querySelectorAll('.page-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === pageNum);
+            });
+        }
+
+        // Check for existing data
+        window.addEventListener('load', function() {
+            const hasExistingData = localStorage.getItem('co2Data');
+            if (hasExistingData) {
+                // Show dashboard button if data exists
+                document.getElementById('dashboardBtn').style.display = 'flex';
+            }
+        });
+
+        // Backup-Funktionalität
+        function createBackup() {
+            try {
+                // Sammle alle relevanten Daten
+                const backupData = {
+                    timestamp: new Date().getTime(),
+                    co2Data: JSON.parse(localStorage.getItem('co2Data') || '{}'),
+                    monthlyEmissions: JSON.parse(localStorage.getItem('monthlyEmissions') || '[]'),
+                    dashboard_data: JSON.parse(localStorage.getItem('dashboard_data') || '{}')
+                };
+
+                // Erstelle Backup-Datei
+                const blob = new Blob([JSON.stringify(backupData, null, 2)], 
+                    {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `CO2_Bilanz_Backup_${new Date().toISOString().slice(0,10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+
+                // Zeige Erfolgsmeldung
+                showMessage('Backup wurde erfolgreich erstellt!', 'success');
+            } catch (error) {
+                console.error('Backup-Fehler:', error);
+                showMessage('Fehler beim Erstellen des Backups', 'error');
+            }
+        }
+
+        // Hilfsfunktion für Benachrichtigungen
+        function showMessage(message, type = 'info') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.position = 'fixed';
+            messageDiv.style.top = '20px';
+            messageDiv.style.left = '50%';
+            messageDiv.style.transform = 'translateX(-50%)';
+            messageDiv.style.padding = '1rem 2rem';
+            messageDiv.style.borderRadius = '8px';
+            messageDiv.style.backgroundColor = type === 'success' ? '#4CAF50' : '#f44336';
+            messageDiv.style.color = 'white';
+            messageDiv.style.zIndex = '1000';
+            messageDiv.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            messageDiv.textContent = message;
+            
+            document.body.appendChild(messageDiv);
+            
+            // Nachricht nach 3 Sekunden ausblenden
+            setTimeout(() => {
+                messageDiv.style.opacity = '0';
+                messageDiv.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => messageDiv.remove(), 500);
+            }, 3000);
+        }
+    </script>
+</body>
+</html> 

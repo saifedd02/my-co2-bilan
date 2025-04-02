@@ -10,13 +10,15 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 
   <style>
     /* Allgemeine Styles */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #23d5ab, #23a6d5); color: #333; padding: 1rem; }
     header { background: linear-gradient(90deg, #004d40, #00796b); padding: 15px 30px; display: flex; align-items: center; justify-content: space-between; color: #fff; border-radius: 10px; margin-bottom: 1rem; }
-    header img { height: 45px; transition: transform 0.3s ease; }
+    header img { height: 90px; transition: transform 0.3s ease; }
     header img:hover { transform: scale(1.05); }
     nav { display: flex; gap: 20px; }
     nav a { color: #fff; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 25px; transition: background 0.3s; }
@@ -38,19 +40,145 @@
     .chat-input button { padding: 0.8rem; border: none; background: #23d5ab; color: #fff; cursor: pointer; }
 
     /* Dashboard */
-    #dashboard { display: none; margin-top: 2rem; }
-    #pdfContent { background: #fafafa; border: 1px solid #ddd; border-radius: 8px; padding: 1rem; }
-    .scope-summary { display: flex; flex-wrap: wrap; gap: 1rem; margin: 2rem 0; }
-    .scope-box { flex: 1 1 200px; background: #f2f2f2; border-radius: 8px; padding: 1rem; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    table.scope-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
-    table.scope-table th, table.scope-table td { border: 1px solid #ccc; padding: 0.5rem; }
-    table.scope-table th { background: #e3f2fd; font-weight: bold; }
-    .chart-container { max-width: 500px; margin: 2rem auto; }
-    .chart-grid { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; margin-top: 2rem; }
-    .chart-box { background: #f9f9f9; border-radius: 8px; padding: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-width: 280px; text-align: center; }
-    .dash-btns { text-align: center; margin: 1rem 0; }
-    .btn { background: linear-gradient(45deg, #23d5ab, #23a6d5); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 25px; font-weight: 600; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; margin: 0.2rem 0; }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(35,213,171,0.4); }
+    #dashboard {
+      background: linear-gradient(135deg, #1a1f25 0%, #2c3e50 100%);
+      border-radius: 20px;
+      padding: 2rem;
+      color: #fff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      margin-top: 2rem;
+    }
+
+    #pdfContent {
+      background: rgba(255,255,255,0.1);
+      padding: 2rem;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+    }
+
+    #companyInfo {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1.2rem !important;
+      color: #fff !important;
+    }
+
+    .scope-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .scope-box {
+      background: rgba(255,255,255,0.1);
+      padding: 1.5rem;
+      border-radius: 15px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .scope-box:hover {
+      transform: translateY(-5px);
+    }
+
+    .scope-box h3 {
+      color: #4CAF50;
+      margin-bottom: 1rem;
+    }
+
+    .scope-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+      margin: 2rem 0;
+    }
+
+    .scope-table th {
+      background: rgba(76, 175, 80, 0.2);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #4CAF50;
+    }
+
+    .scope-table td {
+      background: rgba(255,255,255,0.1);
+      padding: 1rem;
+      transition: background 0.3s;
+    }
+
+    .scope-table tr:hover td {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .chart-container {
+      background: rgba(255,255,255,0.1);
+      padding: 1.5rem;
+      border-radius: 15px;
+      margin: 2rem 0;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .chart-box {
+      background: rgba(255,255,255,0.1);
+      padding: 1.5rem;
+      border-radius: 15px;
+    }
+
+    .chart-box h4 {
+      color: #4CAF50;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .dash-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      background: linear-gradient(45deg, #4CAF50, #45a049);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+    }
+
+    /* Animationen */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #dashboard {
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    .scope-box {
+      animation: fadeIn 0.8s ease-out;
+      animation-fill-mode: both;
+    }
+
+    .scope-box:nth-child(1) { animation-delay: 0.2s; }
+    .scope-box:nth-child(2) { animation-delay: 0.4s; }
+    .scope-box:nth-child(3) { animation-delay: 0.6s; }
+
     .error-msg { color: #b71c1c; font-weight: bold; margin-top: 0.5rem; }
     .info-msg { color: #004d40; font-size: 0.9rem; }
 
@@ -100,10 +228,11 @@ header {
     color: white;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
+    min-height: 100px; /* Erhöht für das größere Logo */
 }
 
 header img {
-    height: 45px;
+    height: 90px; /* Doppelte Höhe */
     transition: transform 0.3s ease;
 }
 
@@ -465,15 +594,15 @@ button[type="submit"] {
 .header-content {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 15px;
 }
 
 .small-avatar {
-    width: 45px;
-    height: 45px;
+    width: 90px; /* Doppelte Größe */
+    height: 90px; /* Doppelte Größe */
     border-radius: 50%;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.3);
+    border: 2px solid rgba(255,255,255,0.3);
     flex-shrink: 0;
 }
 
@@ -484,7 +613,7 @@ button[type="submit"] {
 }
 
 .chat-title {
-    font-size: 14px;
+    font-size: 18px; /* Größere Schrift */
     font-weight: bold;
 }
 
@@ -1604,36 +1733,37 @@ button.submit-button {
 </head>
 <body>
   <!-- HEADER -->
- <header>
+  <header style="min-height: 130px; padding: 15px 30px; display: flex; align-items: center; justify-content: space-between;">
     <a href="Dateipload.html">
-      <img src="https://digi-green-pilot.de/wp-content/uploads/2023/10/DGP-Logo-1024x438.png" alt="DigiGreen Pilot Logo">
+        <img src="https://lh3.googleusercontent.com/sgi-eph/AAxiof5e2mNVhdIEpcoInasC6nUTls8osDBRKrbMjo1hJ669VOGpK2nxEvbFDybNv4Tb3JOgL-BKxmqb63Cm1zIpc7Pfg6kDk7m99NHE0TQaCdRQ2tIZD8beU124uZSesn8wpVhRhlyMcNsu2uh2CtY8Utr97cI5_Nl3z24=s925" 
+            alt="DigiGreen Pilot Logo" 
+            style="height: 120px; width: auto; transition: transform 0.3s ease; margin: 10px 0;">
     </a>
-    
-    <nav>
-      <!-- Hier wurden die zwei zusätzlichen Buttons eingefügt: CO₂ Express & Chatbot -->
-      <a href="Dateipload.html" >
-        <i class="fas fa-poll"></i> Umfrage
-      </a>
-      <a href="Co2express.html">
-        <i class="fas fa-bolt"></i> CO₂ Express
-      </a>
-      <a href="Chatbot.html"class="active">
-        <i class="fas fa-comments"></i> Chatbot
-      </a>
-      <a href="livecalc.html">
-        <i class="fas fa-poll"></i> Live Calculator
-      </a>
-      <a href="Dashboard.html">
-        <i class="fas fa-leaf"></i> Dashboard
-      </a>
-      <a href="https://moodle.digitalekompetenzen.org/login/index.php#module-483">
-        <i class="fas fa-envelope"></i> Lernplatform
-      </a>
-      <a href="Meinprofil.html">
-        <i class="fas fa-user"></i> Mein Profil
-      </a>
+    <nav style="margin-left: 20px;">
+        <a href="Dateipload.html">
+            <i class="fas fa-poll"></i> Umfrage
+        </a>
+        <a href="Co2express.html">
+            <i class="fas fa-bolt"></i> CO₂ Express
+        </a>
+        <a href="Chatbot.html" class="active">
+            <i class="fas fa-comments"></i> Chatbot
+        </a>
+        <a href="livecalc.html" >
+            <i class="fas fa-calculator"></i> Live Calculator
+        </a>
+        <a href="Dashboard.html">
+            <i class="fas fa-leaf"></i> Dashboard
+        </a>
+        <a href="https://moodle.digitalekompetenzen.org/login/index.php#module-483">
+            <i class="fas fa-envelope"></i> Lernplatform
+        </a>
+        <a href="Meinprofil.html">
+            <i class="fas fa-user"></i> Mein Profil
+        </a>
     </nav>
-  </header>
+    <button class="toggle-btn" onclick="toggleMode()" style="margin-left: 20px;">Mode wechseln</button>
+</header>
 
 
 
@@ -1645,7 +1775,7 @@ button.submit-button {
       <div class="chat-header" id="chatHeader">CO₂ Assistant – Fragen Sie mich alles!</div>
       <div class="chat-body" id="chatBody">
         <ul class="chat-messages" id="chatMessages">
-          <li class="message bot-message">Hallo! Ich helfe Ihnen bei Ihrer CO₂-Bilanzierung. Lassen Sie uns beginnen. Bitte geben Sie Ihren Firmennamen ein.</li>
+          <li class="message bot-message">👋 Willkommen beim CO₂-Bilanzrechner! Ich führe Sie Schritt für Schritt durch die Erfassung aller relevanten Daten für Ihre CO₂-Bilanz. Bitte geben Sie zunächst den Namen Ihres Unternehmens ein:</li>
         </ul>
         <div class="chat-input">
           <input type="text" id="userInput" placeholder="Ihre Antwort..." onkeypress="handleKeyPress(event)">
@@ -1694,436 +1824,468 @@ button.submit-button {
     </div>
   </div>
 
+  <!-- Nach dem schließenden div mit der Klasse "container" und vor dem ersten Script-Tag -->
+  <script src="script1.js"></script>
+
   <script>
-    /****************************************************
-     * 0) Erweiterte Gesprächslogik – Alle relevanten
-     * Variablen für eine präzise CO₂-Bilanzierung
-     ****************************************************/
-    // Hier definieren wir eine umfangreiche Liste von Schritten (conversationSteps).
-    // Für jedes Subscope und jede relevante Variable wird eine Frage gestellt.
+    /******************************************************
+     * CO₂-Bilanzierung: Verbesserte Berechnung aller Scopes
+     * mit Funktionen aus script1.js
+     ******************************************************/
+    function calculateBilanz() {
+      addMessage("Berechne Ihre CO₂-Bilanz...", "bot");
+
+      try {
+        // Grundlegende Berechnungen
+        const dieselEmissions = (parseFloat(responses.scope1A_diesel) || 0) * 2.65;
+        const gasolineEmissions = (parseFloat(responses.scope1A_gasoline) || 0) * 2.32;
+        const electricityFactor = responses.scope2A_greenElectricity?.toLowerCase() === 'ja' ? 0 : 0.338;
+        const electricityEmissions = (parseFloat(responses.scope2A_electricity) || 0) * electricityFactor;
+        const trainEmissions = (parseFloat(responses.scope3A_train) || 0) * 0.032;
+        const flightEmissions = (parseFloat(responses.scope3A_flight) || 0) * 0.23;
+
+        const totalEmissions = dieselEmissions + gasolineEmissions + electricityEmissions + trainEmissions + flightEmissions;
+
+        // Dashboard anzeigen
+        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('companyInfo').innerHTML = `
+          <h2 style="color: #4CAF50; margin-bottom: 0.5rem;">${responses.companyName}</h2>
+          <div style="font-size: 1.2rem; color: #fff;">CO₂-Bilanz für das Jahr ${responses.year}</div>
+        `;
+
+        // Scope Summary Boxes
+        document.getElementById('scopeSummary').innerHTML = `
+          <div class="scope-box">
+            <h3>Scope 1</h3>
+            <div style="font-size: 1.5rem; margin: 1rem 0;">${(dieselEmissions + gasolineEmissions).toFixed(2)} kg CO₂</div>
+            <div>Direkte Emissionen</div>
+          </div>
+          <div class="scope-box">
+            <h3>Scope 2</h3>
+            <div style="font-size: 1.5rem; margin: 1rem 0;">${electricityEmissions.toFixed(2)} kg CO₂</div>
+            <div>Energie-bezogene Emissionen</div>
+          </div>
+          <div class="scope-box">
+            <h3>Scope 3</h3>
+            <div style="font-size: 1.5rem; margin: 1rem 0;">${(trainEmissions + flightEmissions).toFixed(2)} kg CO₂</div>
+            <div>Indirekte Emissionen</div>
+          </div>
+        `;
+
+        // Ergebnisse in der Tabelle anzeigen
+        const tbody = document.querySelector('#scopeTable tbody');
+        tbody.innerHTML = `
+          <tr>
+            <td>Scope 1 (Fahrzeuge)</td>
+            <td>${(dieselEmissions + gasolineEmissions).toFixed(2)}</td>
+            <td>${((dieselEmissions + gasolineEmissions) / totalEmissions * 100).toFixed(1)}%</td>
+          </tr>
+          <tr>
+            <td>Scope 2 (Strom)</td>
+            <td>${electricityEmissions.toFixed(2)}</td>
+            <td>${(electricityEmissions / totalEmissions * 100).toFixed(1)}%</td>
+          </tr>
+          <tr>
+            <td>Scope 3 (Geschäftsreisen)</td>
+            <td>${(trainEmissions + flightEmissions).toFixed(2)}</td>
+            <td>${((trainEmissions + flightEmissions) / totalEmissions * 100).toFixed(1)}%</td>
+          </tr>
+        `;
+
+        document.getElementById('totalEmissionCell').textContent = totalEmissions.toFixed(2);
+
+        // Erstelle Pie Chart
+        const ctx = document.getElementById('scopeChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Scope 1', 'Scope 2', 'Scope 3'],
+            datasets: [{
+              data: [
+                dieselEmissions + gasolineEmissions,
+                electricityEmissions,
+                trainEmissions + flightEmissions
+              ],
+              backgroundColor: [
+                'rgba(76, 175, 80, 0.8)',
+                'rgba(33, 150, 243, 0.8)',
+                'rgba(255, 152, 0, 0.8)'
+              ],
+              borderColor: 'rgba(255,255,255,0.1)',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: '#fff'
+                }
+              },
+              title: {
+                display: true,
+                text: 'Verteilung der CO₂-Emissionen',
+                color: '#fff',
+                font: {
+                  size: 16
+                }
+              }
+            }
+          }
+        });
+
+        // Erstelle Bar Chart für Subscopes
+        const ctxBar = document.getElementById('subscopeChart').getContext('2d');
+        new Chart(ctxBar, {
+          type: 'bar',
+          data: {
+            labels: ['Diesel', 'Benzin', 'Strom', 'Bahn', 'Flug'],
+            datasets: [{
+              label: 'CO₂ Emissionen (kg)',
+              data: [
+                dieselEmissions,
+                gasolineEmissions,
+                electricityEmissions,
+                trainEmissions,
+                flightEmissions
+              ],
+              backgroundColor: [
+                'rgba(76, 175, 80, 0.8)',
+                'rgba(76, 175, 80, 0.6)',
+                'rgba(33, 150, 243, 0.8)',
+                'rgba(255, 152, 0, 0.8)',
+                'rgba(255, 152, 0, 0.6)'
+              ],
+              borderColor: 'rgba(255,255,255,0.1)',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: {
+                  color: 'rgba(255,255,255,0.1)'
+                },
+                ticks: {
+                  color: '#fff'
+                }
+              },
+              x: {
+                grid: {
+                  color: 'rgba(255,255,255,0.1)'
+                },
+                ticks: {
+                  color: '#fff'
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Detaillierte Emissionen nach Quelle',
+                color: '#fff',
+                font: {
+                  size: 16
+                }
+              }
+            }
+          }
+        });
+
+        // Chatbot ausblenden
+        document.getElementById('chatContainer').style.display = 'none';
+
+        // Erfolgsmeldung
+        addMessage("Ihre CO₂-Bilanz wurde erfolgreich berechnet!", "bot");
+
+      } catch (error) {
+        console.error("Fehler bei der Berechnung:", error);
+        addMessage("Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.", "bot");
+      }
+    }
+
+    // CO2-Bilanz Chatbot: Strukturierte Konversation
     const conversationSteps = [
-      { key: "companyName", question: "Bitte geben Sie Ihren Firmennamen ein:" },
-      { key: "year", question: "Welches Bezugsjahr möchten Sie bilanzieren? (z. B. 2023)" },
-
-      // Scope 1 – Direkte Emissionen (Fahrzeuge, Heizung, Gase, sonstige Emittenten)
-      { key: "scope1_carDiesel", question: "Geben Sie die jährliche Dieselmenge (in Litern) für Firmen-PKW ein:" },
-      { key: "scope1_carDieselFactor", question: "Welchen Emissionsfaktor (kg CO₂/Liter) nutzen Sie für Diesel? (Standard: 2.64)", default: 2.64 },
-      { key: "scope1_carGasoline", question: "Geben Sie die jährliche Benzinmenge (in Litern) für Firmen-PKW ein:" },
-      { key: "scope1_carGasolineFactor", question: "Welchen Emissionsfaktor (kg CO₂/Liter) nutzen Sie für Benzin? (Standard: 2.32)", default: 2.32 },
-      { key: "scope1_heatingConsumption", question: "Geben Sie den jährlichen Erdgasverbrauch (in kWh) für Ihre Heizungsanlage ein:" },
-      { key: "scope1_heatingFactor", question: "Welchen Emissionsfaktor (kg CO₂/kWh) nutzen Sie für Erdgas? (Standard: 0.201)", default: 0.201 },
-      { key: "scope1_techGases", question: "Geben Sie die Menge der verbrauchten technischen Gase (in kg) ein:" },
-      { key: "scope1_techGasesFactor", question: "Welchen Emissionsfaktor (kg CO₂/kg) nutzen Sie für technische Gase? (z. B. 1430 für R134a)", default: 1430 },
-      { key: "scope1_otherEmitters", question: "Geben Sie die Menge anderer Emittenten (z. B. Notstromaggregate, in Litern) ein:" },
-      { key: "scope1_otherEmittersFactor", question: "Welchen Emissionsfaktor (kg CO₂ pro Liter) nutzen Sie für diese sonstigen Emittenten? (Standard: 2.50)", default: 2.50 },
-
-      // Scope 2 – Indirekte Emissionen (Strom)
-      { key: "scope2_electricity", question: "Geben Sie den jährlichen Stromverbrauch (in kWh) ein:" },
-      { key: "scope2_electricityFactor", question: "Welchen Emissionsfaktor (kg CO₂/kWh) nutzen Sie für den zugekauften Strom? (Standard: 0.356)", default: 0.356 },
-
-      // Scope 3 – Weitere indirekte Emissionen (Geschäftsreisen, externer Transport, postal, Chemikalien, Papier, Kunststoffe, Metalle, Mineralien, Entsorgung, Wasser)
-      { key: "scope3_trainTravel", question: "Geben Sie die jährliche Strecke (in km) für Geschäftsreisen per Bahn ein:" },
-      { key: "scope3_trainTravelFactor", question: "Welchen Emissionsfaktor (kg CO₂/km) nutzen Sie für Bahnreisen? (Standard: 0.06)", default: 0.06 },
-      { key: "scope3_flightTravel", question: "Geben Sie die jährliche Strecke (in km) für Geschäftsreisen per Flugzeug ein:" },
-      { key: "scope3_flightTravelFactor", question: "Welchen Emissionsfaktor (kg CO₂/km) nutzen Sie für Flugreisen? (Standard: 0.25)", default: 0.25 },
-      { key: "scope3_externalTransport", question: "Geben Sie die jährliche Distanz (in km) für externe Transporte ein:" },
-      { key: "scope3_externalTransportFactor", question: "Welchen Emissionsfaktor (kg CO₂/km) nutzen Sie für externe Transporte? (Standard: 0.09367)", default: 0.09367 },
-      { key: "scope3_postalPackages", question: "Geben Sie die Anzahl der versendeten Pakete (postal) ein:" },
-      { key: "scope3_postalPackagesFactor", question: "Welchen Emissionsfaktor (kg CO₂ pro Stück) nutzen Sie für Pakete? (Standard: 1.374)", default: 1.374 },
-      { key: "scope3_postalLetters", question: "Geben Sie die Anzahl der versendeten Briefe ein:" },
-      { key: "scope3_postalLettersFactor", question: "Welchen Emissionsfaktor (kg CO₂ pro Stück) nutzen Sie für Briefe? (Standard: 0.02)", default: 0.02 },
-      { key: "scope3_chemicals", question: "Geben Sie den Verbrauch chemischer Grundstoffe (in kg) ein:" },
-      { key: "scope3_chemicalsFactor", question: "Welchen Emissionsfaktor (kg CO₂/kg) nutzen Sie für chemische Grundstoffe? (Standard: 1.01)", default: 1.01 },
-      { key: "scope3_paper", question: "Geben Sie den jährlichen Papierverbrauch (in Blatt) ein:" },
-      { key: "scope3_paperFactor", question: "Welchen Emissionsfaktor (kg CO₂ pro Blatt) nutzen Sie für Papier? (Standard: 0.82)", default: 0.82 },
-      { key: "scope3_plastics", question: "Geben Sie den jährlichen Verbrauch von Kunststoffen (in kg) ein:" },
-      { key: "scope3_plasticsFactor", question: "Welchen Emissionsfaktor (kg CO₂/kg) nutzen Sie für Kunststoffe? (Standard: 1.9)", default: 1.9 },
-      { key: "scope3_metals", question: "Geben Sie den Verbrauch von Metallen (in kg) ein:" },
-      { key: "scope3_metalsFactor", question: "Welchen Emissionsfaktor (kg CO₂/kg) nutzen Sie für Metalle? (Standard: 10)", default: 10 },
-      { key: "scope3_minerals", question: "Geben Sie den Verbrauch von Mineralien/Baustoffen (in kg) ein:" },
-      { key: "scope3_mineralsFactor", question: "Welchen Emissionsfaktor (kg CO₂/kg) nutzen Sie für Mineralien/Baustoffe? (Standard: 0.0612)", default: 0.0612 },
-      { key: "scope3_disposalVolume", question: "Geben Sie das Volumen (in Litern) der entsorgten Abfälle ein:" },
-      { key: "scope3_disposalFill", question: "Geben Sie den durchschnittlichen Füllgrad (%) der Abfallbehälter ein:" },
-      { key: "scope3_disposalCollections", question: "Geben Sie die Anzahl der Leerungen pro Jahr für Abfallbehälter ein:" },
-      { key: "scope3_disposalFactor", question: "Welchen Emissionsfaktor (kg CO₂ pro Liter) nutzen Sie für die Entsorgung? (Standard: 2.63)", default: 2.63 },
-      { key: "scope3_water", question: "Geben Sie den jährlichen Wasserverbrauch (in m³) ein:" },
-      { key: "scope3_waterFactor", question: "Welchen Emissionsfaktor (kg CO₂/m³) nutzen Sie für Wasser? (Standard: 0.00229)", default: 0.00229 },
-
-      { key: "done", question: "Sind alle Daten eingegeben? (ja/nein)" }
+      { 
+        key: "welcome", 
+        question: "👋 Willkommen beim CO₂-Bilanzrechner! Bitte geben Sie den Namen Ihres Unternehmens ein:" 
+      },
+      { 
+        key: "companyName", 
+        question: "Danke! Für welches Jahr möchten Sie die CO₂-Bilanz erstellen? (z.B. 2023):" 
+      },
+      { 
+        key: "scope1A_diesel", 
+        question: "Wie hoch ist Ihr jährlicher Dieselverbrauch in Litern? (0 wenn keiner):" 
+      },
+      { 
+        key: "scope1A_gasoline", 
+        question: "Wie hoch ist Ihr jährlicher Benzinverbrauch in Litern? (0 wenn keiner):" 
+      },
+      { 
+        key: "scope2A_electricity", 
+        question: "Wie hoch ist Ihr jährlicher Stromverbrauch in kWh?" 
+      },
+      { 
+        key: "scope2A_greenElectricity", 
+        question: "Beziehen Sie Ökostrom? (Ja/Nein)" 
+      },
+      { 
+        key: "scope3A_train", 
+        question: "Wie viele Kilometer werden jährlich mit der Bahn zurückgelegt? (0 wenn keine):" 
+      },
+      { 
+        key: "scope3A_flight", 
+        question: "Wie viele Kilometer werden jährlich mit dem Flugzeug zurückgelegt? (0 wenn keine):" 
+      },
+      { 
+        key: "final_confirmation", 
+        question: "Danke für Ihre Angaben! Möchten Sie die CO₂-Bilanz jetzt berechnen? (Ja/Nein)" 
+      }
     ];
 
     // Globale Variable zur Speicherung der Antworten
     const responses = {};
     let currentStep = 0;
 
-    // Zeigt die nächste Frage im Chat an
-    function showNextQuestion() {
-      if (currentStep < conversationSteps.length) {
-        const step = conversationSteps[currentStep];
-        addMessage(step.question, "bot");
-      } else {
-        // Wenn alle Schritte durchlaufen sind, berechne die Bilanz
-        calculateBilanz();
-      }
+    /******************************************************
+     * CO₂-Bilanzierung: Verbesserte Berechnung aller Scopes
+     * mit Funktionen aus script1.js
+     ******************************************************/
+
+    // Funktionen für Chatbot-Interaktion
+    function addMessage(text, type) {
+      const messagesList = document.getElementById("chatMessages");
+      const newMessage = document.createElement("li");
+      newMessage.className = `message ${type}-message`;
+      newMessage.textContent = text;
+      messagesList.appendChild(newMessage);
+      
+      // Scroll to bottom
+      const chatBody = document.getElementById("chatBody");
+      chatBody.scrollTop = chatBody.scrollHeight;
     }
 
-    // Fügt eine Nachricht zum Chat hinzu
-    function addMessage(text, sender) {
-      const chatMessages = document.getElementById("chatMessages");
-      const li = document.createElement("li");
-      li.className = "message " + (sender === "bot" ? "bot-message" : "user-message");
-      li.textContent = text;
-      chatMessages.appendChild(li);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+    function sendMessage() {
+      const input = document.getElementById("userInput");
+      const userMessage = input.value.trim();
+      
+      if (userMessage === "") return;
+      
+      // User-Nachricht anzeigen
+      addMessage(userMessage, "user");
+      
+      // Input-Feld leeren
+      input.value = "";
+      
+      // Nachricht verarbeiten
+      processUserMessage(userMessage);
     }
 
-    // Verarbeitung der Benutzereingabe
-    function processUserInput(input) {
-      const step = conversationSteps[currentStep];
-      // Wenn kein Input und ein Default-Wert definiert ist, diesen Wert verwenden
-      if (!input && step.default !== undefined) {
-        responses[step.key] = step.default;
-      } else {
-        responses[step.key] = input;
-      }
-      addMessage("Ihre Antwort: " + input, "user");
-      currentStep++;
-      if (step.key === "done" && input.toLowerCase() === "nein") {
-        addMessage("Bitte geben Sie weitere Daten ein. Starten Sie den Dialog neu, wenn Sie fertig sind.", "bot");
-        return;
-      }
-      setTimeout(showNextQuestion, 600);
-    }
-
-    // Handler für Enter-Taste
     function handleKeyPress(event) {
       if (event.key === "Enter") {
-        const inputField = document.getElementById("userInput");
-        const text = inputField.value.trim();
-        if (text !== "") {
-          processUserInput(text);
-          inputField.value = "";
-        }
+        sendMessage();
       }
     }
 
-    // Senden-Button
-    function sendMessage() {
-      const inputField = document.getElementById("userInput");
-      const text = inputField.value.trim();
-      if (text !== "") {
-        processUserInput(text);
-        inputField.value = "";
-      }
-    }
-
-    // Start des Chatdialogs beim Laden der Seite
-    document.addEventListener("DOMContentLoaded", function() {
-      showNextQuestion();
-    });
-
-    /******************************************************
-     * CO₂-Bilanzierung: Berechnung aller Scopes
-     ******************************************************/
-    function calculateBilanz() {
-      // Scope 1 – Direkte Emissionen
-      const carDiesel = parseFloat(responses.scope1_carDiesel) || 0;
-      const carDieselFactor = parseFloat(responses.scope1_carDieselFactor) || 2.64;
-      const carGasoline = parseFloat(responses.scope1_carGasoline) || 0;
-      const carGasolineFactor = parseFloat(responses.scope1_carGasolineFactor) || 2.32;
-      const heatingConsumption = parseFloat(responses.scope1_heatingConsumption) || 0;
-      const heatingFactor = parseFloat(responses.scope1_heatingFactor) || 0.201;
-      const techGases = parseFloat(responses.scope1_techGases) || 0;
-      const techGasesFactor = parseFloat(responses.scope1_techGasesFactor) || 1430;
-      const otherEmitters = parseFloat(responses.scope1_otherEmitters) || 0;
-      const otherEmittersFactor = parseFloat(responses.scope1_otherEmittersFactor) || 2.50;
-      const scope1_total = (carDiesel * carDieselFactor) +
-                           (carGasoline * carGasolineFactor) +
-                           (heatingConsumption * heatingFactor) +
-                           (techGases * techGasesFactor) +
-                           (otherEmitters * otherEmittersFactor);
-
-      // Scope 2 – Indirekte Emissionen (Strom)
-      const electricity = parseFloat(responses.scope2_electricity) || 0;
-      const electricityFactor = parseFloat(responses.scope2_electricityFactor) || 0.356;
-      const scope2_total = electricity * electricityFactor;
-
-      // Scope 3 – Weitere indirekte Emissionen
-      const trainTravel = parseFloat(responses.scope3_trainTravel) || 0;
-      const trainFactor = parseFloat(responses.scope3_trainTravelFactor) || 0.06;
-      const flightTravel = parseFloat(responses.scope3_flightTravel) || 0;
-      const flightFactor = parseFloat(responses.scope3_flightTravelFactor) || 0.25;
-      const externalTransport = parseFloat(responses.scope3_externalTransport) || 0;
-      const externalTransportFactor = parseFloat(responses.scope3_externalTransportFactor) || 0.09367;
-      const postalPackages = parseFloat(responses.scope3_postalPackages) || 0;
-      const postalPackagesFactor = parseFloat(responses.scope3_postalPackagesFactor) || 1.374;
-      const postalLetters = parseFloat(responses.scope3_postalLetters) || 0;
-      const postalLettersFactor = parseFloat(responses.scope3_postalLettersFactor) || 0.02;
-      const chemicals = parseFloat(responses.scope3_chemicals) || 0;
-      const chemicalsFactor = parseFloat(responses.scope3_chemicalsFactor) || 1.01;
-      const paper = parseFloat(responses.scope3_paper) || 0;
-      const paperFactor = parseFloat(responses.scope3_paperFactor) || 0.82;
-      const plastics = parseFloat(responses.scope3_plastics) || 0;
-      const plasticsFactor = parseFloat(responses.scope3_plasticsFactor) || 1.9;
-      const metals = parseFloat(responses.scope3_metals) || 0;
-      const metalsFactor = parseFloat(responses.scope3_metalsFactor) || 10;
-      const minerals = parseFloat(responses.scope3_minerals) || 0;
-      const mineralsFactor = parseFloat(responses.scope3_mineralsFactor) || 0.0612;
-      // Für Entsorgung: Volumen (Liter) * (Füllgrad/100) * Leerungen * Factor / 1000 (Umrechnung auf kg)
-      const disposalVolume = parseFloat(responses.scope3_disposalVolume) || 0;
-      const disposalFill = parseFloat(responses.scope3_disposalFill) || 0;
-      const disposalCollections = parseFloat(responses.scope3_disposalCollections) || 0;
-      const disposalFactor = parseFloat(responses.scope3_disposalFactor) || 2.63;
-      const disposalEmissions = (disposalVolume * (disposalFill / 100) * disposalCollections * disposalFactor) / 1000;
-      const water = parseFloat(responses.scope3_water) || 0;
-      const waterFactor = parseFloat(responses.scope3_waterFactor) || 0.00229;
+    function processUserMessage(message) {
+      // Aktuellen Schritt abrufen
+      const currentStepObj = conversationSteps[currentStep];
       
-      const scope3_total = (trainTravel * trainFactor) +
-                           (flightTravel * flightFactor) +
-                           (externalTransport * externalTransportFactor) +
-                           (postalPackages * postalPackagesFactor) +
-                           (postalLetters * postalLettersFactor) +
-                           (chemicals * chemicalsFactor) +
-                           (paper * paperFactor) +
-                           (plastics * plasticsFactor) +
-                           (metals * metalsFactor) +
-                           (minerals * mineralsFactor) +
-                           disposalEmissions +
-                           (water * waterFactor);
-
-      const totalEmissions = scope1_total + scope2_total + scope3_total;
-
-      // Speichern der Ergebnisse
-      responses.scope1_total = scope1_total;
-      responses.scope2_total = scope2_total;
-      responses.scope3_total = scope3_total;
-      responses.totalEmissions = totalEmissions;
-
-      // Ausgabe im Chat
-      addMessage("Vielen Dank! Ihre CO₂-Bilanz wurde berechnet:", "bot");
-      addMessage(`Scope 1: ${scope1_total.toFixed(2)} kg CO₂`, "bot");
-      addMessage(`Scope 2: ${scope2_total.toFixed(2)} kg CO₂`, "bot");
-      addMessage(`Scope 3: ${scope3_total.toFixed(2)} kg CO₂`, "bot");
-      addMessage(`Gesamt: ${totalEmissions.toFixed(2)} kg CO₂`, "bot");
-
-      // Dashboard aufbauen
-      buildDashboard();
-    }
-
-    /******************************************************
-     * Dashboard-Aufbau: Ergebnisse, Tabelle & Diagramme
-     ******************************************************/
-    function buildDashboard() {
-      // Chat ausblenden, Dashboard einblenden
-      document.getElementById("chatContainer").style.display = "none";
-      document.getElementById("dashboard").style.display = "block";
-
-      // Firmendaten anzeigen
-      document.getElementById("companyInfo").textContent =
-        `Firma: ${responses.companyName}, Bezugsjahr: ${responses.year}`;
-
-      // Scope-Zusammenfassungen
-      const scopeSummaryEl = document.getElementById("scopeSummary");
-      scopeSummaryEl.innerHTML = `
-        <div class="scope-box">
-          <h3>Scope 1</h3>
-          <p>${responses.scope1_total.toFixed(2)} kg CO₂</p>
-        </div>
-        <div class="scope-box">
-          <h3>Scope 2</h3>
-          <p>${responses.scope2_total.toFixed(2)} kg CO₂</p>
-        </div>
-        <div class="scope-box">
-          <h3>Scope 3</h3>
-          <p>${responses.scope3_total.toFixed(2)} kg CO₂</p>
-        </div>
-      `;
-      const total = responses.totalEmissions;
-      const tableBody = document.querySelector("#scopeTable tbody");
-      tableBody.innerHTML = `
-        <tr>
-          <td>Scope 1</td>
-          <td>${responses.scope1_total.toFixed(2)}</td>
-          <td>${((responses.scope1_total/total)*100).toFixed(1)}%</td>
-        </tr>
-        <tr>
-          <td>Scope 2</td>
-          <td>${responses.scope2_total.toFixed(2)}</td>
-          <td>${((responses.scope2_total/total)*100).toFixed(1)}%</td>
-        </tr>
-        <tr>
-          <td>Scope 3</td>
-          <td>${responses.scope3_total.toFixed(2)}</td>
-          <td>${((responses.scope3_total/total)*100).toFixed(1)}%</td>
-        </tr>
-      `;
-      document.getElementById("totalEmissionCell").textContent = total.toFixed(2);
-
-      // Diagramme erstellen
-      createScopeChart({
-        "Scope 1": responses.scope1_total,
-        "Scope 2": responses.scope2_total,
-        "Scope 3": responses.scope3_total
-      });
-      createSubscopeChart(["Scope 1", "Scope 2", "Scope 3"],
-                           [responses.scope1_total, responses.scope2_total, responses.scope3_total]);
-    }
-
-    /******************************************************
-     * Diagramme mit Chart.js
-     ******************************************************/
-    let scopeChartRef = null;
-    function createScopeChart(scopeSums) {
-      const ctx = document.getElementById("scopeChart").getContext("2d");
-      if (scopeChartRef) scopeChartRef.destroy();
-      scopeChartRef = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-          labels: ["Scope 1", "Scope 2", "Scope 3"],
-          datasets: [{
-            data: [scopeSums["Scope 1"], scopeSums["Scope 2"], scopeSums["Scope 3"]],
-            backgroundColor: [
-              "rgba(54,162,235,0.7)",
-              "rgba(255,99,132,0.7)",
-              "rgba(75,192,192,0.7)"
-            ]
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: { legend: { position: "bottom" } }
-        }
-      });
-    }
-
-    let subscopeChartRef = null;
-    function createSubscopeChart(labels, values) {
-      const ctx = document.getElementById("subscopeChart").getContext("2d");
-      if (subscopeChartRef) subscopeChartRef.destroy();
-      subscopeChartRef = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: labels,
-          datasets: [{
-            label: "CO₂ (kg)",
-            data: values,
-            backgroundColor: "rgba(153,102,255,0.7)"
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            x: { ticks: { autoSkip: false, maxRotation: 45, minRotation: 0 } },
-            y: { beginAtZero: true }
-          },
-          plugins: { legend: { display: false } }
-        }
-      });
-    }
-
-    /******************************************************
-     * PDF-Export (html2pdf.js)
-     ******************************************************/
-    function downloadPDF() {
-      const element = document.getElementById("pdfContent");
-      const opt = {
-        filename: "CO2_Express_Advanced_Bilanz.pdf",
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 3 },
-        jsPDF: { unit: "pt", format: "a4", orientation: "portrait" }
-      };
-      html2pdf().from(element).set(opt).save();
-    }
-
-    /******************************************************
-     * Excel-Export (SheetJS)
-     ******************************************************/
-    function downloadExcel() {
-      if (!parsedData || parsedData.length === 0) {
-        alert("Keine Daten vorhanden.");
+      // Antwort speichern
+      responses[currentStepObj.key] = message;
+      
+      // Wenn der Benutzer nach Emissionsfaktoren fragt
+      if (message.toLowerCase().includes("faktoren") || message.toLowerCase().includes("emissionsfaktoren")) {
+        const scope = message.toLowerCase().includes("scope 1") ? "Scope 1" : 
+                     message.toLowerCase().includes("scope 2") ? "Scope 2" :
+                     message.toLowerCase().includes("scope 3") ? "Scope 3" : "alle";
+        
+        showEmissionFactors(scope);
         return;
       }
-      const wb = XLSX.utils.book_new();
-      wb.Props = {
-        Title: "CO2 Express Advanced Bilanz",
-        Subject: "CO2 Bilanz",
-        Author: responses.companyName || "CO2 Express",
-        CreatedDate: new Date()
-      };
-      const rawDataSheet = XLSX.utils.json_to_sheet(parsedData);
-      XLSX.utils.book_append_sheet(wb, rawDataSheet, "Rohdaten");
-      XLSX.writeFile(wb, "CO2_Express_Advanced_Bilanz.xlsx");
-    }
-
-    /******************************************************
-     * Formular-Submit: Speichern der Daten und Weiterleitung
-     ******************************************************/
-    function handleSubmit(event) {
-      event.preventDefault();
-      localStorage.setItem("co2Data", JSON.stringify(responses));
-      alert("Ihre CO₂-Bilanz wurde gespeichert!");
-      // Hier könnten Sie zur Dashboard-Seite weiterleiten:
-      // window.location.href = "Dashboard.html";
-    }
-
-    /******************************************************
-     * CSV-Einlesen und Dashboard-Generierung
-     ******************************************************/
-    let parsedData = [];
-    function processCSV() {
-      const fileInput = document.getElementById("csvFileInput");
-      const errorEl = document.getElementById("csvError");
-      errorEl.style.display = "none";
-      errorEl.textContent = "";
-      if (!fileInput.files || fileInput.files.length === 0) {
-        errorEl.style.display = "block";
-        errorEl.textContent = "Bitte eine CSV-Datei auswählen.";
+      
+      // Wenn der Benutzer einen eigenen Faktor angeben möchte
+      if (message.toLowerCase().includes("eigener faktor") || message.toLowerCase().includes("benutzerdefiniert")) {
+        addMessage("Sie können einen benutzerdefinierten Emissionsfaktor angeben. Bitte im Format: 'Scope X - Emittent - Faktor' (z.B. 'Scope 1A - Biogas - 0.2')", "bot");
         return;
       }
-      const file = fileInput.files[0];
-      Papa.parse(file, {
-        header: true,
-        delimiter: ";",
-        dynamicTyping: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-          console.log("PapaParse results:", results);
-          if (results.errors && results.errors.length > 0) {
-            errorEl.style.display = "block";
-            errorEl.textContent = "CSV-Fehler: " + results.errors[0].message;
+      
+      // Versuche, einen benutzerdefinierten Faktor zu erkennen
+      const factorPattern = /Scope (\d[A-Z]?)\s*-\s*([^-]+)\s*-\s*(\d+\.?\d*)/i;
+      const factorMatch = message.match(factorPattern);
+      if (factorMatch) {
+        const scope = factorMatch[1];
+        const emittent = factorMatch[2].trim();
+        const factor = parseFloat(factorMatch[3]);
+        useCustomFactor(`Scope ${scope}`, emittent, factor);
             return;
           }
-          parsedData = results.data;
-          if (!parsedData.some(row => row.scope !== undefined && row.scope !== "")) {
-            errorEl.style.display = "block";
-            errorEl.textContent = 'Spalte "scope" nicht gefunden oder leer. Bitte Template beachten.';
+      
+      // Prüfen ob bestimmte Schlüsselwörter eine Ablehnung signalisieren
+      if (
+        ["scope1A_intro", "scope1B_intro", "scope1D_intro", "scope1DOther_intro", 
+        "scope3B_intro", "scope3D_intro", "scope3E_intro", "scope3H_intro"].includes(currentStepObj.key) && 
+        (message.toLowerCase() === "nein" || message.toLowerCase() === "n")
+      ) {
+        responses[currentStepObj.key] = false;
+        // Bei "Nein" zu diesen Kategorien entsprechende Schritte überspringen
+        skipRelatedSteps(currentStepObj.key);
+      } else if (currentStepObj.key === "final_confirmation") {
+        // Letzte Bestätigung vor Berechnung
+        if (message.toLowerCase() === "ja" || message.toLowerCase() === "j" || message.toLowerCase() === "ok") {
+          calculateBilanz();
+          return;
+        } else {
+          addMessage("Zurück zur Eingabe. Welchen Wert möchten Sie korrigieren?", "bot");
+          // Hier könnte später eine Funktion zur Bearbeitung bestimmter Werte implementiert werden
             return;
           }
-          showCSVPreview(parsedData);
-          generateDashboard(parsedData);
-        }
-      });
+      }
+      
+      // Zum nächsten Schritt
+      goToNextStep();
     }
 
-    function showCSVPreview(data) {
-      const previewEl = document.getElementById("csvPreview");
-      previewEl.innerHTML = "";
-      if (!data || data.length === 0) {
-        previewEl.innerHTML = '<p class="info-msg">Keine Daten oder leere CSV.</p>';
-        return;
+    function skipRelatedSteps(key) {
+      // Je nach verneinter Kategorie verschiedene Schritte überspringen
+      switch(key) {
+        case "scope1A_intro":
+          // Alle Fahrzeug-Fragen überspringen
+          currentStep += 5; // 5 Fragen zu Scope 1A überspringen
+          break;
+        case "scope1B_intro":
+          // Transport-Fragen überspringen
+          currentStep += 2; // 2 Fragen zu Scope 1B überspringen
+          break;
+        case "scope1D_intro":
+          // Kältemittel-Fragen überspringen
+          currentStep += 3; // 3 Fragen zu Scope 1D überspringen
+          break;
+        case "scope1DOther_intro":
+          // Sonstige direkte Emittenten überspringen
+          currentStep += 1; // 1 Frage zu Scope 1D Other überspringen
+          break;
+        case "scope3B_intro":
+          // Externe Transporte überspringen  
+          currentStep += 3; // 3 Fragen zu Scope 3B überspringen
+          break;
+        case "scope3D_intro":
+          // Kunststoffe überspringen
+          currentStep += 1; // 1 Frage zu Scope 3D überspringen
+          break;
+        case "scope3E_intro":
+          // Metalle überspringen
+          currentStep += 1; // 1 Frage zu Scope 3E überspringen
+          break;
+        case "scope3H_intro":
+          // Verpflegung überspringen
+          currentStep += 1; // 1 Frage zu Scope 3H überspringen
+          break;
       }
-      let tableHTML = '<table id="csvPreviewTable"><thead><tr>';
-      const columns = Object.keys(data[0]);
-      columns.forEach(col => { tableHTML += `<th>${col}</th>`; });
-      tableHTML += '</tr></thead><tbody>';
-      data.slice(0, 15).forEach(row => {
-        tableHTML += "<tr>";
-        columns.forEach(col => { tableHTML += `<td>${row[col] || ""}</td>`; });
-        tableHTML += "</tr>";
-      });
-      tableHTML += "</tbody></table>";
-      previewEl.innerHTML = tableHTML;
+    }
+
+    function goToNextStep() {
+      // Zum nächsten Schritt wechseln
+      currentStep++;
+      
+      // Prüfen, ob wir am Ende angelangt sind
+      if (currentStep < conversationSteps.length) {
+        // Nächste Frage stellen
+        let nextQuestion = conversationSteps[currentStep].question;
+        
+        // Platzhalter ersetzen
+        Object.keys(responses).forEach(key => {
+          nextQuestion = nextQuestion.replace(`{${key}}`, responses[key]);
+        });
+        
+        addMessage(nextQuestion, "bot");
+        
+        // Information über Emissionsfaktoren anzeigen für bestimmte Schritte
+        if (currentStepObj.key === "welcome") {
+          addMessage("Hinweis: Sie können jederzeit 'Faktoren' oder 'Emissionsfaktoren' eingeben, um eine Übersicht aller verfügbaren Emissionsfaktoren zu erhalten. Mit 'Eigener Faktor' können Sie benutzerdefinierte Faktoren verwenden.", "bot");
+        }
+      } else {
+        // Ende der Konversation
+        addMessage("Vielen Dank für Ihre Antworten! Klicken Sie auf 'Berechnen', um Ihre CO₂-Bilanz zu erstellen.", "bot");
+      }
+    }
+
+    // Funktion für benutzerdefinierte Emissionsfaktoren
+    function useCustomFactor(scope, emittent, customFactor) {
+      addMessage(`Ihr benutzerdefinierter Emissionsfaktor für ${emittent} (${scope}) mit ${customFactor} kg CO₂/Einheit wurde gespeichert und wird in der Berechnung verwendet.`, "bot");
+      
+      // Je nach Scope unterschiedlich behandeln
+      switch(scope) {
+        case "Scope 1A":
+          const scope1AId = addScope1A();
+          document.getElementById(`scope1A_type_${scope1AId}`).value = emittent;
+          document.getElementById(`scope1A_factor_${scope1AId}`).value = customFactor;
+          break;
+        case "Scope 1B":
+          const scope1BId = addTransport1B();
+          document.getElementById(`transport1B_type_${scope1BId}`).value = emittent;
+          document.getElementById(`transport1B_factor_${scope1BId}`).value = customFactor;
+          break;
+        case "Scope 1C":
+          const scope1CId = addScope1C();
+          document.getElementById(`scope1C_type_${scope1CId}`).value = emittent;
+          document.getElementById(`scope1C_factor_${scope1CId}`).value = customFactor;
+          break;
+        // Weitere Scopes hier ergänzen...
+        default:
+          // Allgemeiner Fall - als sonstige Emittenten behandeln
+          const otherEmitterId = addScope1DOther();
+          document.getElementById(`scope1d-other-name_${otherEmitterId}`).value = emittent;
+          document.getElementById(`scope1d-other-factor_${otherEmitterId}`).value = customFactor;
+      }
+      
+      // Frage nach weiteren Informationen
+      addMessage(`Bitte geben Sie nun die Menge für ${emittent} an:`, "bot");
+    }
+
+    // Zeigt die verfügbaren Emissionsfaktoren je nach Scope an
+    function showEmissionFactors(scope) {
+      let message = "Hier sind die verfügbaren Emissionsfaktoren:\n\n";
+      
+      if (scope === "Scope 1" || scope === "alle") {
+        message += "SCOPE 1 - Direkte Emissionen:\n";
+        message += "- Fahrzeuge (Scope 1A): Benzin (2,32 kg CO₂/L), Diesel (2,65 kg CO₂/L), Erdgas (2,27 kg CO₂/kg), LPG (1,63 kg CO₂/L)\n";
+        message += "- Transport (Scope 1B): LKW Diesel (0,13 kg CO₂/km für 3,5-7,5t), LKW CNG (0,092 kg CO₂/km für 3,5-7,5t)\n";
+        message += "- Heizung (Scope 1C): Erdgas (0,201 kg CO₂/kWh), Heizöl (3,11 kg CO₂/L), Holzpellets (0,035 kg CO₂/kg)\n";
+        message += "- Kältemittel (Scope 1D): R134a (1430 kg CO₂/kg), R404A (3922 kg CO₂/kg), R407C (1774 kg CO₂/kg)\n\n";
+      }
+      
+      if (scope === "Scope 2" || scope === "alle") {
+        message += "SCOPE 2 - Indirekte Emissionen aus Energiebezug:\n";
+        message += "- Strom (Scope 2A): Strom 2023 (0,338 kg CO₂/kWh ohne Vorketten, 0,390 kg CO₂/kWh mit Vorketten)\n";
+        message += "- Fernwärme (Scope 2A): Nah-/Fernwärme (0,25 kg CO₂/kWh)\n\n";
+      }
+      
+      if (scope === "Scope 3" || scope === "alle") {
+        message += "SCOPE 3 - Weitere indirekte Emissionen:\n";
+        message += "- Geschäftsreisen (Scope 3A): Bahn (0,03-0,053 kg CO₂/pkm), Flug Inland (0,28 kg CO₂/pkm), Flug International (0,20 kg CO₂/pkm)\n";
+        message += "- Externe Transporte (Scope 3B): LKW (0,05-0,10 kg CO₂/tkm), Schiff (0,01-0,03 kg CO₂/tkm), Bahn (0,01-0,02 kg CO₂/tkm)\n";
+        message += "- Papier (Scope 3C): Papier (0,90 kg CO₂/kg), Recyclingpapier (0,30 kg CO₂/kg)\n";
+        message += "- Kunststoffe (Scope 3D): Diverse Polymere (1,7-8,5 kg CO₂/kg je nach Typ)\n";
+        message += "- Metalle (Scope 3E): Stahl (1,0-2,2 kg CO₂/kg), Aluminium (2,0-16,5 kg CO₂/kg), Kupfer (1,0-4,1 kg CO₂/kg)\n";
+        message += "- Abfall (Scope 3F): Restmüll (0,52 kg CO₂/kg), Papiermüll (0,04 kg CO₂/kg)\n";
+        message += "- Wasser (Scope 3G): Wasserverbrauch (0,27-0,30 kg CO₂/m³)\n";
+        message += "- Verpflegung (Scope 3H): Durchschnitt pro Mahlzeit (2,26 kg CO₂/Mahlzeit), diverse Lebensmittel (0,3-27,0 kg CO₂/kg)\n";
+      }
+      
+      message += "\nDies ist eine vereinfachte Übersicht. Alle Faktoren werden automatisch in der Berechnung berücksichtigt. Möchten Sie mit der Eingabe fortfahren?";
+      
+      addMessage(message, "bot");
     }
   </script>
 </body>
 </html>
+

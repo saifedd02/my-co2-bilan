@@ -4,247 +4,169 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CO₂-Dashboard</title>
-
   <!-- Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
   <!-- html2pdf.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
   <!-- SheetJS (XLSX) -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
-    /* ========================
-       1) Animations (Fade-In/-Out)
-       ======================== */
-    .fade-in {
-      animation: fadeIn 0.6s forwards;
+    :root {
+      --primary: #004d40;
+      --secondary: #00796b;
+      --accent: #23d5ab;
+      --accent-2: #23a6d5;
+      --bg-color: #f8f8f8;
+      --card-bg: #ffffff;
+      --text-dark: #333;
+      --transition: 0.3s;
     }
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.98);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: var(--text-dark);
     }
-    .fade-out {
-      animation: fadeOut 0.6s forwards;
-    }
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-        transform: scale(0.98);
-      }
-    }
-
-    /* ========================
-       2) Header / Navigation
-       ======================== */
+    /* Header-Stil bleibt gleich wie auf allen anderen Seiten */
     header {
-      background: linear-gradient(90deg, #004d40, #00796b);
+      background: rgba(0, 77, 64, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #fff;
       padding: 15px 30px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       position: sticky;
       top: 0;
       z-index: 1000;
-      color: white;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
     header img {
       height: 45px;
-      transition: transform 0.3s ease;
+      transition: transform var(--transition);
     }
-    header img:hover {
-      transform: scale(1.05);
-    }
+    header img:hover { transform: scale(1.05); }
     nav {
       display: flex;
-      gap: 30px;
+      gap: 20px;
       align-items: center;
     }
     header a {
-      color: white;
+      color: #fff;
       text-decoration: none;
       font-size: 16px;
-      font-weight: 500;
       padding: 8px 15px;
       border-radius: 25px;
-      transition: all 0.3s ease;
+      transition: background var(--transition);
+    }
+    header a:hover { background: rgba(255,255,255,0.2); }
+    /* Optional: Falls auf allen Seiten ein einheitlicher Header verwendet wird, kann hier
+       kein separater Seitentitel-Header eingefügt werden. Stattdessen den Inhalt in die Hauptseite integrieren. */
+    .page-title {
+      text-align: center;
+      padding: 2rem 1rem;
+      margin: 1rem 0;
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
       position: relative;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      animation: titleGlow 2s ease-in-out infinite;
     }
-    header a i {
-      font-size: 18px;
-      opacity: 0.9;
+    .page-title::before {
+      content: "CO₂-Dashboard";
+      position: absolute;
+      left: 0;
+      right: 0;
+      text-shadow: 2px 2px 20px rgba(35, 213, 171, 0.4);
+      opacity: 0.6;
+      z-index: -1;
     }
-    header a:hover {
-      background: rgba(165, 214, 167, 0.15);
-      color: #a5d6a7;
-      transform: translateY(-2px);
-    }
-    header a::after {
+    .page-title::after {
       content: '';
       position: absolute;
       bottom: 0;
       left: 50%;
-      width: 0;
-      height: 2px;
-      background: #a5d6a7;
       transform: translateX(-50%);
-      transition: width 0.3s ease;
+      width: 150px;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      border-radius: 2px;
     }
-    header a:hover::after {
-      width: 80%;
+    @keyframes titleGlow {
+      0%, 100% {
+        text-shadow: 0 0 30px rgba(35, 213, 171, 0.2);
+        transform: scale(1);
+      }
+      50% {
+        text-shadow: 0 0 40px rgba(35, 213, 171, 0.4);
+        transform: scale(1.02);
+      }
     }
-    header a.active {
-      background: rgba(165, 214, 167, 0.2);
-      color: #a5d6a7;
-    }
-    header a[href="Dashboard.html"] {
-      background: rgba(35, 213, 171, 0.15);
-      border: 1px solid rgba(35, 213, 171, 0.3);
-    }
-    header a[href="Dashboard.html"]:hover {
-      background: rgba(35, 213, 171, 0.25);
-      border-color: rgba(35, 213, 171, 0.5);
-    }
-
-    /* Responsive Nav */
+    /* Responsive Anpassungen */
     @media (max-width: 768px) {
-      header {
-        padding: 15px 20px;
-      }
-      nav {
-        gap: 15px;
-      }
-      header a {
-        padding: 6px 10px;
-        font-size: 14px;
-      }
-      header img {
-        height: 35px;
+      .page-title {
+        font-size: 2rem;
+        letter-spacing: 2px;
       }
     }
-
-    /* ========================
-       3) Body / Container
-       ======================== */
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #23d5ab, #23a6d5);
-      margin: 0;
-      padding: 0;
-      color: #333;
-    }
-    h1 {
-      text-align: center;
-      color: #fff;
-      text-shadow: 0 1px 5px rgba(0,0,0,0.2);
-      margin: 1rem 0;
-    }
-
     .container {
       max-width: 1200px;
       margin: 2rem auto;
-      background: #fff;
-      border-radius: 10px;
+      background: var(--card-bg);
+      border-radius: 8px;
       padding: 2rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      position: relative;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      animation: fadeIn 0.5s ease-in-out;
     }
-
-    /* ========================
-       4) Buttons
-       ======================== */
-    .btn-container {
-      text-align: center; 
-      margin-bottom:20px;
-    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .btn-container { text-align: center; margin-bottom: 20px; }
     .action-button {
-      display: inline-block;
-      margin: 0 10px;
-      background: #004d40;
+      background: var(--accent);
       color: #fff;
       padding: 10px 20px;
-      border-radius: 20px;
-      text-decoration: none;
-      font-weight: bold;
-      text-align: center;
-      cursor: pointer;
-      transition: background 0.3s ease;
       border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      margin: 0 10px;
+      transition: background var(--transition);
     }
-    .action-button:hover {
-      background: #00796b;
-    }
-
-    /* ========================
-       5) Tabellen
-       ======================== */
+    .action-button:hover { background: var(--accent-2); }
     table {
       width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 2rem;
-      margin-top: 1rem;
-    }
-    table th, table td {
-      padding: 0.75rem;
-      border-bottom: 1px solid #ddd;
-      text-align: left;
-      font-size: 14px;
-    }
-    table th {
-      background: #23a6d5;
-      color: #fff;
-      font-weight: bold;
-    }
-
-    /* ========================
-       6) Zusammenfassungen
-       ======================== */
-    .summary {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      justify-content: space-around;
+      border-collapse: separate;
+      border-spacing: 0;
       margin: 2rem 0;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
-    .summary-item {
-      background: #f9f9f9;
-      border-radius: 8px;
-      padding: 1.5rem;
-      flex: 1 1 200px;
-      min-width: 200px;
-      text-align: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      font-size: 14px;
+    th {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 1.2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: left;
     }
-    .summary-item h2 {
-      margin: 0 0 0.5rem 0;
-      font-size: 1.3rem;
-      color: #004d40;
-    }
-    .summary-item p {
-      margin: 0;
+    td {
+      padding: 1rem;
+      background: white;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
       font-size: 1rem;
-      color: #333;
-      font-weight: bold;
     }
-
-    /* ========================
-       7) Diagramme
-       ======================== */
-    .chart-container {
-      max-width: 600px;
-      margin: 2rem auto;
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:hover td {
+      background: rgba(35, 213, 171, 0.05);
     }
     .charts-grid {
       display: flex;
@@ -254,1999 +176,974 @@
       margin-top: 2rem;
     }
     .chart-box {
-      background: #f9f9f9;
+      background: var(--card-bg);
       border-radius: 8px;
       padding: 1rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       flex: 1 1 300px;
+      text-align: center;
     }
-    .chart-box h3 {
-      margin-bottom: 1rem;
-      font-size: 1.1rem;
-      color: #004d40;
+    .chart-container { max-width: 600px; margin: 2rem auto; }
+    .filter-container {
+      text-align: center;
+      margin: 1rem 0;
+      background: rgba(255,255,255,0.8);
+      padding: 10px;
+      border-radius: 8px;
+      display: inline-block;
     }
-
-    /* ========================
-       8) Keine Daten
-       ======================== */
     .no-data {
       text-align: center;
-      color: #fff;
       font-size: 1.2rem;
       margin-top: 2rem;
-      text-shadow: 0 1px 5px rgba(0,0,0,0.2);
+      color: var(--primary);
     }
-
-    /* ========================
-       9) PDF-Header + Empfehlung
-       ======================== */
+    /* CO2-Bilanz Bericht Styling */
     .pdf-header {
-      text-align: center;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 2rem;
+      border-radius: 15px;
       margin-bottom: 2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     .pdf-header h2 {
-      margin: 0;
-      font-size: 1.5rem;
-      color: #004d40;
-      font-weight: bold;
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
     }
     .pdf-header p {
-      margin: 0.3rem 0;
+      font-size: 1.1rem;
+      margin: 0.5rem 0;
+      opacity: 0.9;
+    }
+    /* Zusammenfassende Statistiken */
+    .stats-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+    .stat-card h4 {
+      color: var(--primary);
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    .stat-card .value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--secondary);
+      margin: 0.5rem 0;
+    }
+    .stat-card .description {
       font-size: 0.9rem;
+      color: #666;
     }
-    .recommendation {
-      margin-top: 3rem;
-      padding: 1rem;
-      background: #e8f5e9;
-      border-radius: 8px;
+    /* Vergleichsstatistiken */
+    .comparison-stats {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin: 2rem 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
-    .recommendation h3 {
-      margin-top: 0;
-      color: #004d40;
-      font-size: 1.2rem;
+    .comparison-stats p {
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .recommendation ul {
-      margin: 0;
-      padding-left: 20px;
-      font-size: 0.9rem;
+    .comparison-stats p:last-child {
+      border-bottom: none;
     }
-
-    /* ========================
-       10) Print / PDF-Styling
-       ======================== */
-    @media print {
-      body {
-        background: #fff !important;
-      }
-      .container {
-        box-shadow: none !important;
-      }
+    .comparison-stats strong {
+      color: var(--primary);
     }
-
-:root {
-    --primary: #23d5ab;
-    --secondary: #23a6d5;
-    --dark: #004d40;
-    --light: #e8f5e9;
-    --glow: rgba(35, 213, 171, 0.2);
-    --card: rgba(255, 255, 255, 0.95);
-    --text-dark: #2c3e50;
-}
-
-body {
-    margin: 0;
-    min-height: 100vh;
-    background: linear-gradient(-45deg, #23d5ab, #23a6d5, #23d5ab, #23a6d5);
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
-    font-family: 'Arial', sans-serif;
-    color: var(--text-dark);
-}
-
-@keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* Header Styles */
-header {
-    background: linear-gradient(90deg, #004d40, #00796b);
-    padding: 15px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    color: white;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-}
-
-header img {
-    height: 45px;
-    transition: transform 0.3s ease;
-}
-
-header img:hover {
-    transform: scale(1.05);
-}
-
-nav {
-    display: flex;
-    gap: 30px;
-    align-items: center;
-}
-
-header a {
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 500;
-    padding: 8px 15px;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-header a i {
-    font-size: 18px;
-    opacity: 0.9;
-}
-
-header a:hover {
-    background: rgba(165, 214, 167, 0.15);
-    color: #a5d6a7;
-    transform: translateY(-2px);
-}
-
-header a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background: #a5d6a7;
-    transform: translateX(-50%);
-    transition: width 0.3s ease;
-}
-
-header a:hover::after {
-    width: 80%;
-}
-
-header a.active {
-    background: rgba(165, 214, 167, 0.2);
-    color: #a5d6a7;
-}
-
-header a[href="Dashboard.html"] {
-    background: rgba(35, 213, 171, 0.15);
-    border: 1px solid rgba(35, 213, 171, 0.3);
-}
-
-header a[href="Dashboard.html"]:hover {
-    background: rgba(35, 213, 171, 0.25);
-    border-color: rgba(35, 213, 171, 0.5);
-}
-
-@media (max-width: 768px) {
-    header {
-        padding: 15px 20px;
-    }
-
-    nav {
-        gap: 15px;
-    }
-
-    header a {
-        padding: 6px 10px;
-        font-size: 14px;
-    }
-
-    header img {
-        height: 35px;
-    }
-
-    @media (max-width: 480px) {
-        header a span {
-            display: none;
-        }
-        
-        header a i {
-            font-size: 20px;
-        }
-    }
-}
-
-/* Form Sections */
-.form-section {
-    background: var(--card);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    margin: 2rem auto;
-    padding: 2rem;
-    max-width: 1200px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transform-style: preserve-3d;
-    transition: all 0.6s ease;
-}
-
-.form-section:hover {
-    transform: translateY(-10px) rotateX(5deg);
-}
-
-/* Scope Sections */
-.scope-section {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 15px;
-    padding: 1.5rem;
-    margin: 1rem 0;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(46, 204, 113, 0.1);
-}
-
-.scope-section:hover {
-    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.1);
-    transform: translateY(-3px);
-}
-
-/* Form Groups */
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-label {
-    display: block;
-    color: var(--text-dark);
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-/* Input Styles */
-input, select {
-    width: 100%;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 25px;
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
-    font-size: 16px;
-    transition: all 0.3s;
-}
-
-input:focus, select:focus {
-    outline: none;
-    box-shadow: 
-        inset 0 2px 5px rgba(0, 0, 0, 0.1),
-        0 0 0 2px var(--primary);
-    transform: translateY(-2px);
-}
-
-/* Buttons */
-button {
-    width: auto;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 25px;
-    background: linear-gradient(45deg, #23d5ab, #23a6d5);
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-    position: relative;
-    overflow: hidden;
-}
-
-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(35, 213, 171, 0.4);
-}
-
-button::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transform: rotate(45deg);
-    animation: shine 3s infinite;
-}
-
-@keyframes shine {
-    0% { transform: translateX(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) rotate(45deg); }
-}
-
-button[type="submit"] {
-    width: 100%;
-    max-width: 1200px;
-    margin: 2rem auto;
-    display: block;
-    padding: 1rem;
-    font-weight: bold;
-}
-
-.remove-field {
-    
-    background: linear-gradient(45deg, #ff6b6b, #ee5253);
-    padding: 8px 16px;
-    font-size: 14px;
-}
-
-/* Dynamic Fields */
-.dynamic-field {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 15px;
-    margin: 1rem 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-5px); }
-    100% { transform: translateY(0px); }
-}
-
-/* Result Section */
-.result-section {
-    background: var(--card);
-    border-radius: 20px;
-    padding: 2rem;
-    margin: 2rem auto;
-    max-width: 1200px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .form-section {
-        margin: 1rem;
+    /* Responsive Anpassungen */
+    @media (max-width: 768px) {
+      .pdf-header {
         padding: 1.5rem;
+      }
+      .pdf-header h2 {
+        font-size: 1.8rem;
+      }
+      td, th {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+      }
+      .stat-card .value {
+        font-size: 1.5rem;
+      }
     }
-    
-    .dynamic-field {
-        grid-template-columns: 1fr;
-    }
-}
-
-.input-toggle {
-    margin-bottom: 1rem;
-    margin: 15px 0;
-    padding: 10px;
-    background: #f9f9f9;
-    border-radius: 8px;
-}
-
-.calculation-method {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.energy-price-info {
-    font-size: 0.9em;
-    color: #666;
-    margin-top: 0.25rem;
-}
-
-.cost-input {
-    background: #f5f5f5;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 10px;
-}
-
-.emissions-summary {
-    background: #f5f5f5;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 20px;
-}
-
-.emissions-summary .total {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 2px solid #004d40;
-    font-weight: bold;
-}
-
-.tooltip-icon {
-    display: inline-block;
-    background: #004d40;
-    color: white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    font-size: 14px;
-    line-height: 20px;
-    margin-left: 5px;
-    cursor: pointer;
-    position: relative;
-}
-
-.tooltip-text {
-    display: none;
-    position: absolute;
-    background: rgba(0,0,0,0.8);
-    color: #fff;
-    padding: 8px;
-    border-radius: 5px;
-    font-size: 14px;
-    top: 25px; 
-    left: 0;
-    width: 200px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    z-index: 1000;
-}
-
-.tooltip-icon:hover + .tooltip-text,
-.tooltip-icon:focus + .tooltip-text {
-    display: block;
-}
-
-/* Chatbot Styles */
-.chatbot-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 300px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-    z-index: 1000;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-.chat-header {
-    background: #004d40;
-    color: white;
-    padding: 10px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-}
-
-.header-content {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.small-avatar {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.3);
-    flex-shrink: 0;
-}
-
-.small-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.chat-title {
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.minimize-btn {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 18px;
-}
-
-.chat-body {
-    height: 400px;
-    display: flex;
-    flex-direction: column;
-}
-
-.chat-messages {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 10px;
-    background: #f8f9fa;
-}
-
-.message {
-    margin-bottom: 10px;
-    padding: 8px 12px;
-    border-radius: 15px;
-    max-width: 80%;
-}
-
-.bot-message {
-    background: #e3f2fd;
-    margin-right: auto;
-}
-
-.user-message {
-    background: #004d40;
-    color: white;
-    margin-left: auto;
-}
-
-.quick-replies {
-    padding: 10px;
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-}
-
-.quick-reply {
-    background: #f0f0f0;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 15px;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-.quick-reply:hover {
-    background: #e0e0e0;
-}
-
-.chat-input {
-    display: flex;
-    padding: 10px;
-    gap: 5px;
-    border-top: 1px solid #eee;
-}
-
-.chat-input input {
-    flex-grow: 1;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    outline: none;
-}
-
-.chat-input button {
-    background: #004d40;
-    color: white;
-    border: none;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-.chatbot-container.minimized .chat-body {
-    display: none;
-}
-
-/* Animiertes Icon */
-.fa-leaf {
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-}
-/*veränderung*/
-
-.scope-section {
-    position: relative; /* Für Pseudo-Elemente */
-    margin: 1rem 0;
-    padding: 1.5rem 1rem;
-    background: rgba(255, 255, 255, 0.9);
-    border-left: 4px solid var(--primary); /* farbiger Balken links */
-    border-radius: 10px;
-  }
-  
-  /* Optional: Kleinen "Trennstrich" zwischen Abschnitten */
-  .scope-section + .scope-section::before {
-    content: "";
-    display: block;
-    width: 50%;
-    height: 2px;
-    margin: 2rem auto;
-    background: var(--primary);
-    opacity: 0.2;
-  }
-
-  @media (max-width: 480px) {
-    .dynamic-field {
-      grid-template-columns: 1fr; /* Alles untereinander */
-      gap: 0.5rem; /* etwas geringerer Abstand */
-    }
-  }
-  .remove-field {
-  background: linear-gradient(45deg, #ff6b6b, #ee5253);
-  padding: 8px 16px;
-  font-size: 14px;
-  border: none;
-  border-radius: 25px;
-  color: white;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-.remove-field:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-}
-
-button {
-    background: linear-gradient(45deg, var(--primary), var(--secondary));
-    color: #fff;
-    border: none;
-    border-radius: 25px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: transform 0.3s;
-    font-size: 14px;
-}
-
-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(35, 213, 171, 0.4);
-}
-
-/* Entfernen-Button in Rot */
-button.remove-button {
-    background: linear-gradient(45deg, #ff6b6b, #ee5253);
-}
-
-/* Größerer Submit-Button */
-button.submit-button {
-    width: 100%;
-    max-width: 1200px;
-    display: block;
-    margin: 2rem auto;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 1rem;
-}
-.add-button {
-    background: linear-gradient(45deg, #4caf50, #2ecc71); /* z.B. Grüner Ton */
-    margin-bottom: 1rem;
-    color: #fff;
-}
-
-/* Wenn du noch Hover-Effekt willst: */
-.add-button:hover {
-    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
-}
-
-.scope-card {
-    background: #ffffff; /* oder var(--card), wenn du möchtest */
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  /* Farbige Hintergründe für unterschiedliche Scopes */
-
-/* Scope 1 mit leichtem Grünhauch */
-.scope-1 {
-    background: #ecfdf5; /* helles Grün */
-    border-left: 5px solid #23d5ab; /* auffälliger Balken links */
-    margin-bottom: 2rem; 
-    padding: 1.5rem;
-    border-radius: 8px;
-  }
-  
-  /* Scope 2 mit hellblauer Tönung */
-  .scope-2 {
-    background: #f0f9ff; /* helles Blau */
-    border-left: 5px solid #23a6d5;
-    margin-bottom: 2rem; 
-    padding: 1.5rem;
-    border-radius: 8px;
-  }
-  
-  /* Scope 3 mit gelblicher Nuance */
-  .scope-3 {
-    background: #fffbeb; /* helles Gelb */
-    border-left: 5px solid #fcd34d;
-    margin-bottom: 2rem; 
-    padding: 1.5rem;
-    border-radius: 8px;
-  }
-  /* =========================
-   1) Grundlegende Variablen
-   ========================= */
-:root {
-    --bg-color: #1b1b1b;        /* Sehr dunkles Grau (fast Schwarz) */
-    --accent-color: #00ffd5;    /* Neon-Türkis */
-    --accent-color-2: #ff00ff;  /* Neon-Pink */
-    --text-color: #ffffff;      /* Weißer Text */
-    --text-color-light: #d1d1d1;/* Etwas hellerer Grauton für Labels */
-    --header-height: 60px;
-    --transition-speed: 0.3s;
-  }
-  
-  /* =========================
-     2) Allgemeines Layout
-     ========================= */
-  body {
-    margin: 0;
-    font-family: "Arial", sans-serif;
-    background: var(--bg-color);
-    color: var(--text-color);
-    /* Kleiner animierter BG-Farbverlauf (subtil) */
-    background: radial-gradient(circle at center, #222 0%, #000 100%);
-    background-size: cover;
-    transition: background var(--transition-speed) ease;
-    overflow-x: hidden;
-  }
-  
-  /* Sanftes "rein-zoomen" */
-  @keyframes fadeInZoom {
-    0% {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  
-  /* =========================
-     3) Header / Navigation
-     ========================= */
-  header {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    height: var(--header-height);
-    background: #111;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 255, 213, 0.1);
-    border-bottom: 1px solid rgba(0, 255, 213, 0.2);
-  }
-  
-  header img {
-    height: 40px;
-    transition: transform 0.2s;
-  }
-  
-  header img:hover {
-    transform: scale(1.05);
-  }
-  
-  nav {
-    display: flex;
-    gap: 15px;
-  }
-  
-  header a {
-    color: var(--accent-color);
-    text-decoration: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    position: relative;
-  }
-  
-  header a:hover {
-    background: rgba(0,255,213,0.1);
-    transform: translateY(-2px);
-  }
-  
-  header a.active {
-    background: rgba(0,255,213,0.2);
-    color: #fff;
-    border: 1px solid rgba(0,255,213,0.3);
-  }
-  
-  /* Responsive Header-Anpassung */
-  @media (max-width: 768px) {
-    nav {
-      gap: 10px;
-    }
-    header a {
-      padding: 4px 8px;
-      font-size: 14px;
-    }
-  }
-  
-  /* =========================
-     4) Container & Karten
-     ========================= */
-  .container {
-    max-width: 1200px;
-    margin: 1.5rem auto;
-    padding: 1.5rem;
-    animation: fadeInZoom 0.5s ease forwards;
-  }
-  
-  .form-section,
-  .scope-section,
-  .scope-card {
-    background: #2a2a2a; /* Dunkles Grau */
-    border: 1px solid rgba(0,255,213,0.2);
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    padding: 1.5rem;
-    box-shadow: 0 0 10px rgba(0,255,213,0.05);
-    animation: fadeInZoom 0.6s ease forwards;
-  }
-  
-  /* "Leuchtender" Rahmen bei Hover */
-  .form-section:hover,
-  .scope-section:hover,
-  .scope-card:hover {
-    box-shadow: 0 0 10px rgba(0,255,213,0.3), 0 0 20px rgba(255,0,255,0.1);
-    transform: translateY(-2px);
-  }
-  
-  /* =========================
-     5) Überschriften
-     ========================= */
-  h1, h2, h3 {
-    margin-top: 0;
-    color: var(--accent-color);
-    text-shadow: 0 0 5px rgba(0,255,213,0.4);
-  }
-  
-  h1 {
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: var(--accent-color-2);
-    text-shadow: 0 0 5px rgba(255,0,255,0.5);
-  }
-  
-  /* =========================
-     6) Formularelemente
-     ========================= */
-  .form-group {
-    margin-bottom: 1rem;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 0.3rem;
-    color: var(--text-color-light);
-  }
-  
-  input, select {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px;
-    background: #333;
-    color: #fff;
-    transition: box-shadow var(--transition-speed);
-  }
-  
-  input:focus, select:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--accent-color);
-  }
-  
-  /* =========================
-     7) Buttons
-     ========================= */
-  button, .action-button {
-    display: inline-block;
-    background: var(--accent-color);
-    color: #000;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 14px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-transform: uppercase;
-    font-weight: bold;
-    margin-top: 0.5rem;
-  }
-  
-  button:hover, .action-button:hover {
-    background: var(--accent-color-2);
-    color: #fff;
-    box-shadow: 0 0 8px var(--accent-color-2);
-    transform: translateY(-2px);
-  }
-  
-  button.submit-button {
-    width: 100%;
-    margin-top: 1.5rem;
-    font-size: 16px;
-    background: var(--accent-color-2);
-    color: #fff;
-  }
-  
-  button.remove-field {
-    background: #ff0066; /* Kräftiges Pink/Rot */
-    margin-top: 1rem;
-  }
-  
-  button.remove-field:hover {
-    box-shadow: 0 0 10px #ff0066;
-  }
-  
-  /* =========================
-     8) Dynamische Felder
-     ========================= */
-  .dynamic-fields, .dynamic-field {
-    margin-top: 1rem;
-    background: #333;
-    border: 1px solid rgba(0,255,213,0.1);
-    border-radius: 6px;
-    padding: 1rem;
-    position: relative;
-    transition: box-shadow 0.3s;
-  }
-  
-  .dynamic-field:hover {
-    box-shadow: 0 0 8px rgba(0,255,213,0.3);
-  }
-  
-  /* Felder in Grid-Layout */
-  .dynamic-field {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
-  }
-  
-  /* =========================
-     9) Chatbot
-     ========================= */
-  .chatbot-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 320px;
-    background: #2a2a2a;
-    border: 1px solid rgba(0,255,213,0.3);
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,255,213,0.2);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    z-index: 999;
-    animation: fadeInZoom 0.5s ease forwards;
-  }
-  
-  .chat-header {
-    background: #333;
-    color: #fff;
-    padding: 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .chat-header .chat-title {
-    font-weight: bold;
-    font-size: 14px;
-  }
-  
-  .chat-body {
-    display: flex;
-    flex-direction: column;
-    height: 380px;
-    background: #1b1b1b;
-  }
-  
-  .chat-messages {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 10px;
-  }
-  
-  .message {
-    margin-bottom: 8px;
-    padding: 8px 10px;
-    border-radius: 12px;
-    max-width: 80%;
-    line-height: 1.3;
-  }
-  
-  .bot-message {
-    background: #004d40;
-    color: #fff;
-    margin-right: auto;
-    box-shadow: 0 0 5px rgba(0,255,213,0.3);
-  }
-  
-  .user-message {
-    background: var(--accent-color);
-    color: #000;
-    margin-left: auto;
-    box-shadow: 0 0 5px var(--accent-color);
-  }
-  
-  .quick-replies {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    background: #222;
-    padding: 6px;
-  }
-  
-  .quick-reply {
-    background: #444;
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    padding: 5px 10px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  
-  .quick-reply:hover {
-    background: var(--accent-color);
-    color: #000;
-  }
-  
-  .chat-input {
-    display: flex;
-    gap: 5px;
-    padding: 8px;
-    background: #333;
-  }
-  
-  .chat-input input {
-    flex-grow: 1;
-    background: #222;
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 4px;
-    padding: 8px;
-  }
-  
-  .chat-input input:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--accent-color);
-  }
-  
-  .chat-input button {
-    background: var(--accent-color);
-    color: #000;
-    border-radius: 4px;
-    width: 40px;
-    border: none;
-    font-weight: bold;
-  }
-  
-  .chatbot-container.minimized .chat-body {
-    display: none;
-  }
-  
-  /* =========================
-     10) Medienabfragen
-     ========================= */
-  @media (max-width: 768px) {
-    .container {
-      margin: 1rem;
-      padding: 1rem;
-    }
-    .dynamic-field {
-      grid-template-columns: 1fr;
-    }
-    .chatbot-container {
-      width: 90%;
-      right: 5%;
-    }
-  }
-  
-  /* Kleiner Schimmer-Effekt */
-  @keyframes shimmer {
-    0% { background-position: -200px 0; }
-    100% { background-position: 200px 0; }
-  }
-  /* =============================
-   1) Standard-Variablen (Light Mode)
-   ============================= */
-:root {
-    --transition-speed: 0.3s;
-    --font-family: "Arial", sans-serif;
-  
-    /* Farben Light Mode */
-    --bg-color: #f0f0f0;         /* Hintergrund (hell) */
-    --text-color: #1b1b1b;       /* Text (dunkel) */
-    --accent-color: #0066cc;     /* Akzent (Blau) */
-    --accent-color-2: #00cc66;   /* 2. Akzent (Grün) */
-    --card-bg: #ffffff;          /* Karten/Box-Hintergrund */
-    --border-color: rgba(0,0,0,0.1);
-  
-    /* Optional: Größere Layout-Variablen */
-    --header-height: 60px;
-  }
-  
-  /* =============================
-     2) Dark Mode Variablen
-     Überschreiben dieselben Namen
-     ============================= */
-  .dark-mode {
-    --bg-color: #1b1b1b;         /* Hintergrund (dunkel) */
-    --text-color: #ffffff;       /* Text (hell) */
-    --accent-color: #00ffd5;     /* Neon-Türkis */
-    --accent-color-2: #ff00ff;   /* Neon-Pink */
-    --card-bg: #2a2a2a;          /* Kartenhintergrund (dunkler) */
-    --border-color: rgba(0,255,213,0.3);
-  }
-  
-  /* =============================
-     3) Globales Styling
-     (greift auf die Variablen zu)
-     ============================= */
-  
-  /* Body */
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: var(--font-family);
-    background: var(--bg-color);
-    color: var(--text-color);
-    transition: background var(--transition-speed), color var(--transition-speed);
-  }
-  
-  /* Header (Beispiel) */
-  header {
-    height: var(--header-height);
-    background: var(--card-bg);
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1rem;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-  
-  /* Ein Button, um den Mode zu toggeln */
-  .toggle-btn {
-    background: var(--accent-color);
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: background var(--transition-speed);
-  }
-  .toggle-btn:hover {
-    background: var(--accent-color-2);
-  }
-  
-  /* Beispiel: Container / Section / Card */
-  .container,
-  .form-section,
-  .scope-section,
-  .scope-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin: 1rem auto;
-    padding: 1rem;
-    max-width: 1200px;
-    transition: background var(--transition-speed), box-shadow var(--transition-speed);
-  }
-  
-  /* Buttons allgemein */
-  button, .action-button {
-    background: var(--accent-color);
-    color: #fff;
-    border: none;
-    border-radius: 25px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.2s ease;
-    margin: 0.25rem 0;
-  }
-  button:hover, .action-button:hover {
-    background: var(--accent-color-2);
-  }
-  
-  /* Textfelder, Inputs, Selects */
-  input, select, textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background: var(--card-bg);
-    color: var(--text-color);
-    transition: background var(--transition-speed), color var(--transition-speed);
-  }
-  input:focus, select:focus, textarea:focus {
-    outline: 2px solid var(--accent-color);
-  }
-  
-  /* Überschriften */
-  h1, h2, h3, h4 {
-    color: var(--text-color);
-    margin: 0.5rem 0;
-  }
-  
-  /* Beispiel: Minimale Chatbot-Stile (vereinfacht) */
-  .chatbot-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 300px;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    transition: background var(--transition-speed);
-  }
-  .chat-header {
-    background: var(--accent-color);
-    color: #fff;
-    padding: 10px;
-    cursor: pointer;
-  }
-  .chat-body {
-    height: 400px;
-    overflow-y: auto;
-    padding: 10px;
-    background: var(--card-bg);
-  }
-  .message {
-    background: #e3f2fd;
-    margin: 5px 0;
-    padding: 8px;
-    border-radius: 8px;
-  }
-  
-  /* etc. … */
-  /* ==============================================
-   1) Standard (Light Mode) – Variablen & Basics
-   ============================================== */
-:root {
-    --transition-speed: 0.3s;
-    --font-family: 'Arial', sans-serif;
-  
-    /* Farben: Light Mode */
-    --bg-color: #f8f8f8;        /* Hintergrund hell */
-    --text-color: #2c3e50;      /* Dunkler Text */
-    --accent-color: #0066cc;    /* Akzent (Blau) */
-    --accent-color-2: #00cc66;  /* 2. Akzent (Grün) */
-    --card-bg: #ffffff;         /* Karten / Boxen */
-    --border-color: rgba(0,0,0,0.1);
-  
-    /* Layout-Größen */
-    --header-height: 60px;
-  }
-  
-  /* ==============================================
-     2) Dark Mode – überschreibt dieselben Variablen
-     ============================================== */
-  .dark-mode {
-    --bg-color: #1b1b1b;        /* Sehr dunkel */
-    --text-color: #ffffff;      /* Heller Text */
-    --accent-color: #00ffd5;    /* Neon-Türkis */
-    --accent-color-2: #ff00ff;  /* Neon-Pink */
-    --card-bg: #2a2a2a;         /* Dunkles Grau */
-    --border-color: rgba(0,255,213,0.3);
-  }
-  
-  /* ==============================================
-     3) Globales Styling
-     ============================================== */
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: var(--font-family);
-    background: var(--bg-color);
-    color: var(--text-color);
-    transition: background var(--transition-speed), color var(--transition-speed);
-  }
-  
-  /* Header-Beispiel */
-  header {
-    height: var(--header-height);
-    background: var(--card-bg);
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1rem;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-  
-  header img {
-    height: 40px;
-    transition: transform 0.2s;
-  }
-  header img:hover {
-    transform: scale(1.05);
-  }
-  
-  /* Navigation */
-  nav {
-    display: flex;
-    gap: 15px;
-  }
-  
-  header a {
-    color: var(--accent-color);
-    text-decoration: none;
-    padding: 6px 12px;
-    border-radius: 25px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    position: relative;
-  }
-  header a:hover {
-    background: rgba(0, 0, 0, 0.05);
-    transform: translateY(-2px);
-  }
-  header a.active {
-    background: rgba(0, 0, 0, 0.1);
-    color: var(--text-color);
-  }
-  
-  /* ==============================================
-     4) Container, Sektionen, Karten
-     ============================================== */
-  .container,
-  .form-section,
-  .scope-section,
-  .scope-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin: 1rem auto;
-    padding: 1rem;
-    max-width: 1200px;
-    transition: background var(--transition-speed), box-shadow var(--transition-speed);
-  }
-  
-  /* Hover-Effekt bei Cards/Sektionen */
-  .form-section:hover,
-  .scope-section:hover,
-  .scope-card:hover {
-    box-shadow: 0 2px 8px var(--border-color);
-    transform: translateY(-2px);
-  }
-  
-  /* ==============================================
-     5) Überschriften
-     ============================================== */
-  h1, h2, h3, h4 {
-    color: var(--accent-color);
-    margin: 0.5rem 0;
-  }
-  h1 {
-    text-align: center;
-    font-size: 1.8rem;
-    color: var(--accent-color-2);
-    margin-bottom: 1rem;
-  }
-  
-  /* ==============================================
-     6) Formularelemente
-     ============================================== */
-  .form-group {
-    margin-bottom: 1rem;
-  }
-  label {
-    display: block;
-    margin-bottom: 0.3rem;
-    font-weight: bold;
-    color: var(--text-color);
-  }
-  input, select, textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background: var(--bg-color);
-    color: var(--text-color);
-    transition: background var(--transition-speed), color var(--transition-speed);
-  }
-  input:focus, select:focus, textarea:focus {
-    outline: 2px solid var(--accent-color);
-  }
-  
-  /* ==============================================
-     7) Buttons
-     ============================================== */
-  button, .action-button {
-    background: var(--accent-color);
-    color: #fff;
-    border: none;
-    border-radius: 25px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.2s ease;
-    margin: 0.25rem 0;
-  }
-  button:hover, .action-button:hover {
-    background: var(--accent-color-2);
-    transform: translateY(-2px);
-  }
-  button.submit-button {
-    width: 100%;
-    margin-top: 1.5rem;
-    font-size: 16px;
-    background: var(--accent-color-2);
-  }
-  
-  /* Entfernen-Button in Rot */
-  button.remove-field {
-    background: #ff0066;
-    margin-top: 1rem;
-  }
-  button.remove-field:hover {
-    box-shadow: 0 0 10px #ff0066;
-  }
-  
-  /* ==============================================
-     8) Dynamische Felder (z.B. .dynamic-field)
-     ============================================== */
-  .dynamic-fields,
-  .dynamic-field {
-    margin-top: 1rem;
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 1rem;
-    position: relative;
-    transition: box-shadow 0.3s;
-  }
-  
-  .dynamic-field {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
-  }
-  .dynamic-field:hover {
-    box-shadow: 0 0 8px var(--border-color);
-  }
-  
-  /* ==============================================
-     9) Quick-Replies / Chatbot-Elemente
-     ============================================== */
-  .quick-reply {
-    background: var(--card-bg);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-    border-radius: 15px;
-    padding: 5px 10px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .quick-reply:hover {
-    background: var(--accent-color);
-    color: #fff;
-  }
-  
-  /* ==============================================
-     10) Chatbot-Container
-     ============================================== */
-  .chatbot-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 320px;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    transition: background var(--transition-speed);
-  }
-  
-  .chat-header {
-    background: var(--accent-color);
-    color: #fff;
-    padding: 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .chat-body {
-    height: 400px;
-    overflow-y: auto;
-    padding: 10px;
-    background: var(--bg-color);
-  }
-  
-  .chat-messages {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 10px;
-  }
-  
-  .message {
-    margin-bottom: 8px;
-    padding: 8px 10px;
-    border-radius: 12px;
-    max-width: 80%;
-    line-height: 1.3;
-    color: var(--text-color);
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-  }
-  
-  .bot-message {
-    margin-right: auto;
-    border-left: 3px solid var(--accent-color);
-  }
-  .user-message {
-    margin-left: auto;
-    border-left: 3px solid var(--accent-color-2);
-  }
-  
-  .chat-input {
-    display: flex;
-    gap: 5px;
-    padding: 8px;
-    background: var(--card-bg);
-    border-top: 1px solid var(--border-color);
-  }
-  
-  .chat-input input {
-    flex-grow: 1;
-    background: var(--bg-color);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-    border-radius: 25px;
-    padding: 8px;
-  }
-  .chat-input button {
-    background: var(--accent-color);
-    color: #fff;
-    border-radius: 25px;
-    width: 40px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  .chatbot-container.minimized .chat-body {
-    display: none;
-  }
-  
-  /* ==============================================
-     11) Responsive Anpassungen
-     ============================================== */
-  @media (max-width: 768px) {
-    .container {
-      margin: 1rem;
-      padding: 1rem;
-    }
-    .dynamic-field {
-      grid-template-columns: 1fr;
-    }
-    .chatbot-container {
-      width: 90%;
-      right: 5%;
-    }
-  }
-  ::-webkit-input-placeholder { 
-    color: rgba(255,255,255,0.5); /* z.B. in Dark Mode */
-  }
-  :-ms-input-placeholder {
-    color: rgba(255,255,255,0.5);
-  }
-  ::placeholder {
-    color: rgba(255,255,255,0.5);
-  }
   </style>
 </head>
-<body class="fade-in">
+<body>
+  <!-- Einheitlicher Header, wie auf allen anderen Seiten -->
+  <header>
+    <a href="Dateipload.html">
+      <img src="https://lh3.googleusercontent.com/sgi-eph/AAxiof5e2mNVhdIEpcoInasC6nUTls8osDBRKrbMjo1hJ669VOGpK2nxEvbFDybNv4Tb3JOgL-BKxmqb63Cm1zIpc7Pfg6kDk7m99NHE0TQaCdRQ2tIZD8beU124uZSesn8wpVhRhlyMcNsu2uh2CtY8Utr97cI5_Nl3z24=s925" alt="DigiGreen Pilot Logo"
+      style="height: 120px; width: auto; transition: transform 0.3s ease; margin: 10px 0;">
+    </a>
+    <nav>
+      <a href="Dateipload.html"><i class="fas fa-poll"></i> Umfrage</a>
+      <a href="Co2express.html"><i class="fas fa-bolt"></i> CO₂ Express</a>
+      <a href="Chatbot.html"><i class="fas fa-comments"></i> Chatbot</a>
+      <a href="livecalc.html"><i class="fas fa-calculator"></i> Live Calculator</a>
+      <a href="Dashboard.html" class="active"><i class="fas fa-leaf"></i> Dashboard</a>
+      <a href="https://moodle.digitalekompetenzen.org/login/index.php#module-483"><i class="fas fa-envelope"></i> Lernplatform</a>
+      <a href="Meinprofil.html"><i class="fas fa-user"></i> Mein Profil</a>
+    </nav>
+  </header>
 
-<!-- HEADER / NAV -->
-<header>
-  <a href="Dateipload.html">
-    <img src="https://digi-green-pilot.de/wp-content/uploads/2023/10/DGP-Logo-1024x438.png" alt="DigiGreen Pilot Logo">
-  </a>
-  
-  <nav>
-    <!-- Hier wurden die zwei zusätzlichen Buttons eingefügt: CO₂ Express & Chatbot -->
-    <a href="Dateipload.html" class="active">
-      <i class="fas fa-poll"></i> Umfrage
-    </a>
-    <a href="Co2express.html">
-      <i class="fas fa-bolt"></i> CO₂ Express
-    </a>
-    <a href="Chatbot.html">
-      <i class="fas fa-comments"></i> Chatbot
-    </a>
-    <a href="livecalc.html">
-      <i class="fas fa-poll"></i> Live Calculator
-    </a>
-    <a href="Dashboard.html">
-      <i class="fas fa-leaf"></i> Dashboard
-    </a>
-    <a href="https://moodle.digitalekompetenzen.org/login/index.php#module-483">
-      <i class="fas fa-envelope"></i> Lernplatform
-    </a>
-    <a href="Meinprofil.html">
-      <i class="fas fa-user"></i> Mein Profil
-    </a>
-  </nav>
-</header>
-
-
-
-<header>
-  <!-- Dein Header-Inhalt hier … -->
-  <h1>CO₂-Dashboard</h1>
-</header>
-
-<div class="container" id="pdfContent">
-  <!-- Download Buttons -->
-  <div class="btn-container">
-    <button class="action-button" onclick="downloadPDF()">Als PDF herunterladen</button>
-    <button class="action-button" onclick="downloadExcel()">Als Excel herunterladen</button>
+  <!-- Optionaler Seitentitel im gleichen Stil -->
+  <div class="page-title" data-text="CO₂-Dashboard">
+    CO₂-Dashboard
   </div>
-  
-  <div id="dashboardContent"></div>
-</div>
 
-<!-- Canvas-Element für das allgemeine Scope-Diagramm -->
-<div class="chart-container">
-  <canvas id="allScopesChart"></canvas>
-</div>
-
-<!-- Detaillierte Diagramme -->
-<div class="charts-grid">
-  <div class="chart-box">
-    <h3>Detaillierte Scope 1 Aufschlüsselung</h3>
-    <canvas id="detailedScope1Chart"></canvas>
+  <div class="container" id="pdfContent">
+    <div class="btn-container">
+      <button class="action-button" onclick="downloadPDF()"><i class="fas fa-file-pdf"></i> PDF herunterladen</button>
+      <button class="action-button" onclick="downloadExcel()"><i class="fas fa-file-excel"></i> Excel herunterladen</button>
+      <!-- Neuer Button für den Daten-Export -->
+      <button class="action-button" onclick="exportData()"><i class="fas fa-download"></i> Daten exportieren</button>
+    </div>
+    <div id="dashboardContent"></div>
   </div>
-  <div class="chart-box">
-    <h3>Detaillierte Scope 2 Aufschlüsselung</h3>
-    <canvas id="detailedScope2Chart"></canvas>
-  </div>
-  <div class="chart-box">
-    <h3>Detaillierte Scope 3 Aufschlüsselung</h3>
-    <canvas id="detailedScope3Chart"></canvas>
-  </div>
-</div>
 
-<!-- Trend-Diagramm -->
-<div class="chart-box" style="max-width:600px; margin: 2rem auto;">
-  <h3>Trend Vergleich (Vorjahr vs. aktuell)</h3>
-  <canvas id="trendChart"></canvas>
-</div>
+  <div class="chart-container">
+    <canvas id="allScopesChart"></canvas>
+  </div>
 
-<script>
-  /********************************************************
-   * Funktionen zum Laden, Berechnen & Anzeigen der Daten
-   ********************************************************/
-  window.addEventListener('DOMContentLoaded', initDashboard);
-  
-  function initDashboard() {
-    const jsonData = localStorage.getItem('co2Data');
-    const dashboard = document.getElementById('dashboardContent');
+  <div class="charts-grid">
+    <div class="chart-box">
+      <h3>Detaillierte Scope 1 Aufschlüsselung</h3>
+      <canvas id="detailedScope1Chart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Detaillierte Scope 2 Aufschlüsselung</h3>
+      <canvas id="detailedScope2Chart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Detaillierte Scope 3 Aufschlüsselung</h3>
+      <canvas id="detailedScope3Chart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-box" style="max-width:600px; margin: 2rem auto;">
+    <h3>Trend Vergleich (Vorjahr vs. aktuell)</h3>
+    <canvas id="trendChart"></canvas>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="trendLineChart"></canvas>
+  </div>
+
+  <div class="filter-container">
+    <label for="yearFilter"><i class="fas fa-filter"></i> Jahr auswählen:</label>
+    <select id="yearFilter" onchange="filterByYear()">
+      <option value="2021">2021</option>
+      <option value="2022" selected>2022</option>
+      <option value="2023">2023</option>
+    </select>
+  </div>
+
+  <!-- Historischer Vergleich -->
+  <div class="container">
+    <h2>Historischer Vergleich</h2>
+    <div class="chart-box">
+      <h3>Monatliche Entwicklung</h3>
+      <canvas id="monthlyTrendChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Scope-Verteilung im Zeitverlauf</h3>
+      <canvas id="scopeStackedChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Nach dem existierenden "Historischer Vergleich" Container -->
+  <div class="container">
+    <h2>Detaillierte Zeitanalyse</h2>
     
-    if (!jsonData) {
-      dashboard.innerHTML = '<div class="no-data">Keine Daten vorhanden. Bitte führen Sie zuerst die Umfrage durch.</div>';
-      return;
+    <!-- Zeitraum-Auswahl -->
+    <div class="filter-container">
+      <label for="timeframeSelect">Zeitraum:</label>
+      <select id="timeframeSelect" onchange="updateTimeframeCharts()">
+        <option value="monthly">Monatlich</option>
+        <option value="quarterly">Quartalsweise</option>
+        <option value="yearly">Jährlich</option>
+      </select>
+    </div>
+
+    <!-- Neue Chart Container -->
+    <div class="charts-grid">
+      <div class="chart-box">
+        <h3>Emissionsverlauf</h3>
+        <canvas id="timeframeChart"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Scope-Verteilung</h3>
+        <canvas id="timeframeScopeChart"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Durchschnittliche Verteilung</h3>
+        <canvas id="timeframeAverageChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', initDashboard);
+
+    function initDashboard() {
+      const jsonData = localStorage.getItem('co2Data');
+      console.log('Geladene Daten:', jsonData); // Debug-Ausgabe
+      
+      const dashboard = document.getElementById('dashboardContent');
+      if (!jsonData) {
+        dashboard.innerHTML = '<div class="no-data">Keine Daten vorhanden. Bitte führen Sie zuerst die Umfrage durch.</div>';
+        return;
+      }
+      const co2Data = JSON.parse(jsonData);
+      const { companyInfo, scope1, scope2, scope3 } = co2Data;
+
+      // Scope 1 Berechnungen
+      const s1_vehicles  = sumEmissions(scope1.vehicles);
+      const s1_transport = sumEmissions(scope1.transport1B);
+      const s1_heating   = sumEmissions(scope1.scope1C);
+      const s1_techGases = sumEmissions(scope1.scope1D);
+      const s1_other     = sumEmissions(scope1.scope1DOther);
+      const s1 = s1_vehicles + s1_transport + s1_heating + s1_techGases + s1_other;
+
+      // Scope 2 Berechnungen
+      const s2_energy   = sumEmissions(scope2.energy);
+      const s2_indirect = sumEmissions(scope2.indirectEmissions);
+      const s2 = s2_energy + s2_indirect;
+
+      // Scope 3 Berechnungen
+      const s3_businessTravel    = sumEmissions(scope3.businessTravel);
+      const s3_externalTransport = sumEmissions(scope3.transport);
+      const s3_chemicals         = sumEmissions(scope3.chemicals);
+      const s3_paper             = sumEmissions(scope3.paper);
+      const s3_plastics          = sumEmissions(scope3.plastics);
+      const s3_metals            = sumEmissions(scope3.metals || []);
+      const s3_minerals          = sumEmissions(scope3.minerals || []);
+      const s3_disposal          = sumEmissions(scope3.disposal || []);
+      const s3_water             = sumEmissions(scope3.water || []);
+      const s3_otherTransport    = sumEmissions(scope3.otherTransport || []);
+      const s3_food              = sumEmissions(scope3.food || []);
+      const s3_otherEmitters     = sumEmissions(scope3.otherEmitters || []);
+      const s3 = s3_businessTravel + s3_externalTransport + s3_chemicals + s3_paper +
+                 s3_plastics + s3_metals + s3_minerals + s3_disposal + s3_water +
+                 s3_otherTransport + s3_food + s3_otherEmitters;
+
+      const totalEmissions = s1 + s2 + s3;
+      const p1 = (s1 / totalEmissions) * 100 || 0;
+      const p2 = (s2 / totalEmissions) * 100 || 0;
+      const p3 = (s3 / totalEmissions) * 100 || 0;
+
+      // Vergleich Vorjahr (fiktiv)
+      const lastYearEmissions = 30000;
+      const difference = totalEmissions - lastYearEmissions;
+      const diffPercent = (difference / lastYearEmissions) * 100 || 0;
+      const trend = difference > 0 ? "höher" : "niedriger";
+
+      // Kosten und Emissionen pro Mitarbeiter (fiktiv)
+      const costPerTon = 50;
+      const employees = 100;
+      const costEstimate = (totalEmissions / 1000) * costPerTon;
+      const perEmployee = totalEmissions / employees;
+
+      let html = `
+        <div class="pdf-header">
+          <h2>CO₂-Bilanz Bericht</h2>
+          <p><strong>Firma:</strong> ${companyInfo.name}</p>
+          <p><strong>Bezugsjahr:</strong> ${companyInfo.year}</p>
+          <p><strong>Erfassungsdatum:</strong> ${new Date(companyInfo.date).toLocaleString()}</p>
+        </div>
+        <hr>
+        <div class="stats-summary">
+          <div class="stat-card">
+            <h4>Gesamtemissionen</h4>
+            <div class="value">${totalEmissions.toFixed(2)}</div>
+            <div class="description">kg CO₂</div>
+          </div>
+          <div class="stat-card">
+            <h4>Veränderung zum Vorjahr</h4>
+            <div class="value">${diffPercent.toFixed(1)}%</div>
+            <div class="description">${difference.toFixed(2)} kg CO₂ ${trend}</div>
+          </div>
+          <div class="stat-card">
+            <h4>Pro Mitarbeiter</h4>
+            <div class="value">${perEmployee.toFixed(2)}</div>
+            <div class="description">kg CO₂/Mitarbeiter</div>
+          </div>
+        </div>
+        <table>
+          <tr>
+            <th>Scope</th>
+            <th>Emissionen (kg CO₂)</th>
+            <th>Anteil (%)</th>
+          </tr>
+          <tr>
+            <td>Scope 1</td>
+            <td>${s1.toFixed(2)}</td>
+            <td>${p1.toFixed(1)}%</td>
+          </tr>
+          <tr>
+            <td>Scope 2</td>
+            <td>${s2.toFixed(2)}</td>
+            <td>${p2.toFixed(1)}%</td>
+          </tr>
+          <tr>
+            <td>Scope 3</td>
+            <td>${s3.toFixed(2)}</td>
+            <td>${p3.toFixed(1)}%</td>
+          </tr>
+          <tr><th>Gesamt</th><th>${totalEmissions.toFixed(2)}</th><th>100%</th></tr>
+        </table>
+        <div class="comparison-stats">
+          <p>
+            <strong>Vorjahresemissionen:</strong>
+            <span>${lastYearEmissions.toFixed(2)} kg CO₂</span>
+          </p>
+          <p>
+            <strong>Kostenschätzung (Kompensation):</strong>
+            <span>ca. ${costEstimate.toFixed(2)} €</span>
+          </p>
+        </div>
+      `;
+      dashboard.innerHTML = html;
+
+      createScopeChart(s1, s2, s3);
+      createDetailedCharts(s1_vehicles, s1_transport, s1_heating, s1_techGases, s1_other,
+                           s2_energy, s2_indirect,
+                           s3_businessTravel, s3_externalTransport, s3_chemicals, s3_paper,
+                           s3_plastics, s3_metals, s3_minerals, s3_disposal, s3_water, s3_otherTransport, s3_food, s3_otherEmitters);
+      createTrendChart(totalEmissions, lastYearEmissions);
+      createHistoricalCharts();
+      updateTimeframeCharts();
     }
 
-    const co2Data = JSON.parse(jsonData);
-    const { companyInfo, scope1, scope2, scope3 } = co2Data;
+    function sumEmissions(dataArray) {
+      let sum = 0;
+      if (Array.isArray(dataArray)) {
+        dataArray.forEach(item => sum += parseFloat(item.co2Emissions) || 0);
+      }
+      return sum;
+    }
 
-    // --- Berechnung der Summen für Scope 1 ---
-    const s1_vehicles    = sumEmissions(scope1.vehicles);
-    const s1_transport   = sumEmissions(scope1.transport1B);
-    const s1_heating     = sumEmissions(scope1.scope1C);
-    const s1_techGases   = sumEmissions(scope1.scope1D);
-    const s1_other       = sumEmissions(scope1.scope1DOther);
-    const s1 = s1_vehicles + s1_transport + s1_heating + s1_techGases + s1_other;
-
-    // --- Berechnung der Summen für Scope 2 ---
-    const s2_energy   = sumEmissions(scope2.energy);
-    const s2_indirect = sumEmissions(scope2.indirectEmissions);
-    const s2 = s2_energy + s2_indirect;
-
-    // --- Berechnung der Summen für Scope 3 ---
-    const s3_businessTravel    = sumEmissions(scope3.businessTravel);
-    const s3_externalTransport = sumEmissions(scope3.transport);
-    const s3_postal            = sumEmissions(scope3.chemicals);
-    const s3_chemicals         = sumEmissions(scope3.scope3D);
-    const s3_paper             = sumEmissions(scope3.paper);
-    const s3_plastics          = sumEmissions(scope3.plastics);
-    const s3_metals            = sumEmissions(scope3.metals || []);
-    const s3_minerals          = sumEmissions(scope3.minerals || []);
-    const s3_disposal          = sumEmissions(scope3.disposal || []);
-    const s3_water             = sumEmissions(scope3.water || []);
-    const s3_otherTransport             = sumEmissions(scope3.otherTransport || []);
-    const s3_food             = sumEmissions(scope3.food || []);
-
-
-    const s3 = s3_businessTravel + s3_externalTransport + s3_postal + s3_chemicals + s3_paper + s3_plastics + s3_metals + s3_minerals + s3_disposal + s3_water;
-
-    const totalEmissions = s1 + s2 + s3;
-
-    const p1 = (s1/totalEmissions)*100 || 0;
-    const p2 = (s2/totalEmissions)*100 || 0;
-    const p3 = (s3/totalEmissions)*100 || 0;
-
-    // Vergleich zum Vorjahr (fiktive Werte)
-    const lastYearEmissions = 30000;
-    const difference = totalEmissions - lastYearEmissions;
-    const diffPercent = (difference/lastYearEmissions)*100 || 0;
-    const trend = difference > 0 ? "höher" : "niedriger";
-
-    // Kostenschätzung und Emissionen pro Mitarbeiter (fiktive Werte)
-    const costPerTon = 50;
-    const employees = 100;
-    const costEstimate = (totalEmissions/1000) * costPerTon;
-    const perEmployee = totalEmissions / employees;
-
-    // Zusammenfassung HTML
-    let html = `
-      <div class="pdf-header">
-        <h2>CO₂-Bilanz Bericht</h2>
-        <p><strong>Firma:</strong> ${companyInfo.name}</p>
-        <p><strong>Bezugsjahr:</strong> ${companyInfo.year}</p>
-        <p><strong>Erfassungsdatum:</strong> ${new Date(companyInfo.date).toLocaleString()}</p>
-      </div>
-      <hr>
-      <table>
-        <tr><th>Scope</th><th>Emissionen (kg CO₂)</th><th>Anteil (%)</th></tr>
-        <tr><td>Scope 1</td><td>${s1.toFixed(2)}</td><td>${p1.toFixed(1)}%</td></tr>
-        <tr><td>Scope 2</td><td>${s2.toFixed(2)}</td><td>${p2.toFixed(1)}%</td></tr>
-        <tr><td>Scope 3</td><td>${s3.toFixed(2)}</td><td>${p3.toFixed(1)}%</td></tr>
-        <tr><th>Gesamt</th><th>${totalEmissions.toFixed(2)}</th><th>100%</th></tr>
-      </table>
-
-      <p>
-        <strong>Vorjahresemissionen:</strong> ${lastYearEmissions.toFixed(2)} kg CO₂<br>
-        <strong>Veränderung:</strong> ${difference.toFixed(2)} kg CO₂ (${diffPercent.toFixed(1)}% ${trend})
-      </p>
-      <p><strong>Kostenschätzung (Kompensation):</strong> ca. ${costEstimate.toFixed(2)} €</p>
-      <p><strong>Emissionen pro Mitarbeiter:</strong> ${perEmployee.toFixed(2)} kg CO₂</p>
-    `;
-    dashboard.innerHTML = html;
-
-    // Diagramme erstellen
-    createScopeChart(s1, s2, s3);
-    createDetailedCharts(s1_vehicles, s1_transport, s1_heating, s1_techGases, s1_other,
-                         s2_energy, s2_indirect,
-                         s3_businessTravel, s3_externalTransport, s3_postal, s3_chemicals, s3_paper,
-                         s3_plastics, s3_metals, s3_minerals, s3_disposal, s3_water);
-
-    // Beispiel-Trend-Diagramm (Aktuell vs. Vorjahr)
-    createTrendChart(totalEmissions, lastYearEmissions);
-  }
-
-  // Funktion zum Summieren von Emissionen aus einem Array
-  function sumEmissions(dataArray) {
-    let sum = 0;
-    if (dataArray && Array.isArray(dataArray)) {
-      dataArray.forEach(item => {
-        sum += parseFloat(item.co2Emissions) || 0;
+    function createScopeChart(s1Sum, s2Sum, s3Sum) {
+      const ctx = document.getElementById('allScopesChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Scope 1', 'Scope 2', 'Scope 3'],
+          datasets: [{
+            label: 'CO₂-Emissionen (kg)',
+            data: [s1Sum, s2Sum, s3Sum],
+            backgroundColor: [
+              'rgba(255,99,132,0.5)',
+              'rgba(54,162,235,0.5)',
+              'rgba(75,192,192,0.5)'
+            ],
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54,162,235,1)',
+              'rgba(75,192,192,1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: { y: { beginAtZero: true, title: { display: true, text: 'kg CO₂' } } },
+          plugins: { legend: { display: false } }
+        }
       });
     }
-    return sum;
-  }
 
-  // Allgemeines Scope-Diagramm (Balkendiagramm)
-  function createScopeChart(s1Sum, s2Sum, s3Sum) {
-    const ctx = document.getElementById('allScopesChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Scope 1', 'Scope 2', 'Scope 3'],
-        datasets: [{
-          label: 'CO₂-Emissionen (kg)',
-          data: [s1Sum, s2Sum, s3Sum],
-          backgroundColor: [
-            'rgba(255,99,132,0.5)',
-            'rgba(54,162,235,0.5)',
-            'rgba(75,192,192,0.5)'
-          ],
-          borderColor: [
-            'rgba(255,99,132,1)',
-            'rgba(54,162,235,1)',
-            'rgba(75,192,192,1)'
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: { y: { beginAtZero: true, title: { display: true, text: 'kg CO₂' } } },
-        plugins: { legend: { display: false } }
-      }
-    });
-  }
-
-  // Detaillierte Diagramme für jeden Scope
-  function createDetailedCharts(s1_vehicles, s1_transport, s1_heating, s1_techGases, s1_other,
-                                s2_energy, s2_indirect,
-                                s3_businessTravel, s3_externalTransport, s3_postal, s3_chemicals, s3_paper,
-                                s3_plastics, s3_metals, s3_minerals, s3_disposal, s3_water) {
-    // Detailliertes Scope 1 Diagramm (Doughnut)
-    new Chart(document.getElementById('detailedScope1Chart').getContext('2d'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Fahrzeuge', 'Transport', 'Heizung', 'Technische Gase', 'Sonstiges'],
-        datasets: [{
-          data: [s1_vehicles, s1_transport, s1_heating, s1_techGases, s1_other],
-          backgroundColor: [
-            'rgba(54,162,235,0.7)',
-            'rgba(255,99,132,0.7)',
-            'rgba(75,192,192,0.7)',
-            'rgba(153,102,255,0.7)',
-            'rgba(255,159,64,0.7)'
-          ]
-        }]
-      },
-      options: { plugins: { legend: { position: 'bottom' } } }
-    });
-
-    // Detailliertes Scope 2 Diagramm (Pie)
-    new Chart(document.getElementById('detailedScope2Chart').getContext('2d'), {
-      type: 'pie',
-      data: {
-        labels: ['Energie', 'Indirekt'],
-        datasets: [{
-          data: [s2_energy, s2_indirect],
-          backgroundColor: [
-            'rgba(54,162,235,0.7)',
-            'rgba(255,99,132,0.7)'
-          ]
-        }]
-      },
-      options: { plugins: { legend: { position: 'bottom' } } }
-    });
-
-    // Detailliertes Scope 3 Diagramm (Balkendiagramm)
-    new Chart(document.getElementById('detailedScope3Chart').getContext('2d'), {
-      type: 'bar',
-      data: {
-        labels: ['Geschäftsreisen', 'Externe Transporte', 'Post/Lieferservice', 'Chemikalien', 'Papier', 'Kunststoffe', 'Metalle', 'Mineralien', 'Entsorgung', 'Wasser'],
-        datasets: [{
-          label: 'CO₂-Emissionen (kg)',
-          data: [s3_businessTravel, s3_externalTransport, s3_postal, s3_chemicals, s3_paper, s3_plastics, s3_metals, s3_minerals, s3_disposal, s3_water],
-          backgroundColor: [
-            '#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd',
-            '#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf'
-          ]
-        }]
-      },
-      options: {
-        scales: {
-          y: { beginAtZero: true, title: { display: true, text: 'kg CO₂' } }
+    function createDetailedCharts(s1_vehicles, s1_transport, s1_heating, s1_techGases, s1_other,
+                                  s2_energy, s2_indirect,
+                                  s3_businessTravel, s3_externalTransport, s3_chemicals, s3_paper,
+                                  s3_plastics, s3_metals, s3_minerals, s3_disposal, s3_water, s3_otherTransport, s3_food, s3_otherEmitters) {
+      // Scope 1 Doughnut
+      new Chart(document.getElementById('detailedScope1Chart').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Fahrzeuge', 'Transport', 'Heizung', 'Technische Gase', 'Sonstiges'],
+          datasets: [{
+            data: [s1_vehicles, s1_transport, s1_heating, s1_techGases, s1_other],
+            backgroundColor: [
+              'rgba(54,162,235,0.7)',
+              'rgba(255,99,132,0.7)',
+              'rgba(75,192,192,0.7)',
+              'rgba(153,102,255,0.7)',
+              'rgba(255,159,64,0.7)'
+            ]
+          }]
         },
-        plugins: { legend: { display: false } }
-      }
-    });
-  }
-
-  // Trend-Diagramm (Line Chart: Vorjahr vs. Aktuell)
-  function createTrendChart(currentTotal, previousTotal) {
-    const ctx = document.getElementById('trendChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['Vorjahr', 'Aktuell'],
-        datasets: [{
-          label: 'CO₂-Emissionen (kg)',
-          data: [previousTotal, currentTotal],
-          fill: false,
-          borderColor: 'rgba(75,192,192,1)',
-          tension: 0.1
-        }]
-      },
-      options: {
-        scales: { y: { beginAtZero: true, title: { display: true, text: 'kg CO₂' } } },
-        plugins: { legend: { display: false } }
-      }
-    });
-  }
-
-  /********************************************************
-   * PDF-Export & Excel-Export (wie in Deinem Originalcode)
-   ********************************************************/
-  function downloadPDF() {
-    const element = document.getElementById('pdfContent');
-    const opt = {
-      filename: 'CO2-Bilanz.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 3 },
-      jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
-    };
-    html2pdf().from(element).set(opt).save();
-  }
-
-  function downloadExcel() {
-    if (!co2Data) {
-      alert('Keine Daten vorhanden.');
-      return;
+        options: { plugins: { legend: { position: 'bottom' } } }
+      });
+      // Scope 2 Pie
+      new Chart(document.getElementById('detailedScope2Chart').getContext('2d'), {
+        type: 'pie',
+        data: {
+          labels: ['Energie', 'Indirekt'],
+          datasets: [{
+            data: [s2_energy, s2_indirect],
+            backgroundColor: [
+              'rgba(54,162,235,0.7)',
+              'rgba(255,99,132,0.7)'
+            ]
+          }]
+        },
+        options: { plugins: { legend: { position: 'bottom' } } }
+      });
+      // Scope 3 Bar
+      new Chart(document.getElementById('detailedScope3Chart').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ['Geschäftsreisen', 'Externe Transporte', 'Chemikalien', 'Papier', 'Kunststoffe', 'Metalle', 'Mineralien', 'Entsorgung', 'Wasser', 'Andere Transporte', 'Lebensmittel', 'Andere Emittenten'],
+          datasets: [{
+            label: 'CO₂-Emissionen (kg)',
+            data: [s3_businessTravel, s3_externalTransport, s3_chemicals, s3_paper, s3_plastics, s3_metals, s3_minerals, s3_disposal, s3_water, s3_otherTransport, s3_food, s3_otherEmitters],
+            backgroundColor: [
+              '#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd',
+              '#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf',
+              '#bcbd22','#17becf','#ffbb78'
+            ]
+          }]
+        },
+        options: {
+          scales: { y: { beginAtZero: true, title: { display: true, text: 'kg CO₂' } } },
+          plugins: { legend: { display: false } }
+        }
+      });
     }
-    // (Excel-Export-Funktion wie in Deinem Originalcode – hier kannst Du weitere Sheets hinzufügen)
-    // ...
-  }
-</script>
-<div class="filter-container">
-  <label for="yearFilter">Jahr auswählen:</label>
-  <select id="yearFilter" onchange="filterByYear()">
-    <option value="2021">2021</option>
-    <option value="2022" selected>2022</option>
-    <option value="2023">2023</option>
-  </select>
-</div>
 
-<script>
-  // Beispiel-Funktion: Filtert die CO₂-Daten nach Jahr und aktualisiert das Dashboard
-  function filterByYear() {
-    const selectedYear = document.getElementById('yearFilter').value;
-    // Angenommen, du speicherst die Daten als Array von Objekten, die ein "year"-Feld enthalten
-    const rawData = JSON.parse(localStorage.getItem('co2Data'));
-    if (!rawData) return;
-    
-    // Hier kannst du deine Logik einbauen, um die Daten nach dem ausgewählten Jahr zu filtern.
-    // Beispiel: Wenn du mehrere Jahre im localStorage hast, könntest du
-    // rawData.scope1.vehicles = rawData.scope1.vehicles.filter(item => item.year === selectedYear);
-    
-    // Danach dashboard neu initialisieren:
-    initDashboard(); // Du musst die initDashboard()-Funktion so anpassen, dass sie den Filter berücksichtigt.
-  }
-  function createTrendLineChart(trendData) {
-  // trendData ist ein Array von Objekten, z. B. [{year: '2021', emissions: 28000}, {year: '2022', emissions: 30000}, ...]
-  const ctx = document.getElementById('trendLineChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: trendData.map(item => item.year),
-      datasets: [{
-        label: 'Gesamte Emissionen (kg CO₂)',
-        data: trendData.map(item => item.emissions),
-        fill: false,
-        borderColor: 'rgba(75,192,192,1)',
-        tension: 0.1
-      }]
-    },
-    options: {
-      scales: {
-        y: { beginAtZero: true, title: { display: true, text: 'kg CO₂' } }
-      }
+    function createTrendChart(currentTotal, previousTotal) {
+      const ctx = document.getElementById('trendChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Vorjahr', 'Aktuell'],
+          datasets: [{
+            label: 'CO₂-Emissionen (kg)',
+            data: [previousTotal, currentTotal],
+            fill: false,
+            borderColor: 'rgba(75,192,192,1)',
+            tension: 0.1
+          }]
+        },
+        options: {
+          scales: { y: { beginAtZero: true, title: { display: true, text: 'kg CO₂' } } },
+          plugins: { legend: { display: false } }
+        }
+      });
     }
-  });
+
+    function downloadPDF() {
+      const element = document.getElementById('pdfContent');
+      
+      // Absolute maximale Kontraste für den PDF-Export
+      element.style.background = '#ffffff';
+      element.style.color = '#000000';
+      
+      // Stat-Cards mit extremem Kontrast
+      const statCards = element.getElementsByClassName('stat-card');
+      Array.from(statCards).forEach(card => {
+        card.style.boxShadow = '0 8px 16px rgba(0,0,0,0.8)';
+        card.style.border = '4px solid #000000';
+        card.style.backgroundColor = '#ffffff';
+        card.style.padding = '25px';
+        card.style.margin = '15px 0';
+        
+        const value = card.querySelector('.value');
+        if (value) {
+          value.style.color = '#000000';
+          value.style.fontWeight = '900';
+          value.style.fontSize = '32px'; // Noch größer
+          value.style.letterSpacing = '1px';
+          value.style.lineHeight = '1.4';
+          value.style.textShadow = '2px 2px 0 rgba(0,0,0,0.1)';
+        }
+        
+        const h4 = card.querySelector('h4');
+        if (h4) {
+          h4.style.color = '#000000';
+          h4.style.fontWeight = '900';
+          h4.style.fontSize = '20px';
+          h4.style.textTransform = 'uppercase';
+          h4.style.letterSpacing = '2px';
+          h4.style.marginBottom = '15px';
+        }
+        
+        const description = card.querySelector('.description');
+        if (description) {
+          description.style.color = '#000000';
+          description.style.fontWeight = '700';
+          description.style.fontSize = '16px';
+          description.style.marginTop = '10px';
+        }
+      });
+
+      // Header mit extremem Kontrast
+      const pdfHeader = element.querySelector('.pdf-header');
+      if (pdfHeader) {
+        pdfHeader.style.background = '#000000';
+        pdfHeader.style.color = '#ffffff';
+        pdfHeader.style.padding = '35px';
+        pdfHeader.style.borderBottom = '8px solid #000000';
+        pdfHeader.style.marginBottom = '40px';
+        pdfHeader.style.borderRadius = '0';
+        
+        const h2 = pdfHeader.querySelector('h2');
+        if (h2) {
+          h2.style.fontSize = '36px';
+          h2.style.fontWeight = '900';
+          h2.style.marginBottom = '25px';
+          h2.style.letterSpacing = '2px';
+          h2.style.textTransform = 'uppercase';
+          h2.style.borderBottom = '4px solid #ffffff';
+          h2.style.paddingBottom = '15px';
+        }
+        
+        const paragraphs = pdfHeader.getElementsByTagName('p');
+        Array.from(paragraphs).forEach(p => {
+          p.style.fontSize = '18px';
+          p.style.fontWeight = '700';
+          p.style.marginBottom = '12px';
+          p.style.color = '#ffffff';
+          p.style.letterSpacing = '1px';
+        });
+      }
+
+      // Tabellen mit extremem Kontrast
+      const tables = element.getElementsByTagName('table');
+      Array.from(tables).forEach(table => {
+        table.style.borderCollapse = 'collapse';
+        table.style.width = '100%';
+        table.style.border = '5px solid #000000';
+        table.style.marginTop = '40px';
+        table.style.marginBottom = '40px';
+        table.style.backgroundColor = '#ffffff';
+        
+        // Header-Zellen mit extremem Kontrast
+        const headers = table.getElementsByTagName('th');
+        Array.from(headers).forEach(header => {
+          header.style.backgroundColor = '#000000';
+          header.style.color = '#ffffff';
+          header.style.border = '3px solid #000000';
+          header.style.padding = '20px';
+          header.style.fontSize = '18px';
+          header.style.fontWeight = '900';
+          header.style.textAlign = 'center';
+          header.style.textTransform = 'uppercase';
+          header.style.letterSpacing = '1px';
+        });
+        
+        // Normale Zellen mit extremem Kontrast
+        const cells = table.getElementsByTagName('td');
+        Array.from(cells).forEach(cell => {
+          cell.style.border = '3px solid #000000';
+          cell.style.padding = '15px';
+          cell.style.color = '#000000';
+          cell.style.fontSize = '16px';
+          cell.style.fontWeight = '700';
+          cell.style.backgroundColor = '#ffffff';
+          cell.style.textAlign = 'center';
+        });
+
+        // Alternating row colors für bessere Lesbarkeit
+        const rows = table.getElementsByTagName('tr');
+        Array.from(rows).forEach((row, index) => {
+          if (index % 2 === 1) {
+            row.style.backgroundColor = '#f0f0f0';
+          }
+        });
+      });
+
+      // Vergleichsstatistiken mit extremem Kontrast
+      const compStats = element.querySelector('.comparison-stats');
+      if (compStats) {
+        compStats.style.border = '5px solid #000000';
+        compStats.style.backgroundColor = '#ffffff';
+        compStats.style.padding = '25px';
+        compStats.style.marginTop = '40px';
+        compStats.style.boxShadow = '0 8px 16px rgba(0,0,0,0.8)';
+        
+        const paragraphs = compStats.getElementsByTagName('p');
+        Array.from(paragraphs).forEach(p => {
+          p.style.color = '#000000';
+          p.style.borderBottom = '3px solid #000000';
+          p.style.padding = '20px 15px';
+          p.style.fontSize = '18px';
+          p.style.fontWeight = '700';
+          p.style.display = 'flex';
+          p.style.justifyContent = 'space-between';
+          p.style.alignItems = 'center';
+          
+          const strong = p.querySelector('strong');
+          if (strong) {
+            strong.style.color = '#000000';
+            strong.style.fontWeight = '900';
+            strong.style.fontSize = '20px';
+            strong.style.textTransform = 'uppercase';
+            strong.style.letterSpacing = '1px';
+          }
+        });
+      }
+
+      // PDF Export Optionen mit maximaler Qualität
+      const opt = {
+        margin: [20, 20, 20, 20],
+        filename: 'CO2-Bilanz.pdf',
+        image: { type: 'jpeg', quality: 1.0 },
+        html2canvas: { 
+          scale: 5, // Noch höhere Skalierung
+          useCORS: true,
+          logging: true,
+          letterRendering: true,
+          backgroundColor: '#ffffff',
+          removeContainer: true,
+          imageTimeout: 0,
+          windowWidth: 2400,
+          height: undefined,
+          onclone: function(clonedDoc) {
+            Array.from(clonedDoc.getElementsByTagName('*')).forEach(element => {
+              element.style.textRendering = 'geometricPrecision';
+              element.style.webkitFontSmoothing = 'antialiased';
+              element.style.mozOsxFontSmoothing = 'grayscale';
+            });
+          }
+        },
+        jsPDF: { 
+          unit: 'mm', 
+          format: 'a4', 
+          orientation: 'portrait',
+          compress: false,
+          precision: 32,
+          userUnit: 1.0
+        }
+      };
+
+      // Exportiere PDF mit maximaler Qualität
+      html2pdf().set(opt).from(element).save()
+        .then(() => {
+          location.reload(); // Seite neu laden um alle Styles zurückzusetzen
+        });
+    }
+
+    function downloadExcel() {
+    const jsonData = localStorage.getItem('co2Data');
+    if (!jsonData) { 
+        alert('Keine Daten vorhanden.');
+        return; 
+    }
+    try {
+        const co2Data = JSON.parse(jsonData);
+        // Falls co2Data kein Array ist, in ein Array umwandeln
+        const dataArray = Array.isArray(co2Data) ? co2Data : [co2Data];
+        // Jedes Objekt flach machen
+        const flattenedData = dataArray.map(flattenObject);
+        const ws = XLSX.utils.json_to_sheet(flattenedData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "CO2-Bilanz");
+        XLSX.writeFile(wb, "CO2-Bilanz.xlsx");
+    } catch (e) {
+        console.error("Fehler beim Exportieren der Excel-Datei:", e);
+        alert("Fehler beim Erstellen der Excel-Datei.");
+    }
 }
-</script>
-<div class="chart-container">
-  <canvas id="trendLineChart"></canvas>
-</div>
-</body>
+
+// Diese Funktion wandelt verschachtelte Objekte in ein flaches Objekt um.
+function flattenObject(ob) {
+  let toReturn = {};
+  for (let i in ob) {
+    if (!ob.hasOwnProperty(i)) continue;
+    if ((typeof ob[i]) === 'object' && ob[i] !== null) {
+      if(Array.isArray(ob[i])){
+         // Arrays als String ausgeben
+         toReturn[i] = JSON.stringify(ob[i]);
+      } else {
+         let flatObject = flattenObject(ob[i]);
+         for (let x in flatObject) {
+           if (!flatObject.hasOwnProperty(x)) continue;
+           toReturn[i + '.' + x] = flatObject[x];
+         }
+      }
+    } else {
+      toReturn[i] = ob[i];
+    }
+  }
+  return toReturn;
+}
+
+    function filterByYear() {
+      // Hier kannst du die Daten anhand des ausgewählten Jahres filtern.
+      initDashboard();
+    }
+
+    function createTrendLineChart(trendData) {
+      const ctx = document.getElementById('trendLineChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: trendData.map(item => item.year),
+          datasets: [{
+            label: 'Gesamte Emissionen (kg CO₂)',
+            data: trendData.map(item => item.emissions),
+            fill: false,
+            borderColor: 'rgba(75,192,192,1)',
+            tension: 0.1
+          }]
+        },
+        options: {
+          scales: { y: { beginAtZero: true, title: { display: true, text: 'kg CO₂' } } }
+        }
+      });
+    }
+
+    function createHistoricalCharts() {
+      const historicalData = JSON.parse(localStorage.getItem('monthlyEmissions') || '[]');
+      
+      if (historicalData.length === 0) return;
+
+      // Monatlicher Trend
+      const ctx1 = document.getElementById('monthlyTrendChart').getContext('2d');
+      new Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: historicalData.map(d => d.date),
+          datasets: [{
+            label: 'Gesamtemissionen',
+            data: historicalData.map(d => d.emissions.scope1 + d.emissions.scope2 + d.emissions.scope3),
+            borderColor: 'rgba(75,192,192,1)',
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: 'kg CO₂' }
+            }
+          }
+        }
+      });
+
+      // Gestapeltes Balkendiagramm für Scopes
+      const ctx2 = document.getElementById('scopeStackedChart').getContext('2d');
+      new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: historicalData.map(d => d.date),
+          datasets: [
+            {
+              label: 'Scope 1',
+              data: historicalData.map(d => d.emissions.scope1),
+              backgroundColor: 'rgba(255,99,132,0.5)'
+            },
+            {
+              label: 'Scope 2',
+              data: historicalData.map(d => d.emissions.scope2),
+              backgroundColor: 'rgba(54,162,235,0.5)'
+            },
+            {
+              label: 'Scope 3',
+              data: historicalData.map(d => d.emissions.scope3),
+              backgroundColor: 'rgba(75,192,192,0.5)'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: { stacked: true },
+            y: { 
+              stacked: true,
+              title: { display: true, text: 'kg CO₂' }
+            }
+          }
+        }
+      });
+    }
+
+    function updateTimeframeCharts() {
+      const timeframe = document.getElementById('timeframeSelect').value;
+      const historicalData = JSON.parse(localStorage.getItem('monthlyEmissions') || '[]');
+      
+      if (historicalData.length === 0) return;
+
+      // Daten nach gewähltem Zeitraum gruppieren
+      const groupedData = groupDataByTimeframe(historicalData, timeframe);
+      
+      // Charts aktualisieren
+      createTimeframeChart(groupedData);
+      createTimeframeScopeChart(groupedData);
+      createTimeframeAverageChart(groupedData);
+    }
+
+    function groupDataByTimeframe(data, timeframe) {
+      const grouped = {};
+      
+      data.forEach(entry => {
+        const date = new Date(entry.date);
+        let key;
+        
+        switch(timeframe) {
+          case 'monthly':
+            key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+            break;
+          case 'quarterly':
+            const quarter = Math.floor(date.getMonth() / 3) + 1;
+            key = `${date.getFullYear()}-Q${quarter}`;
+            break;
+          case 'yearly':
+            key = `${date.getFullYear()}`;
+            break;
+        }
+        
+        if (!grouped[key]) {
+          grouped[key] = {
+            scope1: 0,
+            scope2: 0,
+            scope3: 0,
+            total: 0,
+            count: 0
+          };
+        }
+        
+        grouped[key].scope1 += entry.emissions.scope1;
+        grouped[key].scope2 += entry.emissions.scope2;
+        grouped[key].scope3 += entry.emissions.scope3;
+        grouped[key].total += (entry.emissions.scope1 + entry.emissions.scope2 + entry.emissions.scope3);
+        grouped[key].count++;
+      });
+      
+      return grouped;
+    }
+
+    function createTimeframeChart(groupedData) {
+      const ctx = document.getElementById('timeframeChart').getContext('2d');
+      const labels = Object.keys(groupedData).sort();
+      const totals = labels.map(key => groupedData[key].total / groupedData[key].count);
+      
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Durchschnittliche Gesamtemissionen',
+            data: totals,
+            borderColor: 'rgba(75,192,192,1)',
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: 'kg CO₂' }
+            }
+          }
+        }
+      });
+    }
+
+    function createTimeframeScopeChart(groupedData) {
+      const ctx = document.getElementById('timeframeScopeChart').getContext('2d');
+      const labels = Object.keys(groupedData).sort();
+      
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Scope 1',
+              data: labels.map(key => groupedData[key].scope1 / groupedData[key].count),
+              backgroundColor: 'rgba(255,99,132,0.5)'
+            },
+            {
+              label: 'Scope 2',
+              data: labels.map(key => groupedData[key].scope2 / groupedData[key].count),
+              backgroundColor: 'rgba(54,162,235,0.5)'
+            },
+            {
+              label: 'Scope 3',
+              data: labels.map(key => groupedData[key].scope3 / groupedData[key].count),
+              backgroundColor: 'rgba(75,192,192,0.5)'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: { stacked: true },
+            y: { 
+              stacked: true,
+              title: { display: true, text: 'kg CO₂' }
+            }
+          }
+        }
+      });
+    }
+
+    function createTimeframeAverageChart(groupedData) {
+      const ctx = document.getElementById('timeframeAverageChart').getContext('2d');
+      
+      // Durchschnittliche Verteilung berechnen
+      const totalScope1 = Object.values(groupedData).reduce((sum, data) => sum + data.scope1, 0);
+      const totalScope2 = Object.values(groupedData).reduce((sum, data) => sum + data.scope2, 0);
+      const totalScope3 = Object.values(groupedData).reduce((sum, data) => sum + data.scope3, 0);
+      const total = totalScope1 + totalScope2 + totalScope3;
+      
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Scope 1', 'Scope 2', 'Scope 3'],
+          datasets: [{
+            data: [
+              (totalScope1 / total) * 100,
+              (totalScope2 / total) * 100,
+              (totalScope3 / total) * 100
+            ],
+            backgroundColor: [
+              'rgba(255,99,132,0.5)',
+              'rgba(54,162,235,0.5)',
+              'rgba(75,192,192,0.5)'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.label}: ${context.raw.toFixed(1)}%`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  </script>
 </body>
 </html>
-

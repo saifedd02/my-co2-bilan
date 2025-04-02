@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>CO₂ Express –  CSV-Tool</title>
 
+  <!-- Font Awesome für Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  
   <!-- PapaParse für CSV -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
   <!-- Chart.js für Diagramme -->
@@ -844,9 +847,6 @@ button[type="submit"] {
   font-size: 14px;
   border: none;
   border-radius: 25px;
-  color: white;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
 }
 .remove-field:hover {
   transform: translateY(-2px);
@@ -1830,47 +1830,48 @@ button.submit-button {
 <body>
 
   <!-- HEADER -->
-  <header>
+  <header style="min-height: 130px; padding: 15px 30px; display: flex; align-items: center; justify-content: space-between;">
     <a href="Dateipload.html">
-      <img src="https://digi-green-pilot.de/wp-content/uploads/2023/10/DGP-Logo-1024x438.png" alt="DigiGreen Pilot Logo">
+        <img src="https://lh3.googleusercontent.com/sgi-eph/AAxiof5e2mNVhdIEpcoInasC6nUTls8osDBRKrbMjo1hJ669VOGpK2nxEvbFDybNv4Tb3JOgL-BKxmqb63Cm1zIpc7Pfg6kDk7m99NHE0TQaCdRQ2tIZD8beU124uZSesn8wpVhRhlyMcNsu2uh2CtY8Utr97cI5_Nl3z24=s925" 
+            alt="DigiGreen Pilot Logo" 
+            style="height: 120px; width: auto; transition: transform 0.3s ease; margin: 10px 0;">
     </a>
-    
-    <nav>
-      <!-- Hier wurden die zwei zusätzlichen Buttons eingefügt: CO₂ Express & Chatbot -->
-      <a href="Dateipload.html" >
-        <i class="fas fa-poll"></i> Umfrage
-      </a>
-      <a href="Co2express.html" class="active">
-        <i class="fas fa-bolt"></i> CO₂ Express
-      </a>
-      <a href="Chatbot.html">
-        <i class="fas fa-comments"></i> Chatbot
-      </a>
-      <a href="livecalc.html">
-        <i class="fas fa-poll"></i> Live Calculator
-      </a>
-      <a href="Dashboard.html">
-        <i class="fas fa-leaf"></i> Dashboard
-      </a>
-      <a href="https://moodle.digitalekompetenzen.org/login/index.php#module-483">
-        <i class="fas fa-envelope"></i> Lernplatform
-      </a>
-      <a href="Meinprofil.html">
-        <i class="fas fa-user"></i> Mein Profil
-      </a>
+    <nav style="margin-left: 20px;">
+        <a href="Dateipload.html">
+            <i class="fas fa-poll"></i> Umfrage
+        </a>
+        <a href="Co2express.html" class="active">
+            <i class="fas fa-bolt"></i> CO₂ Express
+        </a>
+        <a href="Chatbot.html">
+            <i class="fas fa-comments"></i> Chatbot
+        </a>
+        <a href="livecalc.html" >
+            <i class="fas fa-calculator"></i> Live Calculator
+        </a>
+        <a href="Dashboard.html">
+            <i class="fas fa-leaf"></i> Dashboard
+        </a>
+        <a href="https://moodle.digitalekompetenzen.org/login/index.php#module-483">
+            <i class="fas fa-envelope"></i> Lernplatform
+        </a>
+        <a href="Meinprofil.html">
+            <i class="fas fa-user"></i> Mein Profil
+        </a>
     </nav>
-  </header>
+    <button class="toggle-btn" onclick="toggleMode()" style="margin-left: 20px;">Mode wechseln</button>
+</header>
 
 
   <!-- HAUPT-CONTAINER -->
-  <div class="container">
+  <div class="container" style="margin-top: -10px;">
     <h1 class="title">CO₂ Express – Umfangreiches CSV-Tool</h1>
     <p class="description">
-      Willkommen bei Ihrem umfangreichen CO₂-Express-Tool. Laden Sie unser vorbereitetes
-      CSV-Template herunter, füllen Sie die Tabellenzeilen in Excel oder Google Sheets
-      (inkl. Ihrer Emissionsfaktoren, Mengen etc.) und laden Sie die Datei anschließend
-      wieder hoch. Das Tool erstellt automatisch ein Dashboard mit Diagrammen und bietet
-      PDF- und Excel-Export an.
+        Willkommen bei Ihrem umfangreichen CO₂-Express-Tool. Laden Sie unser vorbereitetes
+        CSV-Template herunter, füllen Sie die Tabellenzeilen in Excel oder Google Sheets
+        (inkl. Ihrer Emissionsfaktoren, Mengen etc.) und laden Sie die Datei anschließend
+        wieder hoch. Das Tool erstellt automatisch ein Dashboard mit Diagrammen und bietet
+        PDF- und Excel-Export an.
     </p>
 
     <!-- CSV-Bereich -->
@@ -1997,59 +1998,72 @@ button.submit-button {
  */
 function downloadTemplate() {
   try {
-    // UTF-8 BOM hinzufügen (wichtig, damit Umlaute in Excel korrekt dargestellt werden)
     const BOM = "\uFEFF";
 
-    // CSV-Inhalt (mit Semikolon als Trenner und "..." um jeden Wert)
     const csvContent = BOM +
-`# CO2 Express – CSV-Template (mit Semikolon)
+`# CO2 Express – Scope 1 Template (mit Semikolon)
 # Bitte jede Zeile mit Werten füllen. 
 # Wichtig: "scope" ist Pflicht. Weitere empfohlene Spalten: subCategory, activityName, emissionFactor, quantity, unit, co2Emissions, companyName, year
-# Optional: notes, cost, supplier, location, invoiceNumber
-# 
-#   Scope 1 (direkte Emissionen): 1A, 1B, 1C, 1D, 1E
-#   Scope 2 (indirekte Energieemissionen): 2A, 2B
-#   Scope 3 (sonstige Emissionen): 3A, 3B, 3C, 3D, 3E, 3F, 3G, 3H, 3I, 3J, 3K, 3L
 #
-"scope";"subCategory";"activityName";"description";"emissionFactor";"quantity";"unit";"co2Emissions";"companyName";"year";"notes";"cost";"supplier";"location";"invoiceNumber"
-"1A";"";"Firmen-PKW Diesel";"Dieselkraftstoffverbrauch für Geschäftsreisen";"2.64";"1000";"Liter";"";"GreatCorp";"2023";"PKW-Flotte";"2000";"Tankstelle X";"Hauptsitz";"INV-001"
-"1B";"";"Firmen-LKW Diesel";"Dieselkraftstoff für firmeneigene LKW";"2.68";"1200";"Liter";"";"GreatCorp";"2023";"LKW-Flotte";"2500";"Spedition Y";"Lager";"INV-002"
-"1C";"";"Heizung Erdgas";"Erdgasverbrauch für Heizungsanlage";"0.201";"20000";"kWh";"";"GreatCorp";"2023";"Heizung Hauptgebäude";"4000";"Stadtwerke Energie";"Hauptsitz";"INV-003"
-"1D";"";"Kältemittel R134a";"Verlust im Kältemittelkreislauf";"1430";"5";"kg";"";"GreatCorp";"2023";"Klimaanlage Wartung";"1500";"KälteService GmbH";"Hauptsitz";"INV-004"
-"1E";"";"Notstromaggregat Diesel";"Dieselkraftstoff für Notstromgenerator";"2.50";"100";"Liter";"";"GreatCorp";"2023";"Backup-System";"300";"Tankstelle X";"Nebengebäude";"INV-005"
-"2A";"";"Strombezug Mix";"Zugekaufter Strom aus Strommix";"0.356";"4000";"kWh";"";"GreatCorp";"2023";"Strom Büro";"800";"Stadtwerke Strom";"Hauptsitz";"INV-006"
-"2B";"";"Fernwärme extern";"Zugekaufte Fernwärme für Heizung";"0.28";"3000";"kWh";"";"GreatCorp";"2023";"Wärme Nebengebäude";"600";"Fernwärme Verbund";"Nebengebäude";"INV-007"
-"3A";"";"Geschäftsreise Bahn";"Externe Bahnreisen (Dienstreisen)";"0.06";"1000";"km";"";"GreatCorp";"2023";"DB-Tickets";"400";"Bahn AG";"Diverse Strecken";"INV-008"
-"3B";"postal";"Pakete DHL";"Paketversand über DHL";"1.374";"50";"Stück";"";"GreatCorp";"2023";"Postversand";"200";"DHL";"Hauptsitz";"INV-009"
-"3B";"postal";"Briefe";"Externer Briefversand";"0.02";"200";"Stück";"";"GreatCorp";"2023";"Briefpost";"50";"DHL";"Hauptsitz";"INV-010"
-"3B";"transport";"Externer Gütertransport";"Spedition (7,5-12t) pro km";"0.09367";"300";"km";"";"GreatCorp";"2023";"Zulieferung";"500";"Spedition ABC";"Lager";"INV-011"
-"3C";"";"Chemische Grundstoffe";"Verbrauch chemischer Rohstoffe";"1.01";"500";"kg";"";"GreatCorp";"2023";"Rohmaterial A";"2000";"ChemieCo";"Werk";"INV-012"
-"3D";"";"Papier A4";"Büro-Papierverbrauch in Blatt";"0.82";"10000";"Blatt";"";"GreatCorp";"2023";"Druckerpapier";"150";"Paper Inc.";"Büro";"INV-013"
-"3E";"";"Kunststoffverpackung";"Verbrauch von Kunststoffverpackungen in kg";"1.90";"200";"kg";"";"GreatCorp";"2023";"Verpackungsmaterial";"400";"Packaging GmbH";"Lager";"INV-014"
-"3F";"";"Metall Aluminium";"Aluminiumverbrauch in Produktion";"10";"30";"kg";"";"GreatCorp";"2023";"Alu-Teile";"300";"Metall AG";"Werk";"INV-015"
-"3G";"";"Beton";"Betonverbrauch in kg (Baustoff)";"0.0612";"2000";"kg";"";"GreatCorp";"2023";"Baustelle X";"500";"Baustoff XXL";"Baustelle";"INV-016"
-"3H";"";"Restmüll Deponie";"Entsorgung von Restmüll auf Deponie";"2.63";"1000";"Liter";"";"GreatCorp";"2023";"Gemischter Müll";"200";"WasteCo";"Hauptsitz";"INV-017"
-"3I";"";"Wasserverbrauch";"Trinkwasserverbrauch in m³";"0.00229";"200";"m³";"";"GreatCorp";"2023";"Büro Wasser";"120";"Wasserwerke";"Hauptsitz";"INV-018"
-"3I";"";"Abwasser";"Abwasserbehandlung in m³";"0.000274";"180";"m³";"";"GreatCorp";"2023";"Kanalisation";"90";"Wasserwerke";"Hauptsitz";"INV-019"
-"3J";"";"Mobilität/Kraftstoffe";"Benzinverbrauch externer Dienstreisen";"2.31";"300";"Liter";"";"GreatCorp";"2023";"PKW privat Dienstfahrt";"700";"Tankstelle Z";"Diverse";"INV-020"
-"3K";"";"Lebensmittel (Beispiel)";"Kantinenbedarf (Fleisch, etc.)";"5.00";"100";"kg";"";"GreatCorp";"2023";"Kantine Verbrauch";"500";"FoodSupplier";"Kantine";"INV-021"
-"3L";"";"Material & Vorprodukte (Beispiel)";"Zukauf von Holzpaletten (Transport)";"1.10";"500";"kg";"";"GreatCorp";"2023";"Paletten Lager";"600";"WoodCo";"Lager";"INV-022"
+# SCOPE 1A - FAHRZEUGE & KRAFTSTOFFE
+"scope";"subCategory";"activityName";"emissionFactor";"quantity";"unit";"co2Emissions";"companyName";"year"
+"1A";"Kraftstoff";"Benzin";"2.32";"0";"Liter";"";"Firma";"2024"
+"1A";"Kraftstoff";"Diesel";"2.65";"0";"Liter";"";"Firma";"2024"
+"1A";"Kraftstoff";"Erdgas (CNG)";"2.27";"0";"kg";"";"Firma";"2024"
+"1A";"Kraftstoff";"LPG";"1.63";"0";"Liter";"";"Firma";"2024"
+"1A";"PKW";"PKW-Benzin-klein";"0.18";"0";"km";"";"Firma";"2024"
+"1A";"PKW";"PKW-Benzin-mittel";"0.20";"0";"km";"";"Firma";"2024"
+"1A";"PKW";"PKW-Benzin-groß";"0.22";"0";"km";"";"Firma";"2024"
+"1A";"PKW";"PKW-Diesel-klein";"0.19";"0";"km";"";"Firma";"2024"
+"1A";"PKW";"PKW-Diesel-mittel";"0.21";"0";"km";"";"Firma";"2024"
+"1A";"PKW";"PKW-Diesel-groß";"0.24";"0";"km";"";"Firma";"2024"
+"1A";"Alternative";"Hybrid";"0.20716";"0";"km";"";"Firma";"2024"
+"1A";"Alternative";"Vollstromer";"0.18";"0";"kWh/Km";"";"Firma";"2024"
+
+# SCOPE 1B - FIRMENEIGENE TRANSPORTER
+"1B";"LKW";"LKW Diesel (3,5-7,5 Tonnen)";"0.12955";"0";"km";"";"Firma";"2024"
+"1B";"LKW";"LKW Diesel (7,5-12 Tonnen)";"0.09367";"0";"km";"";"Firma";"2024"
+"1B";"LKW";"LKW Diesel (> 12 Tonnen)";"0.04735";"0";"km";"";"Firma";"2024"
+"1B";"LKW";"LKW Otto-CNG (3,5-7,5 Tonnen)";"0.092";"0";"km";"";"Firma";"2024"
+"1B";"LKW";"LKW Otto-CNG (7,5-12 Tonnen)";"0.078";"0";"km";"";"Firma";"2024"
+
+# SCOPE 1C - ENERGIETRÄGER & HEIZUNG
+"1C";"Heizung";"Altöl (EEW) 2022";"3.15";"0";"Liter";"";"Firma";"2024"
+"1C";"Heizung";"Biodiesel (EEW)";"2.70";"0";"Liter";"";"Firma";"2024"
+"1C";"Heizung";"Bioethanol (EEW)";"1.90";"0";"Liter";"";"Firma";"2024"
+"1C";"Heizung";"Biogas (EEW)";"0.20";"0";"kWh";"";"Firma";"2024"
+"1C";"Heizung";"Biomasse Holz (EEW)";"0.028";"0";"kg";"";"Firma";"2024"
+"1C";"Heizung";"Braunkohle (EEW)";"0.38";"0";"kg";"";"Firma";"2024"
+"1C";"Heizung";"Erdgas Heizwert (EEW) 2022";"0.201";"0";"kWh";"";"Firma";"2024"
+"1C";"Heizung";"Heizöl (HEL)";"3.11";"0";"Liter";"";"Firma";"2024"
+"1C";"Heizung";"Holz-Pellets (2023)";"0.035";"0";"kg";"";"Firma";"2024"
+
+# SCOPE 1D - TECHNISCHE GASE
+"1D";"Kältemittel";"R134a";"1430";"0";"kg";"";"Firma";"2024"
+"1D";"Kältemittel";"R32";"675";"0";"kg";"";"Firma";"2024"
+"1D";"Kältemittel";"R404A";"3922";"0";"kg";"";"Firma";"2024"
+"1D";"Kältemittel";"R407C";"1774";"0";"kg";"";"Firma";"2024"
+"1D";"Kältemittel";"R410A";"2088";"0";"kg";"";"Firma";"2024"
+"1D";"Industriegas";"Helium (He) (EEW) 2024";"8.60";"0";"kg";"";"Firma";"2024"
+"1D";"Industriegas";"Methan (CH4)";"28.0";"0";"kg";"";"Firma";"2024"
+"1D";"Industriegas";"SF6";"22800";"0";"kg";"";"Firma";"2024"
+"1D";"Industriegas";"NF3";"17200";"0";"kg";"";"Firma";"2024"
+"1D";"Industriegas";"Sauerstoff (O2)";"0.15";"0";"kg";"";"Firma";"2024"
+"1D";"Industriegas";"Stickstoff (N2)";"0.20";"0";"kg";"";"Firma";"2024"
+
+# SCOPE 1E - SONSTIGE EMITTENTEN
+"1E";"Sonstige";"Notstromaggregat Diesel";"2.65";"0";"Liter";"";"Firma";"2024"
+"1E";"Sonstige";"Andere Emissionsquelle";"0";"0";"kg";"";"Firma";"2024"
 `;
 
-    // Blob erzeugen
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    // Temporäre URL
     const url = URL.createObjectURL(blob);
-
-    // Download-Link simulieren
     const link = document.createElement("a");
     link.href = url;
-    link.download = "co2_express_template.csv";
+    link.download = "co2_express_scope1_template.csv";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
-    // URL-Objekt wieder freigeben
     URL.revokeObjectURL(url);
 
   } catch (error) {
@@ -2084,20 +2098,192 @@ function downloadTemplate() {
           errorEl.textContent = 'CSV-Fehler: ' + results.errors[0].message;
           return;
         }
-        parsedData = results.data;
+        
+        // Daten nach Scope gruppieren
+        const scope1Data = {
+          vehicles: [], // 1A
+          transport1B: [], // 1B
+          scope1C: [], // 1C
+          scope1D: [], // 1D
+          scope1DOther: [] // 1E
+        };
 
-        // Minimale Prüfung: "scope" muss existieren
-        const hasScope = parsedData.some(row => row.scope !== undefined && row.scope !== '');
-        if (!hasScope) {
-          errorEl.textContent = 'Spalte "scope" nicht gefunden oder leer. Bitte Template beachten.';
-          return;
+        // Daten verarbeiten
+        results.data.forEach(row => {
+          if (!row.scope) return;
+          
+          // Emissionen berechnen falls nicht angegeben
+          if (!row.co2Emissions && row.quantity && row.emissionFactor) {
+            row.co2Emissions = parseFloat(row.quantity) * parseFloat(row.emissionFactor);
+          }
+
+          // Nach Scope sortieren
+          switch(row.scope.trim().toUpperCase()) {
+            case '1A':
+              scope1Data.vehicles.push({
+                activityName: row.activityName,
+                quantity: parseFloat(row.quantity) || 0,
+                unit: row.unit,
+                emissionFactor: parseFloat(row.emissionFactor) || 0,
+                co2Emissions: parseFloat(row.co2Emissions) || 0,
+                subCategory: row.subCategory
+              });
+              break;
+            case '1B':
+              scope1Data.transport1B.push({
+                activityName: row.activityName,
+                quantity: parseFloat(row.quantity) || 0,
+                unit: row.unit,
+                emissionFactor: parseFloat(row.emissionFactor) || 0,
+                co2Emissions: parseFloat(row.co2Emissions) || 0,
+                subCategory: row.subCategory
+              });
+              break;
+            case '1C':
+              scope1Data.scope1C.push({
+                activityName: row.activityName,
+                quantity: parseFloat(row.quantity) || 0,
+                unit: row.unit,
+                emissionFactor: parseFloat(row.emissionFactor) || 0,
+                co2Emissions: parseFloat(row.co2Emissions) || 0,
+                subCategory: row.subCategory
+              });
+              break;
+            case '1D':
+              scope1Data.scope1D.push({
+                activityName: row.activityName,
+                quantity: parseFloat(row.quantity) || 0,
+                unit: row.unit,
+                emissionFactor: parseFloat(row.emissionFactor) || 0,
+                co2Emissions: parseFloat(row.co2Emissions) || 0,
+                subCategory: row.subCategory
+              });
+              break;
+            case '1E':
+              scope1Data.scope1DOther.push({
+                activityName: row.activityName,
+                quantity: parseFloat(row.quantity) || 0,
+                unit: row.unit,
+                emissionFactor: parseFloat(row.emissionFactor) || 0,
+                co2Emissions: parseFloat(row.co2Emissions) || 0,
+                subCategory: row.subCategory
+              });
+              break;
+          }
+        });
+
+        // Daten für Dashboard vorbereiten
+        const dashboardData = {
+          companyInfo: {
+            name: results.data[0]?.companyName || "Unbekannte Firma",
+            year: results.data[0]?.year || new Date().getFullYear(),
+            date: new Date().toISOString()
+          },
+          scope1: scope1Data
+        };
+
+        // Daten im localStorage speichern
+        localStorage.setItem('co2Data', JSON.stringify(dashboardData));
+
+        // Summen berechnen
+        const scope1Total = {
+          vehicles: calculateTotal(scope1Data.vehicles),
+          transport: calculateTotal(scope1Data.transport1B),
+          heating: calculateTotal(scope1Data.scope1C),
+          techGases: calculateTotal(scope1Data.scope1D),
+          other: calculateTotal(scope1Data.scope1DOther)
+        };
+
+        // Dashboard anzeigen
+        showDashboard(scope1Total, dashboardData.companyInfo);
+
+        // Optional: Zur Dashboard-Seite navigieren
+        window.location.href = 'Dashboard.html';
+      }
+    });
+  }
+
+  function calculateTotal(items) {
+    return items.reduce((sum, item) => {
+      if (item.co2Emissions) {
+        return sum + parseFloat(item.co2Emissions);
+      }
+      return sum + (parseFloat(item.quantity) * parseFloat(item.emissionFactor) || 0);
+    }, 0);
+  }
+
+  function showDashboard(scope1Total, companyInfo) {
+    const dashboard = document.getElementById('dashboard');
+    dashboard.style.display = 'block';
+
+    // Gesamtsumme Scope 1
+    const totalScope1 = Object.values(scope1Total).reduce((a, b) => a + b, 0);
+
+    // Dashboard HTML aktualisieren
+    const scopeSummaryEl = document.getElementById('scopeSummary');
+    scopeSummaryEl.innerHTML = `
+      <div class="scope-box">
+        <h3>Scope 1A - Fahrzeuge</h3>
+        <p>${scope1Total.vehicles.toFixed(2)} kg CO₂</p>
+      </div>
+      <div class="scope-box">
+        <h3>Scope 1B - Transport</h3>
+        <p>${scope1Total.transport.toFixed(2)} kg CO₂</p>
+      </div>
+      <div class="scope-box">
+        <h3>Scope 1C - Heizung</h3>
+        <p>${scope1Total.heating.toFixed(2)} kg CO₂</p>
+      </div>
+      <div class="scope-box">
+        <h3>Scope 1D - Technische Gase</h3>
+        <p>${scope1Total.techGases.toFixed(2)} kg CO₂</p>
+      </div>
+      <div class="scope-box">
+        <h3>Scope 1E - Sonstige</h3>
+        <p>${scope1Total.other.toFixed(2)} kg CO₂</p>
+      </div>
+      <div class="scope-box" style="background: #e3f2fd;">
+        <h3>Scope 1 Gesamt</h3>
+        <p>${totalScope1.toFixed(2)} kg CO₂</p>
+      </div>
+    `;
+
+    // Diagramm erstellen
+    createDetailedScope1Chart(scope1Total);
+  }
+
+  function createDetailedScope1Chart(scope1Total) {
+    const ctx = document.getElementById('scopeChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Fahrzeuge', 'Transport', 'Heizung', 'Technische Gase', 'Sonstige'],
+        datasets: [{
+          data: [
+            scope1Total.vehicles,
+            scope1Total.transport,
+            scope1Total.heating,
+            scope1Total.techGases,
+            scope1Total.other
+          ],
+          backgroundColor: [
+            'rgba(54,162,235,0.7)',
+            'rgba(255,99,132,0.7)',
+            'rgba(75,192,192,0.7)',
+            'rgba(153,102,255,0.7)',
+            'rgba(255,159,64,0.7)'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' },
+          title: {
+            display: true,
+            text: 'Scope 1 Emissionen Verteilung'
+          }
         }
-
-        // Debug-Preview
-        showCSVPreview(parsedData);
-
-        // Dashboard
-        generateDashboard(parsedData);
       }
     });
   }

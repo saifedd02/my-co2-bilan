@@ -7,25 +7,209 @@
   <link rel="stylesheet" href="Style1.css">   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+  <style>
+    .drop-zone {
+      width: 100%;
+      max-width: 600px;
+      height: 200px;
+      border: 2px dashed var(--primary-color);
+      border-radius: 8px;
+      margin: 20px auto;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .drop-zone.active {
+      display: flex;
+    }
+
+    .drop-zone-hover {
+      background: rgba(0, 150, 0, 0.1);
+      border-color: #4CAF50;
+    }
+
+    .options-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      text-align: center;
+      background: var(--background-color);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .option-buttons button {
+      padding: 15px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background: var(--primary-color);
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .option-buttons button:hover {
+      background: var(--secondary-color);
+    }
+
+    .message {
+      padding: 10px 20px;
+      margin: 10px 0;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .success {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .error {
+      background: #f44336;
+      color: white;
+    }
+
+    .submit-button {
+      display: block;
+      width: 100%;
+      max-width: 300px;
+      margin: 2rem auto;
+      padding: 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+      background-color: var(--primary-color);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .submit-button:hover {
+      background-color: var(--secondary-color);
+    }
+
+    .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .loading-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 1rem auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .imported-data-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: var(--background-color);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .company-info {
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .emissions-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .emission-item {
+      padding: 1rem;
+      background: var(--card-background);
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .emission-item.total {
+      grid-column: 1 / -1;
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .actions button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      background: var(--primary-color);
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .actions button:hover {
+      background: var(--secondary-color);
+    }
+  </style>
 </head>
 <body>
 
-  <header>
-    <a href="Dateipload.html">
-      <img src="https://digi-green-pilot.de/wp-content/uploads/2023/10/DGP-Logo-1024x438.png" alt="DigiGreen Pilot Logo">
+  <header style="min-height: 130px; padding: 15px 30px; display: flex; align-items: center; justify-content: space-between;">
+    <a href="Dateipload.html" >
+      <img src="https://lh3.googleusercontent.com/sgi-eph/AAxiof5e2mNVhdIEpcoInasC6nUTls8osDBRKrbMjo1hJ669VOGpK2nxEvbFDybNv4Tb3JOgL-BKxmqb63Cm1zIpc7Pfg6kDk7m99NHE0TQaCdRQ2tIZD8beU124uZSesn8wpVhRhlyMcNsu2uh2CtY8Utr97cI5_Nl3z24=s925" alt="DigiGreen Pilot Logo" style="height: 120px; width: auto; transition: transform 0.3s ease; margin: 10px 0;">
     </a>
-    <nav>
-      <a href="Dateipload.html" class="active">
+    <nav style="margin-left: 20px;">
+      <a href="Dateipload.html"class="active">
         <i class="fas fa-poll"></i> Umfrage
       </a>
-      <a href="Co2express.html">
+      <a href="Co2express.html" >
         <i class="fas fa-bolt"></i> CO₂ Express
       </a>
       <a href="Chatbot.html">
         <i class="fas fa-comments"></i> Chatbot
       </a>
-      <a href="LiveCalculator.html">
-        <i class="fas fa-poll"></i> Live Calculator
+      <a href="livecalc.html">
+        <i class="fas fa-calculator"></i> Live Calculator
       </a>
       <a href="Dashboard.html">
         <i class="fas fa-leaf"></i> Dashboard
@@ -40,47 +224,42 @@
     <button class="toggle-btn" onclick="toggleMode()">Mode wechseln</button>
   </header>
 
-  <!-- Chatbot -->
+  <!-- Toggle‑Button, z. B. fixiert am unteren Rand -->
+  <button id="toggle-chat-btn" class="action-button" 
+          style="position: fixed; bottom: 20px; right: 350px; z-index: 1100;" 
+          onclick="toggleChat()">
+    CO₂ Assistant öffnen
+  </button>
+
+  <!-- CO₂‑Assistant-Container (zunächst ohne "open"-Klasse) -->
   <div id="chatbot-bubble" class="chatbot-container">
     <div class="chat-header" onclick="toggleChat()">
       <div class="header-content">
-        <div class="small-avatar">
-          <img src="https://cdn.midjourney.com/98111e79-bd37-40a6-a49f-acf02ee74210/0_0.png" alt="CO2 Assistant">
-        </div>
-        <div class="chat-title">CO₂ Assistant</div>
+        <img src="https://cdn.midjourney.com/98111e79-bd37-40a6-a49f-acf02ee74210/0_0.png" alt="CO₂ Assistant" style="height: 45px;">
+        <span class="chat-title">CO₂ Assistant</span>
       </div>
-      <button class="minimize-btn">-</button>
+      <button class="minimize-btn" onclick="toggleChat(); event.stopPropagation();">–</button>
     </div>
-    <div class="chat-body">
-      <div class="quick-replies">
-        <button onclick="sendQuickReply('Was sind Scopes?')" class="quick-reply">Scopes?</button>
-        <button onclick="sendQuickReply('Scope 1 Details')" class="quick-reply">Scope 1</button>
-        <button onclick="sendQuickReply('Scope 2 Details')" class="quick-reply">Scope 2</button>
-        <button onclick="sendQuickReply('Scope 3 Details')" class="quick-reply">Scope 3</button>
-        <button onclick="sendQuickReply('CO₂ Tipps')" class="quick-reply">Tipps</button>
-        <button onclick="sendQuickReply('Berechnung')" class="quick-reply">Berechnung</button>
-        <button onclick="sendQuickReply('Best Practices')" class="quick-reply">Best Practices</button>
-        <button onclick="sendQuickReply('Förderung')" class="quick-reply">Förderung</button>
-      </div>
-      <div class="chat-messages" id="chatMessages">
-        <div class="message bot-message">
-          Hallo! Wie kann ich Ihnen bei CO₂ und Nachhaltigkeit helfen?
-        </div>
-      </div>
-      <div class="quick-replies">
-        <button onclick="sendQuickReply('Was sind Scopes?')" class="quick-reply">Scopes?</button>
-        <button onclick="sendQuickReply('CO₂ Tipps')" class="quick-reply">CO₂ Tipps</button>
-        <button onclick="sendQuickReply('Hilfe')" class="quick-reply">Hilfe</button>
-      </div>
-      <div class="chat-input">
-        <input type="text" id="userInput" placeholder="Frage stellen..." onkeypress="handleKeyPress(event)">
-        <button onclick="sendMessage()">↑</button>
-      </div>
+    <div class="chat-body" id="chatMessages">
+      <!-- Chatnachrichten werden hier eingefügt -->
+      <div class="message bot-message">Hallo, wie kann ich dir helfen?</div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Schreibe eine Nachricht..." onkeypress="handleKeyPress(event)">
+      <button onclick="sendMessage()">Senden</button>
     </div>
   </div>
 
+  <!-- Optionen-Container für Bilanz erstellen oder importieren -->
+  <div class="options-container" id="options-container" style="display: none;">
+  </div>
+
+  <!-- Drop-Zone für Datei-Upload -->
+  <div class="drop-zone" id="drop-zone" style="display: none;">
+  </div>
+
   <!-- Hauptformular -->
-  <form id="co2Survey" onsubmit="handleSubmit(event)">
+  <form id="co2Survey" style="display: block;" onsubmit="handleSubmit(event)">
     <!-- Unternehmensdaten -->
     <div class="form-section">
       <h2>Unternehmensdaten</h2>
@@ -89,14 +268,39 @@
         <input type="text" id="companyName" required>
       </div>
       <div class="form-group">
+        <label>Land</label>
+        <input type="text" id="country" required>
+      </div>
+      <div class="form-group">
+        <label>Stadt</label>
+        <input type="text" id="city" required>
+      </div>
+      <div class="form-group">
+        <label>Postleitzahl</label>
+        <input type="text" id="postalCode" required>
+      </div>
+      <div class="form-group">
         <label>Bezugsjahr</label>
-        <select id="year" required>
-          <option value="2024">2024</option>
-          <option value="2023">2023</option>
-          <option value="2022">2022</option>
-        </select>
+        <select id="year" required></select>
       </div>
     </div>
+
+    <script>
+    // Dynamische Befüllung des Jahres-Dropdowns (z. B. von 1990 bis currentYear+5)
+    (function populateYearDropdown() {
+      const select = document.getElementById('year');
+      if (select) {
+        const startYear = 1990;
+        const endYear = new Date().getFullYear() + 5;
+        for (let year = endYear; year >= startYear; year--) {
+          const option = document.createElement('option');
+          option.value = year;
+          option.textContent = year;
+          select.appendChild(option);
+        }
+      }
+    })();
+    </script>
 
     <!-- Dropdown zur Scope-Auswahl -->
     <div class="form-group">
@@ -114,10 +318,14 @@
       <h2>Scope 1: Direkte Emissionen</h2>
       <!-- 1A -->
       <div class="scope-section scope-card">
-        <h3>1A – Geschäftsreisen mit firmeneigenen Fahrzeugen</h3>
-        <button type="button" onclick="addVehicle()">Fahrzeug hinzufügen</button>
-        <div id="vehicleFields" class="dynamic-fields"></div>
-        <div id="totalVehicleEmissions" class="total-emissions"></div>
+        <h3 data-tooltip="1A: Direkte Emissionen – z. B. Treibstoffverbrauch von Firmenfahrzeugen">
+          1A – Direkte Emissionen (Fahrzeugtreibstoff)
+        </h3>
+        <button type="button" onclick="addScope1A()">Fahrzeug-Treibstoff hinzufügen</button>
+        <div id="scope1AFields"></div>
+        <div id="totalScope1AEmissions" class="total-emissions" style="margin-top: 1rem; font-weight: bold;">
+          Gesamt 1A-Emissionen: 0 kg CO₂
+        </div>
       </div>
       <!-- 1B -->
       <div class="scope-section scope-card">
@@ -142,7 +350,7 @@
       </div>
       <!-- 1D Sonstige Emittenten -->
       <div class="scope-section scope-card">
-        <h3>1D – Sonstige Emittenten (frei)</h3>
+        <h3>1E – Sonstige Emittenten (frei)</h3>
         <button type="button" onclick="addScope1DOther()">Sonstigen Emittent hinzufügen</button>
         <div id="scope1DOtherFields"></div>
         <div id="totalScope1DOtherEmissions" style="font-weight: bold; margin-top: 1rem;">
@@ -177,7 +385,7 @@
       <h2>Scope 3: Sonstige Emissionen</h2>
       <!-- 3A -->
       <div class="scope-section scope-card">
-        <h3>3A – Geschäftsreisen (extern)</h3>
+        <h3>3A - Geschäftsreisen mit externen Transportmitteln</h3>
         <button type="button" onclick="addScope3A()">Geschäftsreise hinzufügen</button>
         <div id="scope3AFields"></div>
         <div id="totalScope3AEmissions" style="font-weight: bold; margin-top: 1rem;">
@@ -258,7 +466,7 @@
       </div>
       <!-- 3J -->
       <div class="scope-section scope-card">
-        <h3>3J – Mobilität & Kraftstoffe</h3>
+        <h3>3J – Anfahrt der Mitarbeiter</h3>
         <button type="button" onclick="addScope3J()">Transport/Kraftstoff hinzufügen</button>
         <div id="scope3JFields"></div>
         <div id="totalScope3JEmissions" style="font-weight: bold; margin-top: 1rem;">
@@ -283,11 +491,28 @@
           Gesamt 3L-Emissionen: 0 kg CO₂
         </div>
       </div>
+      <div class="scope-section">
+        <h3 data-tooltip="Scope 3 – Sonstige Emittenten (z. B. 3M)"> Sonstige Emittenten</h3>
+        <button type="button" onclick="addScope3Other()">Eintrag hinzufügen</button>
+        <div id="scope3OtherFields"></div>
+        <div id="totalScope3OtherEmissions" class="total-emissions" style="margin-top: 1rem; font-weight: bold;">
+          Gesamt (Sonstige) Scope 3-Emissionen: 0 kg CO₂
+        </div>
+      </div>
     </div>
 
-    <!-- Buttons zum Berechnen und Herunterladen -->
-    <button type="submit" class="submit-button">Bilanz berechnen</button>
-    <button type="button" id="downloadDataBtn">Daten herunterladen</button>
+    <!-- Loading-Overlay -->
+    <div id="loadingOverlay" class="loading" style="display: none;">
+      <div class="loading-content">
+        <div class="spinner"></div>
+        <p>Bilanz wird berechnet...</p>
+      </div>
+    </div>
+
+    <!-- Submit-Button am Ende des Formulars -->
+    <div class="form-section" style="margin-top: 2rem;">
+      <button type="submit" class="submit-button">Bilanz berechnen</button>
+      <button type="button" id="downloadDataBtn">Daten herunterladen</button>    </div>
   </form>
 
   <!-- Einbindung deines Skripts (z. B. script1.js) -->
@@ -306,8 +531,10 @@
         document.getElementById(selectedScope).style.display = 'block';
       }
     }
+    
   </script>
 <script>
+
   function toggleMode() {
     const body = document.body;
     // Ist aktuell Dark Mode an?
@@ -321,6 +548,899 @@
       body.classList.add('dark-mode');
     }
   }
+</script>
+
+<script>
+// DigiFileHandler-Klasse für Import/Export von .digi-Dateien
+class DigiFileHandler {
+  constructor() {
+    this.data = this.loadFromLocalStorage() || {
+      version: "2.0",
+      company: null,
+      bilanzierungen: [],
+      currentMonth: new Date().toISOString().slice(0, 7)
+    };
+  }
+
+  // Laden der Daten aus localStorage
+  loadFromLocalStorage() {
+    const saved = localStorage.getItem('co2_bilanz_data');
+    return saved ? JSON.parse(saved) : null;
+  }
+
+  // Speichern der Daten im localStorage
+  saveToLocalStorage() {
+    localStorage.setItem('co2_bilanz_data', JSON.stringify(this.data));
+  }
+
+  // Import einer .digi-Datei
+  async importDigiFile(file) {
+    try {
+      showLoading();
+      const text = await file.text();
+      const importedData = JSON.parse(text);
+
+      // Validierung der Datei
+      if (!this.validateDigiFile(importedData)) {
+        throw new Error('Ungültiges .digi-Datei Format');
+      }
+
+      // Daten zusammenführen
+      this.mergeData(importedData);
+      
+      // Erfolgreicher Import
+      const latestBilanz = this.getLatestBilanz();
+      this.displayImportedData(latestBilanz);
+      
+      return true;
+    } catch (error) {
+      console.error('Import-Fehler:', error);
+      showMessage('Fehler beim Import: ' + error.message, 'error');
+      return false;
+    } finally {
+      hideLoading();
+    }
+  }
+
+  // Validierung der .digi-Datei
+  validateDigiFile(data) {
+    return data.version && 
+           data.company && 
+           Array.isArray(data.bilanzierungen) &&
+           data.bilanzierungen.length > 0;
+  }
+
+  // Daten zusammenführen
+  mergeData(importedData) {
+    // Unternehmensdaten aktualisieren
+    if (!this.data.company) {
+      this.data.company = importedData.company;
+    }
+
+    // Neue Bilanzierungen hinzufügen
+    importedData.bilanzierungen.forEach(newBilanz => {
+      // Prüfen, ob die Bilanzierung bereits existiert
+      const exists = this.data.bilanzierungen.some(
+        b => b.timestamp === newBilanz.timestamp
+      );
+      
+      if (!exists) {
+        this.data.bilanzierungen.push(newBilanz);
+      }
+    });
+
+    // Nach Datum sortieren
+    this.data.bilanzierungen.sort((a, b) => 
+      new Date(a.timestamp) - new Date(b.timestamp)
+    );
+
+    this.saveToLocalStorage();
+    this.updateDashboard();
+  }
+
+  // Neueste Bilanz abrufen
+  getLatestBilanz() {
+    if (this.data.bilanzierungen.length === 0) return null;
+    return this.data.bilanzierungen[this.data.bilanzierungen.length - 1];
+  }
+
+  // Importierte Daten anzeigen
+  displayImportedData(bilanz) {
+    if (!bilanz) return;
+
+    const container = document.createElement('div');
+    container.className = 'imported-data-container';
+    container.innerHTML = `
+      <h2>Importierte CO₂-Bilanz</h2>
+      <div class="company-info">
+        <h3>${bilanz.company?.name || this.data.company?.name}</h3>
+        <p>Datum: ${new Date(bilanz.timestamp).toLocaleDateString()}</p>
+      </div>
+      <div class="emissions-summary">
+        <div class="emission-item">
+          <h4>Scope 1</h4>
+          <p>${bilanz.emissions.scope1.total.toLocaleString()} kg CO₂</p>
+        </div>
+        <div class="emission-item">
+          <h4>Scope 2</h4>
+          <p>${bilanz.emissions.scope2.total.toLocaleString()} kg CO₂</p>
+        </div>
+        <div class="emission-item">
+          <h4>Scope 3</h4>
+          <p>${bilanz.emissions.scope3.total.toLocaleString()} kg CO₂</p>
+        </div>
+        <div class="emission-item total">
+          <h4>Gesamt</h4>
+          <p>${(
+            bilanz.emissions.scope1.total + 
+            bilanz.emissions.scope2.total + 
+            bilanz.emissions.scope3.total
+          ).toLocaleString()} kg CO₂</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button onclick="startNewBilanz()">Neue Bilanzierung starten</button>
+        <button onclick="window.location.href='Dashboard.html'">Zum Dashboard</button>
+      </div>
+    `;
+
+    // Vorhandene Anzeige entfernen
+    const existing = document.querySelector('.imported-data-container');
+    if (existing) existing.remove();
+
+    // Formular und Optionen ausblenden
+    document.getElementById('co2Survey').style.display = 'none';
+    document.getElementById('options-container').style.display = 'none';
+    document.getElementById('drop-zone').style.display = 'none';
+
+    // Neue Anzeige einfügen
+    document.body.appendChild(container);
+  }
+
+  // Neue Bilanzierung hinzufügen
+  addBilanzierung(formData) {
+    // Unternehmensdaten aktualisieren
+    this.data.company = formData.company;
+    
+    const newBilanz = {
+      timestamp: new Date().toISOString(),
+      month: new Date().toISOString().slice(0, 7),
+      company: formData.company,
+      emissions: {
+        scope1: this.calculateScope(formData.emissions.scope1),
+        scope2: this.calculateScope(formData.emissions.scope2),
+        scope3: this.calculateScope(formData.emissions.scope3)
+      }
+    };
+
+    // Gesamtemissionen berechnen
+    newBilanz.emissions.total = 
+      newBilanz.emissions.scope1.total +
+      newBilanz.emissions.scope2.total +
+      newBilanz.emissions.scope3.total;
+
+    // Vergleich mit vorheriger Bilanzierung
+    const previousBilanz = this.getLatestBilanz();
+    if (previousBilanz) {
+      newBilanz.comparison = this.calculateComparison(previousBilanz, newBilanz);
+    }
+
+    // Zur Liste hinzufügen
+    this.data.bilanzierungen.push(newBilanz);
+    this.saveToLocalStorage();
+    this.updateDashboard();
+
+    // .digi-Datei erstellen und herunterladen
+    this.createDigiFile();
+
+    return newBilanz;
+  }
+
+  // Vergleich zwischen zwei Bilanzierungen berechnen
+  calculateComparison(previous, current) {
+    return {
+      scope1: this.calculateChange(previous.emissions.scope1.total, current.emissions.scope1.total),
+      scope2: this.calculateChange(previous.emissions.scope2.total, current.emissions.scope2.total),
+      scope3: this.calculateChange(previous.emissions.scope3.total, current.emissions.scope3.total),
+      total: this.calculateChange(
+        previous.emissions.scope1.total + previous.emissions.scope2.total + previous.emissions.scope3.total,
+        current.emissions.scope1.total + current.emissions.scope2.total + current.emissions.scope3.total
+      )
+    };
+  }
+
+  // Prozentuale Änderung berechnen
+  calculateChange(previous, current) {
+    const absoluteChange = current - previous;
+    const percentageChange = previous !== 0 ? (absoluteChange / previous) * 100 : 0;
+    return {
+      absolute: absoluteChange,
+      percentage: percentageChange
+    };
+  }
+
+  // Dashboard aktualisieren
+  updateDashboard() {
+    const dashboardData = {
+      company: this.data.company,
+      bilanzierungen: this.data.bilanzierungen,
+      latest: this.getLatestBilanz(),
+      comparisons: this.generateComparisons()
+    };
+
+    localStorage.setItem('dashboard_data', JSON.stringify(dashboardData));
+    
+    // Event für Dashboard-Update auslösen
+    document.dispatchEvent(new CustomEvent('dashboardDataUpdated', {
+      detail: dashboardData
+    }));
+  }
+
+  // Vergleichsdaten für Diagramme generieren
+  generateComparisons() {
+    return {
+      monthly: this.generateMonthlyComparison(),
+      scopes: this.generateScopeComparison()
+    };
+  }
+
+  // Monatliche Vergleichsdaten generieren
+  generateMonthlyComparison() {
+    return this.data.bilanzierungen.map(bilanz => ({
+      date: bilanz.timestamp,
+      total: bilanz.emissions.scope1.total + 
+             bilanz.emissions.scope2.total + 
+             bilanz.emissions.scope3.total,
+      scope1: bilanz.emissions.scope1.total,
+      scope2: bilanz.emissions.scope2.total,
+      scope3: bilanz.emissions.scope3.total
+    }));
+  }
+
+  // Scope-Vergleichsdaten generieren
+  generateScopeComparison() {
+    const latest = this.getLatestBilanz();
+    if (!latest) return null;
+
+    return {
+      labels: ['Scope 1', 'Scope 2', 'Scope 3'],
+      data: [
+        latest.emissions.scope1.total,
+        latest.emissions.scope2.total,
+        latest.emissions.scope3.total
+      ]
+    };
+  }
+
+  // Emissionen pro Scope berechnen
+  calculateScope(scopeData) {
+    let total = 0;
+    const details = {};
+
+    for (const category in scopeData) {
+      if (scopeData[category] && Array.isArray(scopeData[category])) {
+        details[category] = scopeData[category].reduce((sum, item) => {
+          const amount = parseFloat(item.amount) || 0;
+          sum += amount;
+          return sum;
+        }, 0);
+        total += details[category];
+      }
+    }
+
+    return { total, details };
+  }
+
+
+  // .digi-Datei erstellen
+  createDigiFile() {
+    const fileName = `CO2_Bilanz_${this.data.company.name}_${new Date().toISOString().slice(0, 7)}.digi`;
+    const blob = new Blob([JSON.stringify(this.data, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    showMessage('CO₂-Bilanz wurde als .digi-Datei exportiert.', 'success');
+  }
+
+  async importFile(file) {
+    try {
+      showLoading();
+      const text = await file.text();
+      console.log('Importierte Daten:', text); // Debug-Ausgabe
+      const importedData = JSON.parse(text);
+      
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+      console.log('Dateiformat:', fileExtension); // Debug-Ausgabe
+      
+      if (fileExtension === 'digi') {
+        return await this.importDigiFile(importedData);
+      } else if (fileExtension === 'json') {
+        return await this.importJsonFile(importedData);
+      }
+    } catch (error) {
+      console.error('Import-Fehler:', error);
+      showMessage('Fehler beim Import: ' + error.message, 'error');
+      return false;
+    } finally {
+      hideLoading();
+    }
+  }
+
+  async importJsonFile(jsonData) {
+    try {
+      console.log('JSON-Daten zum Import:', jsonData); // Debug-Ausgabe
+
+      // Flexiblere Validierung
+      if (!this.validateJsonData(jsonData)) {
+        throw new Error('Ungültiges JSON-Format - Erforderliche Felder fehlen oder sind ungültig');
+      }
+
+      const convertedData = this.convertJsonToInternalFormat(jsonData);
+      console.log('Konvertierte Daten:', convertedData); // Debug-Ausgabe
+      
+      await this.mergeData(convertedData);
+      
+      showMessage('JSON-Daten erfolgreich importiert', 'success');
+      return true;
+    } catch (error) {
+      console.error('JSON Import-Fehler:', error);
+      showMessage('Fehler beim JSON-Import: ' + error.message, 'error');
+      return false;
+    }
+  }
+
+  validateJsonData(data) {
+    console.log('Validiere JSON-Daten:', data); // Debug-Ausgabe
+
+    // Flexiblere Validierung
+    if (!data) return false;
+
+    // Prüfe verschiedene mögliche Datenstrukturen
+    if (data.emissions) {
+      // Format 1: Direkte Emissionswerte
+      return typeof data.emissions.scope1 === 'number' ||
+             typeof data.emissions.scope2 === 'number' ||
+             typeof data.emissions.scope3 === 'number';
+    } else if (data.scope1 || data.scope2 || data.scope3) {
+      // Format 2: Direkte Scope-Werte
+      return true;
+    } else if (Array.isArray(data)) {
+      // Format 3: Array von Emissionsdaten
+      return data.length > 0;
+    }
+
+    return false;
+  }
+
+  convertJsonToInternalFormat(jsonData) {
+    console.log('Konvertiere JSON-Daten:', jsonData); // Debug-Ausgabe
+
+    let emissions;
+    if (Array.isArray(jsonData)) {
+      // Behandle Array-Format
+      emissions = jsonData.reduce((acc, entry) => ({
+        scope1: (acc.scope1 || 0) + (parseFloat(entry.scope1) || 0),
+        scope2: (acc.scope2 || 0) + (parseFloat(entry.scope2) || 0),
+        scope3: (acc.scope3 || 0) + (parseFloat(entry.scope3) || 0)
+      }), {});
+    } else if (jsonData.emissions) {
+      // Behandle emissions-Objekt
+      emissions = jsonData.emissions;
+    } else {
+      // Behandle direkte Scope-Werte
+      emissions = {
+        scope1: parseFloat(jsonData.scope1) || 0,
+        scope2: parseFloat(jsonData.scope2) || 0,
+        scope3: parseFloat(jsonData.scope3) || 0
+      };
+    }
+
+    return {
+      version: "2.0",
+      company: this.data.company || {
+        name: jsonData.companyName || "Importierte Daten",
+        year: jsonData.year || new Date().getFullYear()
+      },
+      bilanzierungen: [{
+        timestamp: new Date().toISOString(),
+        month: new Date().toISOString().slice(0, 7),
+        emissions: {
+          scope1: { total: emissions.scope1, details: {} },
+          scope2: { total: emissions.scope2, details: {} },
+          scope3: { total: emissions.scope3, details: {} }
+        }
+      }]
+    };
+  }
+
+  async autoBackup() {
+    try {
+      // Erstelle Backup alle 24 Stunden
+      const lastBackup = localStorage.getItem('lastAutoBackup');
+      const now = new Date().getTime();
+      
+      if (!lastBackup || (now - parseInt(lastBackup)) > 24 * 60 * 60 * 1000) {
+        const backupData = {
+          timestamp: now,
+          bilanzierungen: this.data.bilanzierungen,
+          monthlyEmissions: JSON.parse(localStorage.getItem('monthlyEmissions') || '[]')
+        };
+
+        // Erstelle Backup-Datei
+        const blob = new Blob([JSON.stringify(backupData, null, 2)], 
+          {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `CO2_Bilanz_Backup_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+
+        localStorage.setItem('lastAutoBackup', now.toString());
+        showMessage('Automatisches Backup wurde erstellt', 'success');
+      }
+    } catch (error) {
+      console.error('Backup-Fehler:', error);
+      showMessage('Fehler beim automatischen Backup', 'error');
+    }
+  }
+
+  async restoreFromBackup(backupFile) {
+    try {
+      const backupData = JSON.parse(await backupFile.text());
+      
+      // Validiere Backup-Daten
+      if (!this.validateBackupData(backupData)) {
+        throw new Error('Ungültiges Backup-Format');
+      }
+
+      // Stelle Daten wieder her
+      this.data.bilanzierungen = backupData.bilanzierungen;
+      localStorage.setItem('monthlyEmissions', 
+        JSON.stringify(backupData.monthlyEmissions));
+      
+      this.saveToLocalStorage();
+      this.updateDashboard();
+      
+      showMessage('Daten erfolgreich wiederhergestellt', 'success');
+    } catch (error) {
+      console.error('Wiederherstellungsfehler:', error);
+      showMessage('Fehler bei der Wiederherstellung', 'error');
+    }
+  }
+}
+
+// DigiFileHandler initialisieren
+const digiHandler = new DigiFileHandler();
+
+// Event-Listener für Datei-Upload einrichten
+document.addEventListener('DOMContentLoaded', () => {
+  const dropZone = document.getElementById('drop-zone');
+  const fileInput = document.getElementById('fileInput');
+
+  // Drag & Drop Events
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('drop-zone-hover');
+  });
+
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('drop-zone-hover');
+  });
+
+  dropZone.addEventListener('drop', async (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('drop-zone-hover');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFileUpload(files[0]);
+    }
+  });
+
+  // Klick-Event für Dateiauswahl
+  dropZone.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+      handleFileUpload(e.target.files[0]);
+    }
+  });
+
+  // Formular-Submit
+  document.getElementById('co2Survey').addEventListener('submit', handleSubmit);
+
+  // Prüfen, ob bereits eine Bilanzierung existiert
+  checkExistingBilanz();
+});
+
+// Datei-Upload Handler
+async function handleFileUpload(file) {
+  // Prüfe die Dateiendung
+  const fileExtension = file.name.split('.').pop().toLowerCase();
+  
+  if (fileExtension !== 'digi' && fileExtension !== 'json') {
+    showMessage('Bitte wählen Sie eine .digi oder .json-Datei aus', 'error');
+    return;
+  }
+
+  try {
+    const success = await digiHandler.importFile(file);
+    if (success) {
+      showMessage('Datei erfolgreich importiert', 'success');
+    }
+  } catch (error) {
+    console.error('Import-Fehler:', error);
+    showMessage('Fehler beim Import der Datei', 'error');
+  }
+}
+
+// Formular-Submit Handler
+function handleSubmit(event) {
+  event.preventDefault();
+  
+  const formData = {
+    companyInfo: {
+      name: document.getElementById('companyName').value,
+      year: document.getElementById('year').value,
+      date: new Date().toISOString()
+    },
+    scope1: {
+      vehicles: exportScope1AData() || [],
+      transport1B: exportTransport1BData() || [],
+      scope1C: exportScope1CData() || [],
+      scope1D: exportScope1DData() || [],
+      scope1DOther: exportScope1DOtherData() || []
+    },
+    scope2: {
+      energy: exportScope2AData() || [],
+      indirectEmissions: exportIndirectEmitterData() || []
+    },
+    scope3: {
+      businessTravel: exportScope3AData() || [],
+      transport: exportScope3BData() || [],
+      chemicals: exportScope3CData() || [],
+      paper: exportScope3DData() || [],
+      plastics: exportScope3EData() || [],
+      metals: exportScope3FData() || [],
+      minerals: exportScope3GData() || [],
+      disposal: exportScope3HData() || [],
+      water: exportScope3IData() || [],
+      otherTransport: exportScope3JData() || [],
+      food: exportScope3KFoodData() || [],
+      other: exportScope3LData() || []
+    }
+  };
+
+  // Speichere aktuelle Daten
+  localStorage.setItem('co2Data', JSON.stringify(formData));
+  
+  // Speichere monatliche Historie
+  saveMonthlyData(formData);
+  
+  alert('Ihre CO₂-Bilanz wurde erfolgreich gespeichert!');
+  window.location.href = 'Dashboard.html';
+}
+
+// Prüfen, ob bereits eine Bilanzierung existiert
+function checkExistingBilanz() {
+  const savedData = localStorage.getItem('co2_bilanz_data');
+  if (savedData) {
+    const data = JSON.parse(savedData);
+    if (data.bilanzierungen && data.bilanzierungen.length > 0) {
+      // Es existiert bereits eine Bilanzierung, zeige die Optionen
+      document.getElementById('options-container').style.display = 'block';
+    } else {
+      // Keine Bilanzierung vorhanden, zeige das Formular
+      document.getElementById('co2Survey').style.display = 'block';
+    }
+  } else {
+    // Keine Daten vorhanden, zeige das Formular
+    document.getElementById('co2Survey').style.display = 'block';
+  }
+}
+
+// Daten-Sammelfunktionen für die Scopes
+function collectScope1Data() {
+  return {
+    A: collectDataFromContainer('scope1AFields'),
+    B: collectDataFromContainer('transport1BFields'),
+    C: collectDataFromContainer('scope1CFields'),
+    D: collectDataFromContainer('scope1DFields'),
+    other: collectDataFromContainer('scope1DOtherFields')
+  };
+}
+
+function collectScope2Data() {
+  return {
+    A: collectDataFromContainer('scope2AFields'),
+    B: collectDataFromContainer('indirectEmitterFields')
+  };
+}
+
+function collectScope3Data() {
+  return {
+    A: collectDataFromContainer('scope3AFields'),
+    B: collectDataFromContainer('scope3BFields'),
+    C: collectDataFromContainer('scope3CFields'),
+    D: collectDataFromContainer('scope3DFields'),
+    E: collectDataFromContainer('scope3EFields'),
+    F: collectDataFromContainer('scope3FFields'),
+    G: collectDataFromContainer('scope3GFields'),
+    H: collectDataFromContainer('scope3HFields'),
+    I: collectDataFromContainer('scope3IFields'),
+    J: collectDataFromContainer('scope3JFields'),
+    K: collectDataFromContainer('scope3KFoodFields'),
+    L: collectDataFromContainer('scope3LFields')
+  };
+}
+
+function collectDataFromContainer(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return [];
+
+  const data = [];
+  const inputs = container.querySelectorAll('input[type="number"]');
+  
+  inputs.forEach(input => {
+    const row = input.closest('.input-row');
+    if (row) {
+      const type = row.querySelector('select')?.value || '';
+      const amount = parseFloat(input.value) || 0;
+      
+      data.push({
+        type: type,
+        amount: amount,
+        unit: 'kg CO₂'
+      });
+    }
+  });
+
+  return data;
+}
+
+// UI-Hilfsfunktionen
+function showLoading() {
+  const overlay = document.getElementById('loadingOverlay');
+  if (overlay) overlay.style.display = 'flex';
+}
+
+function hideLoading() {
+  const overlay = document.getElementById('loadingOverlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
+function showMessage(message, type = 'info') {
+  const messageDiv = document.createElement('div');
+  messageDiv.className = `message ${type}`;
+  messageDiv.textContent = message;
+  messageDiv.style.position = 'fixed';
+  messageDiv.style.top = '20px';
+  messageDiv.style.left = '50%';
+  messageDiv.style.transform = 'translateX(-50%)';
+  messageDiv.style.zIndex = '1000';
+  messageDiv.style.padding = '10px 20px';
+  messageDiv.style.borderRadius = '4px';
+  messageDiv.style.backgroundColor = type === 'error' ? '#f44336' : '#4CAF50';
+  messageDiv.style.color = 'white';
+  
+  document.body.appendChild(messageDiv);
+  setTimeout(() => messageDiv.remove(), 5000);
+}
+
+function saveMonthlyData(formData) {
+  const currentDate = new Date();
+  const monthYear = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+  
+  const monthlyData = {
+    date: monthYear,
+    companyInfo: formData.companyInfo,
+    emissions: {
+      scope1: calculateScopeTotal(formData.scope1),
+      scope2: calculateScopeTotal(formData.scope2),
+      scope3: calculateScopeTotal(formData.scope3)
+    }
+  };
+
+  // Lade existierende Daten oder erstelle neues Array
+  let historicalData = JSON.parse(localStorage.getItem('monthlyEmissions') || '[]');
+  
+  // Füge neue Daten hinzu
+  historicalData.push(monthlyData);
+  
+  // Speichere aktualisierte Daten
+  localStorage.setItem('monthlyEmissions', JSON.stringify(historicalData));
+  
+  // Erstelle JSON-Datei zum Download
+  const blob = new Blob([JSON.stringify(historicalData, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `CO2_Bilanz_Historie_${monthYear}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function calculateScopeTotal(scopeData) {
+  let total = 0;
+  for (const category in scopeData) {
+    if (Array.isArray(scopeData[category])) {
+      scopeData[category].forEach(item => {
+        total += parseFloat(item.co2Emissions) || 0;
+      });
+    }
+  }
+  return total;
+}
+
+// Fügen Sie diese Erinnerungsfunktion zum Code hinzu
+function remindDataBackup() {
+  const lastBackup = localStorage.getItem('lastBackupDate');
+  const today = new Date().toISOString().slice(0, 10);
+  
+  if (!lastBackup || lastBackup !== today) {
+    showMessage(
+      'Bitte denken Sie daran, Ihre Bilanzdaten regelmäßig zu exportieren!', 
+      'info'
+    );
+  }
+}
+
+// Fügen Sie diese Warnung beim Verlassen der Seite hinzu
+window.addEventListener('beforeunload', (event) => {
+  const unsavedChanges = checkForUnsavedChanges(); // Implementieren Sie diese Funktion
+  if (unsavedChanges) {
+    event.preventDefault();
+    event.returnValue = 'Sie haben ungespeicherte Änderungen. Möchten Sie die Seite wirklich verlassen?';
+  }
+});
+</script>
+
+<!-- Funktion zum Laden der gespeicherten Daten -->
+<script>
+function loadSavedFormData() {
+  const savedData = localStorage.getItem('co2Data');
+  if (savedData) {
+    const formData = JSON.parse(savedData);
+    
+    // Lade Unternehmensdaten
+    if (formData.companyInfo) {
+      document.getElementById('companyName').value = formData.companyInfo.name || '';
+      document.getElementById('year').value = formData.companyInfo.year || new Date().getFullYear();
+    }
+
+    // Lade Scope 1 Daten
+    if (formData.scope1) {
+      if (formData.scope1.vehicles && formData.scope1.vehicles.length > 0) {
+        formData.scope1.vehicles.forEach(() => addScope1A());
+      }
+      if (formData.scope1.transport1B && formData.scope1.transport1B.length > 0) {
+        formData.scope1.transport1B.forEach(() => addTransport1B());
+      }
+      if (formData.scope1.scope1C && formData.scope1.scope1C.length > 0) {
+        formData.scope1.scope1C.forEach(() => addScope1C());
+      }
+      if (formData.scope1.scope1D && formData.scope1.scope1D.length > 0) {
+        formData.scope1.scope1D.forEach(() => addScope1D());
+      }
+      if (formData.scope1.scope1DOther && formData.scope1.scope1DOther.length > 0) {
+        formData.scope1.scope1DOther.forEach(() => addScope1DOther());
+      }
+    }
+
+    // Lade Scope 2 Daten
+    if (formData.scope2) {
+      if (formData.scope2.energy && formData.scope2.energy.length > 0) {
+        formData.scope2.energy.forEach(() => addScope2A());
+      }
+      if (formData.scope2.indirectEmissions && formData.scope2.indirectEmissions.length > 0) {
+        formData.scope2.indirectEmissions.forEach(() => addIndirectEmitter());
+      }
+    }
+
+    // Lade Scope 3 Daten
+    if (formData.scope3) {
+      if (formData.scope3.businessTravel && formData.scope3.businessTravel.length > 0) {
+        formData.scope3.businessTravel.forEach(() => addScope3A());
+      }
+      if (formData.scope3.transport && formData.scope3.transport.length > 0) {
+        formData.scope3.transport.forEach(() => addScope3B());
+      }
+      if (formData.scope3.chemicals && formData.scope3.chemicals.length > 0) {
+        formData.scope3.chemicals.forEach(() => addScope3C());
+      }
+      if (formData.scope3.paper && formData.scope3.paper.length > 0) {
+        formData.scope3.paper.forEach(() => addScope3D());
+      }
+      if (formData.scope3.plastics && formData.scope3.plastics.length > 0) {
+        formData.scope3.plastics.forEach(() => addScope3E());
+      }
+      if (formData.scope3.metals && formData.scope3.metals.length > 0) {
+        formData.scope3.metals.forEach(() => addScope3F());
+      }
+      if (formData.scope3.minerals && formData.scope3.minerals.length > 0) {
+        formData.scope3.minerals.forEach(() => addScope3G());
+      }
+      if (formData.scope3.disposal && formData.scope3.disposal.length > 0) {
+        formData.scope3.disposal.forEach(() => addScope3H());
+      }
+      if (formData.scope3.water && formData.scope3.water.length > 0) {
+        formData.scope3.water.forEach(() => addScope3I());
+      }
+      if (formData.scope3.otherTransport && formData.scope3.otherTransport.length > 0) {
+        formData.scope3.otherTransport.forEach(() => addScope3J());
+      }
+      if (formData.scope3.food && formData.scope3.food.length > 0) {
+        formData.scope3.food.forEach(() => addScope3KFood());
+      }
+      if (formData.scope3.other && formData.scope3.other.length > 0) {
+        formData.scope3.other.forEach(() => addScope3L());
+      }
+    }
+
+    // Warte kurz, damit die Felder erstellt werden können
+    setTimeout(() => {
+      // Fülle die Werte in die erstellten Felder
+      if (formData.scope1) {
+        fillFieldValues('#scope1AFields', formData.scope1.vehicles);
+        fillFieldValues('#transport1BFields', formData.scope1.transport1B);
+        fillFieldValues('#scope1CFields', formData.scope1.scope1C);
+        fillFieldValues('#scope1DFields', formData.scope1.scope1D);
+        fillFieldValues('#scope1DOtherFields', formData.scope1.scope1DOther);
+      }
+      if (formData.scope2) {
+        fillFieldValues('#scope2AFields', formData.scope2.energy);
+        fillFieldValues('#indirectEmitterFields', formData.scope2.indirectEmissions);
+      }
+      if (formData.scope3) {
+        fillFieldValues('#scope3AFields', formData.scope3.businessTravel);
+        fillFieldValues('#scope3BFields', formData.scope3.transport);
+        fillFieldValues('#scope3CFields', formData.scope3.chemicals);
+        fillFieldValues('#scope3DFields', formData.scope3.paper);
+        fillFieldValues('#scope3EFields', formData.scope3.plastics);
+        fillFieldValues('#scope3FFields', formData.scope3.metals);
+        fillFieldValues('#scope3GFields', formData.scope3.minerals);
+        fillFieldValues('#scope3HFields', formData.scope3.disposal);
+        fillFieldValues('#scope3IFields', formData.scope3.water);
+        fillFieldValues('#scope3JFields', formData.scope3.otherTransport);
+        fillFieldValues('#scope3KFoodFields', formData.scope3.food);
+        fillFieldValues('#scope3LFields', formData.scope3.other);
+      }
+    }, 100);
+  }
+}
+
+// Hilfsfunktion zum Füllen der Feldwerte
+function fillFieldValues(containerId, data) {
+  if (!data || !Array.isArray(data)) return;
+  
+  const container = document.querySelector(containerId);
+  if (!container) return;
+
+  const fields = container.querySelectorAll('.dynamic-field');
+  data.forEach((item, index) => {
+    if (fields[index]) {
+      const field = fields[index];
+      Object.keys(item).forEach(key => {
+        const input = field.querySelector(`[class*="${key}"]`);
+        if (input) {
+          input.value = item[key];
+        }
+      });
+    }
+  });
+}
+
+// Lade die gespeicherten Daten beim Start der Seite
+document.addEventListener('DOMContentLoaded', function() {
+  loadSavedFormData();
+});
 </script>
 
 </body>
