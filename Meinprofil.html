@@ -113,6 +113,9 @@
 </head>
 <body>
   <header>
+    <style>
+
+    </style>
     <a href="Dateipload.html">
       <img src="logo.png" alt="DigiGreen Pilot Logo" class="logo">
     </a>
@@ -126,9 +129,7 @@
       <a href="Chatbot.html">
         <i class="fas fa-comments"></i> Chatbot
       </a>
-      <a href="livecalc.html">
-        <i class="fas fa-poll"></i> Live Calculator
-      </a>
+      
       <a href="Dashboard.html">
         <i class="fas fa-leaf"></i> Dashboard
       </a>
@@ -139,8 +140,8 @@
         <i class="fas fa-user"></i> Mein Profil
       </a>
     </nav>
-    <button class="toggle-btn" onclick="toggleMode()">Mode wechseln</button>
   </header>
+  <button onclick="logout()" class="logout-btn">Abmelden</button>
 
     <div id="message" class="message" style="display: none;"></div>
 <!-- CSS für Nachrichten hinzufügen -->
@@ -504,18 +505,16 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
 <style>
     .logout-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 10px 20px;
+    display: block;
+    margin: 30px auto 0 auto;
+    padding: 10px 30px;
     background: linear-gradient(45deg, #ff4444, #cc0000);
     color: white;
     border: none;
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s;
-    z-index: 1000;
-    font-size: 14px;
+    font-size: 16px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -526,9 +525,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </style>
 
-
-<!-- HTML für den Logout-Button -->
-<button onclick="logout()" class="logout-btn">Abmelden</button>
 
 <!-- JavaScript für die Logout-Funktion -->
 <script>

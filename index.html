@@ -285,58 +285,92 @@
     </div>
 
     <script>
-        // UI-Feedback Funktionen
+        // ===== UI-FEEDBACK FUNKTIONEN =====
+        
+        // Funktion zum Anzeigen von Fehlermeldungen
+        // Parameter: message - Die anzuzeigende Fehlermeldung
         function showError(message) {
+            // Findet das Element für die Fehlermeldung im HTML
             const errorEl = document.getElementById('errorMessage');
+            // Setzt den Text der Fehlermeldung
             errorEl.textContent = message;
+            // Fügt die CSS-Klasse 'show' hinzu, um die Fehlermeldung sichtbar zu machen
             errorEl.classList.add('show');
+            // Entfernt die Fehlermeldung nach 3 Sekunden wieder
             setTimeout(() => errorEl.classList.remove('show'), 3000);
         }
 
+        // Funktion zum Anzeigen des Ladebildschirms
         function showLoading() {
+            // Erstellt ein neues div-Element für den Ladebildschirm
             const loading = document.createElement('div');
+            // Fügt die CSS-Klasse 'loading' hinzu
             loading.className = 'loading';
+            // Fügt den Lade-Spinner (animierter Kreis) hinzu
             loading.innerHTML = '<div class="loading-spinner"></div>';
+            // Fügt den Ladebildschirm zum Body der Seite hinzu
             document.body.appendChild(loading);
         }
 
+        // Funktion zum Ausblenden des Ladebildschirms
         function hideLoading() {
+            // Findet das Ladebildschirm-Element
             const loading = document.querySelector('.loading');
+            // Entfernt es, falls es existiert
             if (loading) loading.remove();
         }
 
-        // Passwort Toggle
+        // ===== PASSWORT TOGGLE FUNKTION =====
+        
+        // Funktion zum Ein-/Ausblenden des Passworts
         function togglePassword() {
+            // Findet das Passwort-Eingabefeld
             const passwordInput = document.getElementById('password');
+            // Findet das Auge-Icon für den Toggle-Button
             const toggleBtn = document.querySelector('.password-toggle i');
             
+            // Wechselt zwischen Passwort und Text
             if (passwordInput.type === 'password') {
+                // Wenn es ein Passwort ist, zeige es als Text an
                 passwordInput.type = 'text';
+                // Ändert das Icon zu einem durchgestrichenen Auge
                 toggleBtn.className = 'fas fa-eye-slash';
             } else {
+                // Wenn es Text ist, verstecke es als Passwort
                 passwordInput.type = 'password';
+                // Ändert das Icon zu einem normalen Auge
                 toggleBtn.className = 'fas fa-eye';
             }
         }
 
-        // Vereinfachter Login-Handler
+        // ===== LOGIN-HANDLER =====
+        
+        // Event-Listener für das Login-Formular
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            // Verhindert das Standard-Formularverhalten (Seitenneuladen)
             e.preventDefault();
+            
+            // Zeigt den Ladebildschirm an
             showLoading();
 
             try {
+                // Simuliert eine kurze Verzögerung, damit der Ladebildschirm sichtbar ist
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
 
-                // Direkte Prüfung für Admin-Zugangsdaten
+                // Prüft die Admin-Zugangsdaten
                 if (username === 'admin' && password === 'admin123') {
-                    // Login erfolgreich
+                    // Login erfolgreich - Speichert die Session-Informationen
                     sessionStorage.setItem('sessionActive', 'true');
                     localStorage.setItem('isLoggedIn', 'true');
                     localStorage.setItem('currentUser', 'admin');
 
-                    // Sanfte Überblendung
+                    // Fügt eine Fade-Out Animation hinzu
                     document.body.classList.add('fade-out');
+                    
+                    // Wartet kurz, bevor zur nächsten Seite weitergeleitet wird
                     setTimeout(() => {
                         window.location.href = 'intro.html';
                     }, 600);
@@ -344,27 +378,39 @@
                     throw new Error('Ungültiger Benutzername oder Passwort');
                 }
             } catch (error) {
+                // Zeigt Fehlermeldung an
                 showError(error.message);
             } finally {
+                // Versteckt den Ladebildschirm
                 hideLoading();
             }
         });
 
-        // Passwort vergessen Funktion
+        // ===== PASSWORT VERGESSEN FUNKTION =====
+        
+        // Funktion für "Passwort vergessen"
         function forgotPassword() {
+            // Zeigt einen Alert mit einer Nachricht an
             alert('Bitte kontaktieren Sie den Administrator für Hilfe beim Zurücksetzen des Passworts.');
         }
 
-        // Session-Management
+        // ===== SESSION-MANAGEMENT =====
+        
+        // Event-Listener für das Laden der Seite
         window.addEventListener('load', function() {
+            // Prüft, ob der Benutzer bereits eingeloggt ist
             if (localStorage.getItem('isLoggedIn') === 'true' && 
                 sessionStorage.getItem('sessionActive') === 'true') {
+                // Leitet zur Dateipload-Seite weiter
                 window.location.href = 'Dateipload.html';
             }
         });
 
+        // Event-Listener für das Verlassen der Seite
         window.addEventListener('beforeunload', function() {
+            // Prüft, ob das Formular nicht gültig ist
             if (!document.getElementById('loginForm').checkValidity()) {
+                // Löscht die Session und setzt den Login-Status zurück
                 sessionStorage.clear();
                 localStorage.setItem('isLoggedIn', 'false');
             }

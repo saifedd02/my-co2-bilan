@@ -8,105 +8,209 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
   <style>
+    /* Basis-Styles */
+    :root {
+      --primary: #23d5ab;
+      --secondary: #23a6d5;
+      --dark: #004d40;
+      --light: #e8f5e9;
+      --accent: #ff6b6b;
+      --text-dark: #2c3e50;
+      --text-light: #ffffff;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 15px rgba(0,0,0,0.1);
+      --transition: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--text-dark);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Header Styles */
+    header {
+      background: linear-gradient(90deg, var(--dark), #00796b);
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-light);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header img {
+      height: 120px;
+      width: auto;
+      transition: var(--transition);
+    }
+
+    header img:hover {
+      transform: scale(1.05);
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+      margin-left: 20px;
+    }
+
+    nav a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 8px 15px;
+      border-radius: 25px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    nav a:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+
+    nav a.active {
+      background: rgba(35,213,171,0.3);
+    }
+
+    /* Form Styles */
+    .form-section {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+      margin: 2rem auto;
+      max-width: 1200px;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(35,213,171,0.2);
+      outline: none;
+    }
+
+    /* Scope Cards */
+    .scope-section {
+      background: var(--light);
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .scope-section:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .scope-section h3 {
+      color: var(--dark);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Buttons */
+    .btn {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: var(--text-light);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(35,213,171,0.4);
+    }
+
+    /* Drop Zone */
     .drop-zone {
       width: 100%;
       max-width: 600px;
       height: 200px;
-      border: 2px dashed var(--primary-color);
-      border-radius: 8px;
+      border: 2px dashed var(--primary);
+      border-radius: 15px;
       margin: 20px auto;
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: var(--transition);
+      background: var(--card-bg);
     }
 
-    .drop-zone.active {
-      display: flex;
+    .drop-zone:hover {
+      border-color: var(--secondary);
+      background: var(--light);
     }
 
-    .drop-zone-hover {
-      background: rgba(0, 150, 0, 0.1);
-      border-color: #4CAF50;
-    }
-
-    .options-container {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-      text-align: center;
-      background: var(--background-color);
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .option-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .option-buttons button {
-      padding: 15px 30px;
-      font-size: 16px;
-      border: none;
-      border-radius: 4px;
-      background: var(--primary-color);
-      color: white;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .option-buttons button:hover {
-      background: var(--secondary-color);
-    }
-
+    /* Messages */
     .message {
-      padding: 10px 20px;
+      padding: 15px 25px;
       margin: 10px 0;
-      border-radius: 4px;
+      border-radius: 8px;
       text-align: center;
+      font-weight: 500;
+      animation: slideIn 0.3s ease-out;
     }
 
     .success {
-      background: #4CAF50;
-      color: white;
+      background: var(--primary);
+      color: var(--text-light);
     }
 
     .error {
-      background: #f44336;
-      color: white;
+      background: var(--accent);
+      color: var(--text-light);
     }
 
-    .submit-button {
-      display: block;
-      width: 100%;
-      max-width: 300px;
-      margin: 2rem auto;
-      padding: 1rem;
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: white;
-      background-color: var(--primary-color);
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .submit-button:hover {
-      background-color: var(--secondary-color);
-    }
-
+    /* Loading Overlay */
     .loading {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0,0,0,0.5);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -114,15 +218,16 @@
     }
 
     .loading-content {
-      background: white;
+      background: var(--card-bg);
       padding: 2rem;
-      border-radius: 8px;
+      border-radius: 15px;
       text-align: center;
+      box-shadow: var(--shadow);
     }
 
     .spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid var(--primary-color);
+      border: 4px solid var(--light);
+      border-top: 4px solid var(--primary);
       border-radius: 50%;
       width: 40px;
       height: 40px;
@@ -130,9 +235,38 @@
       margin: 1rem auto;
     }
 
+    /* Animations */
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        padding: 1rem;
+      }
+
+      nav {
+        margin: 1rem 0;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .form-section {
+        margin: 1rem;
+        padding: 1rem;
+      }
+
+      .scope-section {
+        padding: 1rem;
+      }
     }
 
     .imported-data-container {
@@ -190,6 +324,35 @@
     .actions button:hover {
       background: var(--secondary-color);
     }
+
+    /* Scope-Auswahl Select zentriert und schmaler */
+    #scopeDropdown {
+      display: block;
+      margin: 0 auto 2rem auto;
+      max-width: 400px;
+      width: 100%;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      background: var(--card-bg);
+      border: 1px solid rgba(0,0,0,0.08);
+      padding: 12px 18px;
+      transition: var(--transition);
+    }
+    #scopeDropdown:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(35,213,171,0.15);
+      outline: none;
+    }
+    /* Label für Scope-Auswahl ebenfalls zentriert */
+    label[for="scopeDropdown"] {
+      display: block;
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 0.7rem;
+      color: var(--dark);
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -208,9 +371,7 @@
       <a href="Chatbot.html">
         <i class="fas fa-comments"></i> Chatbot
       </a>
-      <a href="livecalc.html">
-        <i class="fas fa-calculator"></i> Live Calculator
-      </a>
+     
       <a href="Dashboard.html">
         <i class="fas fa-leaf"></i> Dashboard
       </a>
@@ -221,42 +382,7 @@
         <i class="fas fa-user"></i> Mein Profil
       </a>
     </nav>
-    <button class="toggle-btn" onclick="toggleMode()">Mode wechseln</button>
   </header>
-
-  <!-- Toggle‑Button, z. B. fixiert am unteren Rand -->
-  <button id="toggle-chat-btn" class="action-button" 
-          style="position: fixed; bottom: 20px; right: 350px; z-index: 1100;" 
-          onclick="toggleChat()">
-    CO₂ Assistant öffnen
-  </button>
-
-  <!-- CO₂‑Assistant-Container (zunächst ohne "open"-Klasse) -->
-  <div id="chatbot-bubble" class="chatbot-container">
-    <div class="chat-header" onclick="toggleChat()">
-      <div class="header-content">
-        <img src="https://cdn.midjourney.com/98111e79-bd37-40a6-a49f-acf02ee74210/0_0.png" alt="CO₂ Assistant" style="height: 45px;">
-        <span class="chat-title">CO₂ Assistant</span>
-      </div>
-      <button class="minimize-btn" onclick="toggleChat(); event.stopPropagation();">–</button>
-    </div>
-    <div class="chat-body" id="chatMessages">
-      <!-- Chatnachrichten werden hier eingefügt -->
-      <div class="message bot-message">Hallo, wie kann ich dir helfen?</div>
-    </div>
-    <div class="chat-input">
-      <input type="text" id="userInput" placeholder="Schreibe eine Nachricht..." onkeypress="handleKeyPress(event)">
-      <button onclick="sendMessage()">Senden</button>
-    </div>
-  </div>
-
-  <!-- Optionen-Container für Bilanz erstellen oder importieren -->
-  <div class="options-container" id="options-container" style="display: none;">
-  </div>
-
-  <!-- Drop-Zone für Datei-Upload -->
-  <div class="drop-zone" id="drop-zone" style="display: none;">
-  </div>
 
   <!-- Hauptformular -->
   <form id="co2Survey" style="display: block;" onsubmit="handleSubmit(event)">
@@ -512,7 +638,7 @@
     <!-- Submit-Button am Ende des Formulars -->
     <div class="form-section" style="margin-top: 2rem;">
       <button type="submit" class="submit-button">Bilanz berechnen</button>
-      <button type="button" id="downloadDataBtn">Daten herunterladen</button>    </div>
+    </div>
   </form>
 
   <!-- Einbindung deines Skripts (z. B. script1.js) -->
