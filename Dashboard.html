@@ -655,154 +655,20 @@
     function downloadPDF() {
       const element = document.getElementById('pdfContent');
       
-      // Absolute maximale Kontraste für den PDF-Export
-      element.style.background = '#ffffff';
-      element.style.color = '#000000';
-      
-      // Stat-Cards mit extremem Kontrast
-      const statCards = element.getElementsByClassName('stat-card');
-      Array.from(statCards).forEach(card => {
-        card.style.boxShadow = '0 8px 16px rgba(0,0,0,0.8)';
-        card.style.border = '4px solid #000000';
-        card.style.backgroundColor = '#ffffff';
-        card.style.padding = '25px';
-        card.style.margin = '15px 0';
-        
-        const value = card.querySelector('.value');
-        if (value) {
-          value.style.color = '#000000';
-          value.style.fontWeight = '900';
-          value.style.fontSize = '32px'; // Noch größer
-          value.style.letterSpacing = '1px';
-          value.style.lineHeight = '1.4';
-          value.style.textShadow = '2px 2px 0 rgba(0,0,0,0.1)';
+      // Füge temporär globale Export-Styles hinzu, um ALLE bestehenden Styles zu überschreiben
+      const exportStyle = document.createElement('style');
+      exportStyle.id = 'pdfExportStyles';
+      exportStyle.textContent = `
+        #pdfContent, #pdfContent * {
+          color: #000 !important;
+          background: #fff !important;
+          box-shadow: none !important;
+          border-color: #000 !important;
+          filter: none !important;
+          opacity: 1 !important;
         }
-        
-        const h4 = card.querySelector('h4');
-        if (h4) {
-          h4.style.color = '#000000';
-          h4.style.fontWeight = '900';
-          h4.style.fontSize = '20px';
-          h4.style.textTransform = 'uppercase';
-          h4.style.letterSpacing = '2px';
-          h4.style.marginBottom = '15px';
-        }
-        
-        const description = card.querySelector('.description');
-        if (description) {
-          description.style.color = '#000000';
-          description.style.fontWeight = '700';
-          description.style.fontSize = '16px';
-          description.style.marginTop = '10px';
-        }
-      });
-
-      // Header mit extremem Kontrast
-      const pdfHeader = element.querySelector('.pdf-header');
-      if (pdfHeader) {
-        pdfHeader.style.background = '#000000';
-        pdfHeader.style.color = '#ffffff';
-        pdfHeader.style.padding = '35px';
-        pdfHeader.style.borderBottom = '8px solid #000000';
-        pdfHeader.style.marginBottom = '40px';
-        pdfHeader.style.borderRadius = '0';
-        
-        const h2 = pdfHeader.querySelector('h2');
-        if (h2) {
-          h2.style.fontSize = '36px';
-          h2.style.fontWeight = '900';
-          h2.style.marginBottom = '25px';
-          h2.style.letterSpacing = '2px';
-          h2.style.textTransform = 'uppercase';
-          h2.style.borderBottom = '4px solid #ffffff';
-          h2.style.paddingBottom = '15px';
-        }
-        
-        const paragraphs = pdfHeader.getElementsByTagName('p');
-        Array.from(paragraphs).forEach(p => {
-          p.style.fontSize = '18px';
-          p.style.fontWeight = '700';
-          p.style.marginBottom = '12px';
-          p.style.color = '#ffffff';
-          p.style.letterSpacing = '1px';
-        });
-      }
-
-      // Tabellen mit extremem Kontrast
-      const tables = element.getElementsByTagName('table');
-      Array.from(tables).forEach(table => {
-        table.style.borderCollapse = 'collapse';
-        table.style.width = '100%';
-        table.style.border = '5px solid #000000';
-        table.style.marginTop = '40px';
-        table.style.marginBottom = '40px';
-        table.style.backgroundColor = '#ffffff';
-        
-        // Header-Zellen mit extremem Kontrast
-        const headers = table.getElementsByTagName('th');
-        Array.from(headers).forEach(header => {
-          header.style.backgroundColor = '#000000';
-          header.style.color = '#ffffff';
-          header.style.border = '3px solid #000000';
-          header.style.padding = '20px';
-          header.style.fontSize = '18px';
-          header.style.fontWeight = '900';
-          header.style.textAlign = 'center';
-          header.style.textTransform = 'uppercase';
-          header.style.letterSpacing = '1px';
-        });
-        
-        // Normale Zellen mit extremem Kontrast
-        const cells = table.getElementsByTagName('td');
-        Array.from(cells).forEach(cell => {
-          cell.style.border = '3px solid #000000';
-          cell.style.padding = '15px';
-          cell.style.color = '#000000';
-          cell.style.fontSize = '16px';
-          cell.style.fontWeight = '700';
-          cell.style.backgroundColor = '#ffffff';
-          cell.style.textAlign = 'center';
-        });
-
-        // Alternating row colors für bessere Lesbarkeit
-        const rows = table.getElementsByTagName('tr');
-        Array.from(rows).forEach((row, index) => {
-          if (index % 2 === 1) {
-            row.style.backgroundColor = '#f0f0f0';
-          }
-        });
-      });
-
-      // Vergleichsstatistiken mit extremem Kontrast
-      const compStats = element.querySelector('.comparison-stats');
-      if (compStats) {
-        compStats.style.border = '5px solid #000000';
-        compStats.style.backgroundColor = '#ffffff';
-        compStats.style.padding = '25px';
-        compStats.style.marginTop = '40px';
-        compStats.style.boxShadow = '0 8px 16px rgba(0,0,0,0.8)';
-        
-        const paragraphs = compStats.getElementsByTagName('p');
-        Array.from(paragraphs).forEach(p => {
-          p.style.color = '#000000';
-          p.style.borderBottom = '3px solid #000000';
-          p.style.padding = '20px 15px';
-          p.style.fontSize = '18px';
-          p.style.fontWeight = '700';
-          p.style.display = 'flex';
-          p.style.justifyContent = 'space-between';
-          p.style.alignItems = 'center';
-          
-          const strong = p.querySelector('strong');
-          if (strong) {
-            strong.style.color = '#000000';
-            strong.style.fontWeight = '900';
-            strong.style.fontSize = '20px';
-            strong.style.textTransform = 'uppercase';
-            strong.style.letterSpacing = '1px';
-          }
-        });
-      }
+      `;
+      document.head.appendChild(exportStyle);
 
       // PDF Export Optionen mit maximaler Qualität
       const opt = {
@@ -840,6 +706,7 @@
       // Exportiere PDF mit maximaler Qualität
       html2pdf().set(opt).from(element).save()
         .then(() => {
+          exportStyle.remove(); // Temporären Style wieder entfernen
           location.reload(); // Seite neu laden um alle Styles zurückzusetzen
         });
     }
