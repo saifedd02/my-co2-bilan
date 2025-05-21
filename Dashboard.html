@@ -301,7 +301,7 @@
       <a href="Co2express.html"><i class="fas fa-bolt"></i> CO₂ Express</a>
       <a href="Chatbot.html"><i class="fas fa-comments"></i> Chatbot</a>
       <a href="Dashboard.html" class="active"><i class="fas fa-leaf"></i> Dashboard</a>
-      <a href="https://moodle.digitalekompetenzen.org/login/index.php#module-483"><i class="fas fa-envelope"></i> Lernplatform</a>
+      <a href="Lernplattform.html"><i class="fas fa-graduation-cap"></i> Lernplattform</a>
       <a href="Meinprofil.html"><i class="fas fa-user"></i> Mein Profil</a>
     </nav>
   </header>
@@ -452,11 +452,32 @@
       const p2 = (s2 / totalEmissions) * 100 || 0;
       const p3 = (s3 / totalEmissions) * 100 || 0;
 
-      // Vergleich Vorjahr (fiktiv)
-      const lastYearEmissions = 30000;
-      const difference = totalEmissions - lastYearEmissions;
-      const diffPercent = (difference / lastYearEmissions) * 100 || 0;
-      const trend = difference > 0 ? "höher" : "niedriger";
+      // Prüfe ob es sich um die erste Bilanzierung handelt
+      const previousYearData = localStorage.getItem('previousYearEmissions');
+      let comparisonHtml = '';
+      
+      if (previousYearData) {
+        const lastYearEmissions = parseFloat(previousYearData);
+        const difference = totalEmissions - lastYearEmissions;
+        const diffPercent = (difference / lastYearEmissions) * 100 || 0;
+        const trend = difference > 0 ? "höher" : "niedriger";
+        
+        comparisonHtml = `
+          <div class="stat-card">
+            <h4>Veränderung zum Vorjahr</h4>
+            <div class="value">${diffPercent.toFixed(1)}%</div>
+            <div class="description">${difference.toFixed(2)} kg CO₂ ${trend}</div>
+          </div>
+        `;
+      } else {
+        comparisonHtml = `
+          <div class="stat-card">
+            <h4>Erste Bilanzierung</h4>
+            <div class="value">-</div>
+            <div class="description">Kein Vergleich möglich</div>
+          </div>
+        `;
+      }
 
       // Kosten und Emissionen pro Mitarbeiter (fiktiv)
       const costPerTon = 50;
@@ -478,11 +499,7 @@
             <div class="value">${totalEmissions.toFixed(2)}</div>
             <div class="description">kg CO₂</div>
           </div>
-          <div class="stat-card">
-            <h4>Veränderung zum Vorjahr</h4>
-            <div class="value">${diffPercent.toFixed(1)}%</div>
-            <div class="description">${difference.toFixed(2)} kg CO₂ ${trend}</div>
-          </div>
+          ${comparisonHtml}
           <div class="stat-card">
             <h4>Pro Mitarbeiter</h4>
             <div class="value">${perEmployee.toFixed(2)}</div>
@@ -513,10 +530,6 @@
           <tr><th>Gesamt</th><th>${totalEmissions.toFixed(2)}</th><th>100%</th></tr>
         </table>
         <div class="comparison-stats">
-          <p>
-            <strong>Vorjahresemissionen:</strong>
-            <span>${lastYearEmissions.toFixed(2)} kg CO₂</span>
-          </p>
           <p>
             <strong>Kostenschätzung (Kompensation):</strong>
             <span>ca. ${costEstimate.toFixed(2)} €</span>

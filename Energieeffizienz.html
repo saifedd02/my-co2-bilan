@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Energieeffizienz im Unternehmen</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* =============================
+       DESIGN‑TOKENS
+    ==============================*/
+    :root{
+      --primary:#00c389;   /* frisches Grün */
+      --secondary:#0087ff; /* Business‑Blau */
+      --dark:#003844;
+      --light:#f4f9fb;
+      --white:#ffffff;
+      --danger:#ff5252;
+      --warning:#ffb300;
+
+      --radius-sm:8px;
+      --radius-md:14px;
+      --radius-lg:26px;
+      --shadow-sm:0 2px 6px rgba(0,0,0,.06);
+      --shadow-md:0 4px 14px rgba(0,0,0,.10);
+      --shadow-lg:0 8px 26px rgba(0,0,0,.12);
+      --transition:all .25s ease-in-out;
+    }
+
+    /* =============================
+       RESET & GLOBALS
+    ==============================*/
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Inter',Arial,sans-serif;
+      font-size:16px;
+      line-height:1.6;
+      color:#333;
+      background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);
+      background-attachment:fixed;
+      background-size:400% 400%;
+      animation:gradient 15s ease infinite;
+      min-height:100vh;
+      display:flex;flex-direction:column;
+    }
+    @keyframes gradient{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+
+    /* =============================
+       HEADER / NAVBAR
+    ==============================*/
+    header{
+      position:sticky;top:0;z-index:1000;
+      backdrop-filter:saturate(180%) blur(6px);
+      background:rgba(0,56,68,.95);
+      box-shadow:var(--shadow-sm);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:.9rem 1.6rem;
+    }
+    header img{height:90px;transition:var(--transition)}
+    header img:hover{transform:scale(1.06)}
+    nav{display:flex;flex-wrap:wrap;gap:1rem;margin-left:1rem}
+    nav a{
+      color:var(--white);text-decoration:none;font-weight:500;
+      padding:.55rem 1rem;border-radius:var(--radius-lg);
+      display:flex;align-items:center;gap:.4rem;
+      transition:var(--transition);
+    }
+    nav a:hover{background:rgba(255,255,255,.17);transform:translateY(-2px)}
+    nav a.active{background:rgba(0,195,137,.35)}
+
+    /* =============================
+       CONTAINER
+    ==============================*/
+    .container{
+      width:95%;max-width:1280px;margin:3rem auto;padding:2.6rem;
+      background:var(--white);
+      border-radius:var(--radius-md);
+      box-shadow:var(--shadow-md);
+    }
+
+    /* =============================
+       TYPOGRAPHY
+    ==============================*/
+    h1{font-family:'Montserrat',sans-serif;font-size:2.4rem;text-align:center;margin-bottom:1.3rem;color:var(--dark)}
+    h2{font-size:1.55rem;font-weight:600;margin-top:2.6rem;margin-bottom:1.1rem;color:var(--dark)}
+    h3{font-size:1.15rem;font-weight:600;margin:1rem 0 .45rem;color:var(--dark)}
+    p,li{font-size:1rem}
+    ul{padding-left:1.2rem}
+
+    /* =============================
+       TOC / INFOBOX / CASEBOX
+    ==============================*/
+    .toc{
+      background:var(--light);
+      border-left:4px solid var(--primary);
+      padding:1.2rem;border-radius:var(--radius-sm);
+      box-shadow:var(--shadow-sm);margin-bottom:2.2rem;
+    }
+    .toc a{display:block;color:var(--dark);text-decoration:none;font-size:.95rem;margin:.28rem 0}
+    .toc a:hover{text-decoration:underline}
+
+    .infobox,.casebox{
+      padding:1rem 1.2rem;border-radius:var(--radius-sm);
+      font-size:.95rem;box-shadow:var(--shadow-sm);margin:1.2rem 0;
+    }
+    .infobox{background:var(--light);border-left:5px solid var(--primary)}
+    .casebox{background:#fffbea;border-left:5px solid var(--warning)}
+
+    /* =============================
+       MEDIA WRAPPER
+    ==============================*/
+    .media{margin:1.6rem 0;text-align:center}
+    .media img,.media iframe{max-width:100%;border-radius:var(--radius-sm);box-shadow:var(--shadow-md)}
+    .media iframe{aspect-ratio:16/9;border:0}
+
+    /* =============================
+       GRID COMPONENTS
+    ==============================*/
+    .steps-grid,.tool-grid{
+      display:grid;gap:1.5rem;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      margin-top:1.4rem;
+    }
+    .step-card,.tool-card{
+      background:var(--light);
+      border-radius:var(--radius-md);
+      padding:1.2rem 1.4rem;
+      box-shadow:var(--shadow-sm);
+      transition:var(--transition);
+    }
+    .step-card:hover,.tool-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+
+    .step-card{position:relative}
+    .step-number{
+      position:absolute;top:-16px;left:-16px;width:44px;height:44px;border-radius:50%;
+      background:var(--secondary);color:var(--white);display:flex;align-items:center;justify-content:center;
+      font-weight:600;box-shadow:var(--shadow-sm)
+    }
+    .tool-card{display:flex;gap:12px;align-items:flex-start;background:#eaf5ff}
+    .tool-card i{font-size:1.7rem;color:#1e88e5;margin-top:4px}
+
+    /* =============================
+       TABLES & QUIZ
+    ==============================*/
+    .impact-table{width:100%;border-collapse:collapse;margin-top:1.2rem;font-size:.92rem}
+    .impact-table th,.impact-table td{padding:8px;border:1px solid #dcdcdc;text-align:center}
+    .impact-table thead{background:var(--light)}
+
+    .quiz-container{background:var(--light);padding:2rem;border-radius:var(--radius-md);box-shadow:var(--shadow-md);margin-top:2.5rem}
+    .question{margin:1.2rem 0}
+    .options label{display:block;margin:.45rem 0;cursor:pointer}
+    .submit-btn{
+      background:var(--primary);color:var(--white);border:none;
+      padding:.7rem 1.6rem;border-radius:var(--radius-lg);font-weight:600;
+      transition:var(--transition);cursor:pointer;
+    }
+    .submit-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+    .result{margin-top:1rem;font-weight:600}
+
+    /* =============================
+       RESPONSIVE
+    ==============================*/
+    @media(max-width:640px){
+      h1{font-size:2rem} header img{height:70px}
+      nav{gap:.6rem}
+      nav a{padding:.45rem .8rem;font-size:.88rem}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="Dateipload.html"><img src="logo.png" alt="DigiGreen Pilot Logo"></a>
+    <nav>
+      <a href="Dateipload.html"><i class="fas fa-poll"></i> Umfrage</a>
+      <a href="Co2express.html"><i class="fas fa-bolt"></i> CO₂ Express</a>
+      <a href="Chatbot.html"><i class="fas fa-comments"></i> Chatbot</a>
+      <a href="Dashboard.html"><i class="fas fa-leaf"></i> Dashboard</a>
+      <a href="Lernplattform.html" class="active"><i class="fas fa-graduation-cap"></i> Lernplattform</a>
+      <a href="Meinprofil.html"><i class="fas fa-user"></i> Mein Profil</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>Energieeffizienz im Unternehmen</h1>
+
+    <div class="toc">
+      <strong>Inhaltsverzeichnis</strong>
+      <a href="#intro">1. Warum Energieeffizienz?</a>
+      <a href="#audit">2. Energieaudit & Datenbasis</a>
+      <a href="#technologies">3. Effiziente Technologien</a>
+      <a href="#behaviour">4. Mitarbeiterengagement</a>
+      <a href="#iso50001">5. Energiemanagement nach ISO&nbsp;50001</a>
+      <a href="#financing">6. Finanzierung & Förderung</a>
+      <a href="#best">7. Best-Practice-Beispiele</a>
+      <a href="#quickwins">8. Quick Wins vs. Langfristige Maßnahmen</a>
+      <a href="#quiz">9. Wissens-Check</a>
+    </div>
+
+    <section id="intro">
+      <h2>1. Warum Energieeffizienz?</h2>
+      <p>Energie macht in vielen Branchen 5–25 % der Betriebskosten aus. Jeder eingesparte Kilowattstunde senkt nicht nur Kosten, sondern auch CO₂-Emissionen und Abhängigkeiten von volatilem Energiemarkt. Studien zeigen: <strong>1 € Investition</strong> in Effizienzmaßnahmen kann <strong>3–5 €</strong> Lebenszyklus-Ersparnis bewirken.</p>
+      <div class="tip"><i class="fas fa-lightbulb"></i> Spaß-Fakt: Würde jede deutsche Firma ihre Beleuchtung auf LED umstellen, könnte man damit den Jahresstromverbrauch von über 1 Million Haushalten decken!</div>
+    </section>
+
+    <section id="audit">
+      <h2>2. Energieaudit & Datenbasis</h2>
+      <p>Der erste Schritt ist das <em>Energieaudit nach DIN EN 16247-1</em>. Dabei werden:</p>
+      <ul>
+        <li>Alle wesentlichen Verbraucher (Gebäude, Prozesse, Fuhrpark) erfasst</li>
+        <li>Lastprofile &amp; Spitzenauslastung analysiert</li>
+        <li>Maßnahmen priorisiert nach <em>Energy Saving Opportunity</em> &amp; Wirtschaftlichkeit (IRR, Amortisation)</li>
+      </ul>
+      <p>Digitale Zähler und IoT-Sensoren helfen, Transparenz in <strong>Echtzeit</strong> zu schaffen.</p>
+    </section>
+
+    <section id="technologies">
+      <h2>3. Effiziente Technologien</h2>
+      <h3>3.1 Beleuchtung</h3>
+      <p>LEDs verbrauchen bis zu 80 % weniger Strom als Halogenlampen und halten <strong>50 000 h</strong> statt 2 000 h. Kombiniert mit Tageslicht- &amp; Präsenzsensoren lassen sich weitere 20-30 % sparen.</p>
+      <h3>3.2 Motoren &amp; Antriebe</h3>
+      <p>Elektrische Motoren verschlingen weltweit <em>~45 %</em> des Stroms. IE4- oder IE5-Effizienzklassen und Frequenzumrichter reduzieren den Verbrauch um 15-30 %.</p>
+      <h3>3.3 Gebäudetechnik (HVAC)</h3>
+      <p>Optimierte Regelstrategien, Wärmerückgewinnung und smarte Thermostate senken Heiz-/Kühlenergie erheblich.</p>
+      <h3>3.4 Abwärmenutzung</h3>
+      <p>Abhitze aus Öfen oder Druckluftkompressoren kann via Wärmetauscher Prozesse oder Raumheizung speisen.</p>
+      <div class="tip"><i class="fas fa-leaf"></i> Challenge: Identifiziere heute drei Anlagen bei dir, deren Motoren älter als 10 Jahre sind – hier schlummert meist das größte Potenzial!</div>
+    </section>
+
+    <section id="behaviour">
+      <h2>4. Mitarbeiterengagement</h2>
+      <p>Technik allein reicht nicht. <strong>70 %</strong> der erfolgreichen Effizienzprogramme koppeln harte Maßnahmen mit <em>Behaviour Change</em>:</p>
+      <ul>
+        <li>Energie-Dashboards auf Großbildschirmen, die Teams in Wettbewerb setzen</li>
+        <li>Gamification: Punkte für ausgeschaltete Geräte &amp; Ideenwettbewerbe</li>
+        <li>Awareness-Trainings mit Augmented-Reality-Rundgängen</li>
+      </ul>
+      <p>Psychologischer Effekt: Sofortiges Feedback setzt Dopamin frei – so bleibt Lernen motivierend!</p>
+    </section>
+
+    <section id="iso50001">
+      <h2>5. Energiemanagement nach ISO&nbsp;50001</h2>
+      <p>Die Norm fordert einen <em>kontinuierlichen Verbesserungsprozess (PDCA)</em>. Kernelemente:</p>
+      <ol>
+        <li><strong>Energiepolitik</strong> &amp; Ziele festlegen</li>
+        <li><strong>Energiedaten</strong> messen, Baseline definieren</li>
+        <li><strong>Aktionspläne</strong> umsetzen und Verantwortlichkeiten definieren</li>
+        <li><strong>Review</strong>: Management-Bewertung &amp; Audit</li>
+      </ol>
+      <p>Unternehmen mit ISO 50001 sparen laut BDEW im Schnitt <strong>10 %</strong> Energie in den ersten zwei Jahren.</p>
+    </section>
+
+    <section id="financing">
+      <h2>6. Finanzierung & Förderung</h2>
+      <p>In Deutschland unterstützen BAFA &amp; KfW Energieeffizienz mit:</p>
+      <ul>
+        <li>Investitionszuschüssen bis 40 %</li>
+        <li>Zinsgünstigen Krediten</li>
+        <li>Steuerlicher Förderung (§ 3 EStG)</li>
+      </ul>
+      <p>ROI-Berechnung: <code>ROI = Investition / (jährliche Einsparung)</code>. Ein ROI &lt; 3 Jahre gilt als "No-Brainer".</p>
+    </section>
+
+    <section id="best">
+      <h2>7. Best-Practice-Beispiele</h2>
+      <ul>
+        <li><strong>BMW Leipzig</strong>: Regeneratives Energiespeichersystem, 50 % Netzstrom-Einsparung.</li>
+        <li><strong>Siemens Amberg</strong>: Digitale Fabrik mit Echtzeit-ENERGY-Analytics, 30 % geringerer Verbrauch.</li>
+        <li><strong>Alnatura</strong>: Distributionszentrum als <em>Earth Building</em>, jährliche Energieeinsparung &gt; 60 % ggü. Standard.</li>
+      </ul>
+    </section>
+
+    <section id="quickwins">
+      <h2>8. Quick Wins vs. Langfristige Maßnahmen</h2>
+      <p><strong>Quick Wins</strong> (0-1 Jahr):
+        <ul>
+          <li>Temperatur-Setpoints anpassen (–1 °C spart ~6 % Heizenergie)</li>
+          <li>Druckluftleckagen beheben</li>
+          <li>PC-Auto-Shutdown Policy einführen</li>
+        </ul>
+      </p>
+      <p><strong>Langfristig</strong> (≥3 Jahre):
+        <ul>
+          <li>Erneuerbare Eigenstromerzeugung (PV, Wind-Turbine)</li>
+          <li>Gebäudehülle sanieren</li>
+          <li>Wärme-Kälte-Netze koppeln</li>
+        </ul>
+      </p>
+    </section>
+
+    <section id="quiz" class="quiz-container">
+      <h2>9. Wissens-Check</h2>
+      <form id="quizForm">
+        <div class="question">
+          <strong>1) Wie viel Prozent Strom können LEDs gegenüber Halogenlampen einsparen?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q1" value="a"> 20 %</label>
+            <label><input type="radio" name="q1" value="b"> 50 %</label>
+            <label><input type="radio" name="q1" value="c"> Bis zu 80 %</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>2) Welche Norm leitet einen kontinuierlichen PDCA-Prozess für Energiemanagement?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q2" value="a"> ISO 14001</label>
+            <label><input type="radio" name="q2" value="b"> ISO 9001</label>
+            <label><input type="radio" name="q2" value="c"> ISO 50001</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>3) Bei welchem ROI gilt eine Effizienzmaßnahme oft als "No-Brainer"?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q3" value="a"> &lt; 1 Jahr</label>
+            <label><input type="radio" name="q3" value="b"> &lt; 3 Jahre</label>
+            <label><input type="radio" name="q3" value="c"> &lt; 5 Jahre</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>4) Wie hoch ist der durchschnittliche Energieanteil elektrischer Motoren am weltweiten Stromverbrauch?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q4" value="a"> 15 %</label>
+            <label><input type="radio" name="q4" value="b"> 30 %</label>
+            <label><input type="radio" name="q4" value="c"> ~45 %</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>5) Welches Förderinstrument bietet die KfW typischerweise <em>nicht</em> an?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q5" value="a"> Zinsgünstige Kredite</label>
+            <label><input type="radio" name="q5" value="b"> Investitionszuschüsse</label>
+            <label><input type="radio" name="q5" value="c"> Steuerbescheide</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>6) Welche Maßnahme gehört zu <em>Quick Wins</em>?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q6" value="a"> Gebäudehülle sanieren</label>
+            <label><input type="radio" name="q6" value="b"> Druckluftleckagen beheben</label>
+            <label><input type="radio" name="q6" value="c"> PV-Dachanlage installieren</label>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">Quiz auswerten</button>
+        <div class="result" id="quizResult"></div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    function getProgress(){return JSON.parse(localStorage.getItem('learning_progress')||'{}');}
+    function saveProgress(d){localStorage.setItem('learning_progress',JSON.stringify(d));}
+
+    document.getElementById('quizForm').addEventListener('submit',function(e){
+      e.preventDefault();
+      const answers={q1:'c',q2:'c',q3:'b',q4:'c',q5:'c',q6:'b'};
+      let score=0;
+      Object.keys(answers).forEach(k=>{
+        if(document.querySelector(`input[name="${k}"]:checked`)?.value===answers[k])score++;
+      });
+      const total=Object.keys(answers).length;
+      const percent=(score/total)*100;
+      const res=document.getElementById('quizResult');
+      res.textContent=`Ergebnis: ${score}/${total} korrekt (${percent.toFixed(0)}%)`;
+      if(score===total){
+        res.style.color='#4caf50';
+        const prog=getProgress();
+        if(!prog['mod2']){prog['mod2']=true;saveProgress(prog);} // update progress for module 2
+        setTimeout(()=>{
+          alert('Exzellent! Du hast das Modul Energieeffizienz vollständig abgeschlossen.\nZurück zur Lernplattform!');
+          window.location.href='Lernplattform.html';
+        },1500);
+      } else {
+        res.style.color='#ff6b6b';
+        alert('Gute Arbeit! Schau dir die Fragen noch einmal an, um 100 % zu erreichen und das Modul abzuschließen.');
+      }
+    });
+  </script>
+</body>
+</html> 

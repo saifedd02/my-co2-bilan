@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nachhaltigkeitskommunikation & Reporting</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  
+  <style>
+    /* ========================
+       DESIGN TOKEN
+    =========================*/
+    :root{
+      /* brand colours */
+      --primary:#00c389;         /* fresh green */
+      --secondary:#0087ff;       /* clean blue */
+      --danger:#ff5252;
+      --warning:#ffb300;
+      --dark:#003844;
+      --light:#f4f9fb;
+      --white:#ffffff;
+      /* layout */
+      --radius-sm:8px;
+      --radius-md:14px;
+      --radius-lg:25px;
+      --shadow-sm:0 2px 6px rgba(0,0,0,.06);
+      --shadow-md:0 4px 14px rgba(0,0,0,.10);
+      --shadow-lg:0 8px 28px rgba(0,0,0,.12);
+      --transition:all .25s ease-in-out;
+    }
+
+    /* ========================
+       GLOBAL RESET
+    =========================*/
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Inter',Arial,sans-serif;
+      font-size:16px;
+      line-height:1.6;
+      color:#333;
+      background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);
+      background-attachment:fixed;
+      background-size:400% 400%;
+      animation:gradient 15s ease infinite;
+      min-height:100vh;
+      display:flex;flex-direction:column;
+    }
+    @keyframes gradient{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+
+    /* ========================
+       LAYOUT WRAPPER
+    =========================*/
+    .container{
+      width:95%;max-width:1280px;margin:3rem auto;padding:2.5rem;
+      background:var(--white);
+      border-radius:var(--radius-md);
+      box-shadow:var(--shadow-md);
+    }
+
+    /* ========================
+       TYPOGRAPHY
+    =========================*/
+    h1{font-family:'Montserrat',sans-serif;font-size:2.3rem;text-align:center;margin-bottom:1.2rem;color:var(--dark)}
+    h2{font-size:1.55rem;font-weight:600;margin-top:2.5rem;margin-bottom:1.1rem;color:var(--dark)}
+    h3{font-size:1.15rem;font-weight:600;margin:1rem 0 .4rem;color:var(--dark)}
+    p,li{font-size:1rem;}
+    ul{padding-left:1.2rem}
+
+    /* ========================
+       HEADER & NAVBAR
+    =========================*/
+    header{
+      position:sticky;top:0;z-index:999;
+      backdrop-filter:saturate(180%) blur(6px);
+      background:rgba(0,56,68,.9);
+      box-shadow:var(--shadow-sm);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:.8rem 1.6rem;
+    }
+    header img{height:86px;width:auto;transition:var(--transition)}
+    header img:hover{transform:scale(1.06)}
+
+    nav{display:flex;gap:1rem;flex-wrap:wrap}
+    nav a{
+      color:var(--white);
+      text-decoration:none;
+      font-weight:500;
+      padding:.55rem 1rem;
+      border-radius:var(--radius-lg);
+      display:flex;align-items:center;gap:.45rem;
+      transition:var(--transition);
+    }
+    nav a:hover{background:rgba(255,255,255,.15);transform:translateY(-2px)}
+    nav a.active{background:rgba(0,195,137,.30)}
+
+    /* ========================
+       TABLE OF CONTENTS
+    =========================*/
+    .toc{
+      background:var(--light);
+      border-left:4px solid var(--primary);
+      padding:1.2rem;
+      border-radius:var(--radius-sm);
+      box-shadow:var(--shadow-sm);
+      margin-bottom:2.2rem;
+    }
+    .toc a{display:block;margin:.3rem 0;color:var(--dark);text-decoration:none;font-size:.95rem}
+    .toc a:hover{text-decoration:underline}
+
+    /* ========================
+       COMPONENTS / CARDS
+    =========================*/
+    .infobox, .casebox{
+      padding:1rem 1.2rem;
+      border-radius:var(--radius-sm);
+      margin:1.2rem 0;
+      font-size:.95rem;
+      box-shadow:var(--shadow-sm);
+    }
+    .infobox{background:var(--light);border-left:5px solid var(--primary)}
+    .casebox{background:#fffbea;border-left:5px solid var(--warning)}
+
+    /* media wrapper */
+    .media{margin:1.5rem 0;text-align:center}
+    .media img,.media iframe{max-width:100%;border-radius:var(--radius-sm);box-shadow:var(--shadow-md)}
+
+    /* grids */
+    .standards-grid,
+    .steps-grid,
+    .tool-grid{
+      display:grid;gap:1.5rem;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      margin-top:1.4rem;
+    }
+
+    /* cards generic */
+    .standard-card,
+    .step-card,
+    .tool-card{
+      background:var(--light);
+      border-radius:var(--radius-md);
+      padding:1.2rem 1.4rem;
+      box-shadow:var(--shadow-sm);
+      transition:var(--transition);
+    }
+    .standard-card:hover,
+    .step-card:hover,
+    .tool-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+
+    .standard-card i{font-size:1.9rem;color:var(--secondary);margin-bottom:.5rem}
+    .badge{background:var(--primary);color:var(--white);padding:2px 8px;border-radius:10px;font-size:.72rem;margin-left:6px;vertical-align:middle}
+
+    /* step number */
+    .step-card{position:relative}
+    .step-number{
+      position:absolute;top:-15px;left:-15px;
+      width:42px;height:42px;border-radius:50%;
+      background:var(--secondary);color:var(--white);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:600;box-shadow:var(--shadow-sm)
+    }
+
+    /* tool card */
+    .tool-card{display:flex;gap:12px;align-items:flex-start;background:#eaf5ff}
+    .tool-card i{font-size:1.7rem;color:#1e88e5;margin-top:4px}
+
+    /* tables */
+    .impact-table{width:100%;border-collapse:collapse;margin-top:1.2rem;font-size:.92rem}
+    .impact-table th,.impact-table td{padding:8px;border:1px solid #dcdcdc;text-align:center}
+    .impact-table thead{background:var(--light)}
+
+    /* quiz */
+    .quiz-container{background:var(--light);padding:2rem;border-radius:var(--radius-md);box-shadow:var(--shadow-md);margin-top:2.5rem}
+    .question{margin:1.2rem 0}
+    .options label{display:block;cursor:pointer;margin:.45rem 0}
+    .submit-btn{
+      background:var(--primary);color:var(--white);border:none;
+      padding:.7rem 1.6rem;cursor:pointer;
+      border-radius:var(--radius-lg);font-weight:600;
+      transition:var(--transition);
+    }
+    .submit-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+
+    /* timeline */
+    .timeline{position:relative;margin:1rem 0 1.5rem;padding-left:28px}
+    .timeline:before{content:'';position:absolute;left:9px;top:0;width:3px;height:100%;background:var(--secondary)}
+    .timeline-event{position:relative;margin:.9rem 0;font-size:.95rem}
+    .timeline-event:before{content:'';position:absolute;left:-13px;top:3px;width:10px;height:10px;border-radius:50%;background:var(--primary)}
+
+    /* responsive tweaks */
+    @media(max-width:600px){
+      h1{font-size:1.9rem}
+      header img{height:66px}
+      nav{gap:.6rem}
+      nav a{padding:.45rem .8rem;font-size:.9rem}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="Dateipload.html"><img src="logo.png" alt="DigiGreen Pilot Logo"></a>
+    <nav>
+      <a href="Dateipload.html"><i class="fas fa-poll"></i> Umfrage</a>
+      <a href="Co2express.html"><i class="fas fa-bolt"></i> CO₂ Express</a>
+      <a href="Chatbot.html"><i class="fas fa-comments"></i> Chatbot</a>
+      <a href="Dashboard.html"><i class="fas fa-leaf"></i> Dashboard</a>
+      <a href="Lernplattform.html" class="active"><i class="fas fa-graduation-cap"></i> Lernplattform</a>
+      <a href="Meinprofil.html"><i class="fas fa-user"></i> Mein Profil</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>Nachhaltigkeitskommunikation & Reporting</h1>
+
+    <div class="toc">
+      <strong>Inhaltsverzeichnis</strong>
+      <a href="#meaning">1. Warum ist Nachhaltigkeitskommunikation wichtig?</a>
+      <a href="#standards">2. Überblick über Reporting‑Standards</a>
+      <a href="#materiality">3. Wesentlichkeits‑Analyse Schritt für Schritt</a>
+      <a href="#kpi">4. KPIs & Datenerfassung</a>
+      <a href="#storytelling">5. Digitale Kommunikation & Storytelling</a>
+      <a href="#best">6. Best Practices</a>
+      <a href="#video">7. Video: Sustainability Reporting erklärt</a>
+      <a href="#quiz">8. Wissens‑Check</a>
+    </div>
+
+    <!-- 1. Bedeutung -->
+    <section id="meaning">
+        <h2>1. Warum ist Nachhaltigkeitskommunikation wichtig?</h2>
+        <p>Nachhaltigkeitskommunikation ist weit mehr als ein schön gestalteter Jahresbericht – sie ist <strong>Grundlage für Glaubwürdigkeit</strong> und entscheidet darüber, ob eine Organisation als verantwortungsbewusst oder als Greenwasher wahrgenommen wird.</p>
+  
+        <h3><i class="fas fa-handshake"></i> Vertrauen & Reputation</h3>
+        <ul>
+          <li><strong>88&nbsp;%</strong> der institutionellen Investoren bewerten ESG-Informationen als <em>entscheidungsrelevant</em> (PwC&nbsp;2024).</li>
+          <li><strong>70&nbsp;%</strong> der Kundinnen und Kunden bevorzugen Marken mit transparenter Nachhaltigkeitsstrategie.</li>
+          <li>Unternehmen mit transparenter Kommunikation haben eine <strong>25&nbsp;% höhere Mitarbeiterbindung</strong>.</li>
+        </ul>
+  
+        <h3><i class="fas fa-gavel"></i> Regulatorische Anforderungen</h3>
+        <p>Gesetze wie die EU‑<strong>CSRD</strong> oder das deutsche <strong>Lieferkettengesetz</strong> verlangen detaillierte Offenlegung von Nachhaltigkeitsdaten. Fehlende oder falsche Angaben können Bußgelder und Reputationsschäden nach sich ziehen.</p>
+        <div class="timeline">
+          <div class="timeline-event"><strong>2017</strong> – EU Non‑Financial Reporting Directive (NFRD) tritt in Kraft.</div>
+          <div class="timeline-event"><strong>2023</strong> – Verabschiedung der Corporate Sustainability Reporting Directive (CSRD).</div>
+          <div class="timeline-event"><strong>2025</strong> – Erste CSRD‑Pflichtberichte für große Unternehmen (&gt;250 MA).</div>
+        </div>
+  
+        <h3><i class="fas fa-chart-line"></i> Finanzielle Performance</h3>
+        <p>Eine <em>Harvard Business Review</em>-Analyse zeigt: Firmen mit ausgereifter ESG-Berichterstattung verzeichnen im Durchschnitt <strong>4&nbsp;% niedrigere Kapitalkosten</strong>.</p>
+  
+        <h3><i class="fas fa-users"></i> Wettbewerbsvorteil & Innovation</h3>
+        <p>Transparenz schafft Differenzierung. Unternehmen wie <strong>Patagonia</strong> oder <strong>Tony’s Chocolonely</strong> nutzen offene Kommunikation als Markenkern und steigern so Kundenloyalität.</p>
+  
+        <div class="casebox">
+          <strong>Fallbeispiel – Ikea „People & Planet Positive“</strong><br>
+          Durch einen mehrkanaligen Nachhaltigkeitsbericht (Web + Podcast + Social Media) konnte Ikea die <em>Markenvertrauenswerte</em> in Deutschland um <strong>12&nbsp;%</strong> steigern und gleichzeitig den Anteil nachhaltiger Produkte von 30&nbsp;% auf 60&nbsp;% erhöhen.
+        </div>
+  
+        <div class="infobox"><i class="fas fa-lightbulb"></i> <strong>Praxis-Tipp:</strong> Veröffentliche Quartals‑Updates zu deinen ESG‑Zielen in einem Blog oder Newsletter, um Fortschritte kontinuierlich sichtbar zu machen und Stakeholder einzubinden.</div>
+  
+        <div class="media">
+          <!-- Infografik lokal ablegen: assets/kommunikation-vorteile.png -->
+          <img src="https://www.pwc.de/de/nachhaltigkeit/sustainable-transformation/pwc-396769-nachhaltigkeitskommunikation-02-v1.svg" alt="Infografik: Vorteile transparenter Nachhaltigkeitskommunikation" />
+        </div>
+      </section>
+
+       <!-- 2. Standards -->
+       <section id="standards">
+        <h2>2. Überblick über Reporting-Standards</h2>
+        <p>Damit Nachhaltigkeitsleistung <strong>vergleichbar</strong> und <strong>prüfbar</strong> wird, existiert eine Reihe etablierter Standards. Die folgende Übersicht zeigt – in verständlichen Häppchen – worauf jeder Standard den Fokus legt.</p>
+  
+        <div class="standards-grid">
+          <!-- GRI -->
+          <div class="standard-card">
+            <i class="fas fa-globe"></i>
+            <h3>GRI <span class="badge">Global</span></h3>
+            <p>Die <strong>Global Reporting Initiative</strong> liefert modulare Leitlinien, die auf <em>Stakeholder-Bedürfnisse</em> ausgerichtet sind.</p>
+            <ul>
+              <li>Materialitäts­analyse als Kern</li>
+              <li>Branchenergänzungen verfügbar</li>
+              <li><em>Freiwillig</em>, aber weit verbreitet</li>
+            </ul>
+          </div>
+          <!-- CSRD / ESRS -->
+          <div class="standard-card">
+            <i class="fas fa-euro-sign"></i>
+            <h3>CSRD / ESRS <span class="badge">EU‑Pflicht</span></h3>
+            <p>Die <strong>Corporate Sustainability Reporting Directive</strong> verpflichtet ab 2025 große EU-Unternehmen zu detaillierten Offenlegungen nach den <em>European Sustainability Reporting Standards</em>.</p>
+            <ul>
+              <li>Doppelte Wesentlichkeit (Inside‑Out & Outside‑In)</li>
+              <li>Assurance durch Wirtschaftsprüfer</li>
+              <li>Digitale XBRL-Taxonomie</li>
+            </ul>
+          </div>
+          <!-- SASB -->
+          <div class="standard-card">
+            <i class="fas fa-industry"></i>
+            <h3>SASB <span class="badge">USA</span></h3>
+            <p>Das <strong>Sustainability Accounting Standards Board</strong> bietet <em>branchen­spezifische</em> Kennzahlensets für 77 Sektoren.</p>
+            <ul>
+              <li>Finanz­materialität im Fokus</li>
+              <li>Kompatibel mit SEC-Filings</li>
+              <li>Übernahme durch ISSB</li>
+            </ul>
+          </div>
+          <!-- TCFD / ISSB -->
+          <div class="standard-card">
+            <i class="fas fa-fire"></i>
+            <h3>TCFD / ISSB <span class="badge">Klima</span></h3>
+            <p>Berichtet <strong>klimabezogene Risiken & Chancen</strong> – nun im <em>IFRS S2</em> des International Sustainability Standards Board integriert.</p>
+            <ul>
+              <li>Vier Säulen: Governance, Strategie, Risiko, Kennzahlen</li>
+              <li>Pflicht u.a. in UK, Neuseeland</li>
+              <li>Einbettung in globale IFRS-Architektur</li>
+            </ul>
+          </div>
+          <!-- EU Taxonomie -->
+          <div class="standard-card">
+            <i class="fas fa-leaf"></i>
+            <h3>EU Taxonomie <span class="badge">Finanzen</span></h3>
+            <p>Definiert, welche Wirtschaftstätigkeiten <em>ökologisch nachhaltig</em> sind – Grundlage für Green Bonds & Investitionen.</p>
+            <ul>
+              <li>6 Umweltziele, Do‑No‑Significant‑Harm‑Prinzip</li>
+              <li>Transparente KPIs: Umsatz, CapEx, OpEx</li>
+              <li>Pflichtangabe für CSRD‑Bericht</li>
+            </ul>
+          </div>
+        </div>
+  
+        <div class="infobox"><i class="fas fa-lightbulb"></i> <strong>Merksatz:</strong> GRI erzählt die <em>ganze Geschichte</em>, SASB bringt die <em>Zahlen</em>, TCFD/ISSB beleuchtet das <em>Klima‑Risiko</em> – und CSRD/ESRS macht alles in der EU verbindlich.</div>
+  
+      </section>
+
+    <!-- 3. Wesentlichkeit -->
+    <section id="materiality">
+        <h2>3. Wesentlichkeits‑Analyse umfassend erklärt</h2>
+        <p>Mit der <strong>Wesentlichkeits‑Analyse</strong> (engl. <em>materiality assessment</em>) findest du heraus, <em>welche</em> Nachhaltigkeitsthemen für dein Unternehmen wirklich relevant sind – und warum. Sie verbindet <strong>Stakeholder‑Erwartungen</strong> mit <strong>finanziellen Auswirkungen</strong> und bildet damit das Herzstück eines glaubwürdigen ESG‑Reportings.</p>
+  
+        <!-- Schritt‑für‑Schritt‑Übersicht -->
+        <div class="steps-grid">
+          <div class="step-card"><div class="step-number">1</div><h3>Themenuniversum</h3><p>Erstelle eine Long‑List (≈30 Themen) aus GRI, SDGs, Wettbewerbs‑Benchmarks und internen Workshops.</p></div>
+          <div class="step-card"><div class="step-number">2</div><h3>Stakeholder‑Befragung</h3><p>Nutze Online‑Umfragen oder Fokusgruppen. Ziel: Wertung der Themen aus Sicht Kunden, Mitarbeitende, Investoren.</p></div>
+          <div class="step-card"><div class="step-number">3</div><h3>Impact‑Scoring</h3><p>Bewerte ökologische & soziale Auswirkungen (z. B. 1–5 Punkte). Facts: 45 % der DAX‑Konzerne nutzen eine 5‑stufige Skala.</p></div>
+          <div class="step-card"><div class="step-number">4</div><h3>Finanzielle Relevanz</h3><p>Messe Umsatz­potenzial, Kosten, Strafen. Beispiel: CO₂‑Preissteigerung kann Marge um 3 % drücken.</p></div>
+          <div class="step-card"><div class="step-number">5</div><h3>Matrix & Priorisierung</h3><p>Plotte Themen (x = Impact, y = Finanz). Fokussiere High‑High‑Feld – meist 6–10 Kernthemen.</p></div>
+          <div class="step-card"><div class="step-number">6</div><h3>Aktions­plan & KPIs</h3><p>Lege für Kernthemen Ziele & Messgrößen fest. Beispiel‑KPI: „Anteil erneuerbarer Energie 80 % bis 2028“.</p></div>
+        </div>
+  
+        <!-- Doppelte Wesentlichkeit -->
+        <h3><i class="fas fa-balance-scale"></i> Was ist <em>doppelte</em> Wesentlichkeit?</h3>
+        <p>Die EU‑CSRD verlangt zwei Blickwinkel:</p>
+        <ul>
+          <li><strong>Inside‑Out</strong>: Wie beeinflusst mein Unternehmen Umwelt & Gesellschaft?</li>
+          <li><strong>Outside‑In</strong>: Wie beeinflussen Nachhaltigkeitsfaktoren mein Geschäftsmodell (Risiken & Chancen)?</li>
+        </ul>
+  
+        <!-- Tool‑Empfehlungen -->
+        <h3><i class="fas fa-tools"></i> Nützliche Tools</h3>
+        <div class="tool-grid">
+          <div class="tool-card"><i class="fas fa-chart-bar"></i><div><strong>GRI Materiality Wizard</strong><br><small>Kostenloses Tool, generiert Start‑Themen basierend auf Branche.</small></div></div>
+          <div class="tool-card"><i class="fas fa-network-wired"></i><div><strong>Datamaran</strong><br><small>KI‑Plattform zum Echtzeit‑Monitoring von ESG‑Trends.</small></div></div>
+          <div class="tool-card"><i class="fas fa-check-circle"></i><div><strong>CSRD Navigator</strong><br><small>Guidelines & Gap‑Analyse für doppelte Wesentlichkeit.</small></div></div>
+          <div class="tool-card"><i class="fas fa-edit"></i><div><strong>SASB Materiality Map</strong><br><small>Branchen‑Schnellcheck für finanzielle Relevanz.</small></div></div>
+        </div>
+  
+        <!-- Impact‑Tabelle Beispiel -->
+        <h3><i class="fas fa-table"></i> Beispiel‑Scoring (Ausschnitt)</h3>
+        <table class="impact-table">
+          <thead><tr><th>Thema</th><th>Stakeholder‑Priorität (1‑5)</th><th>Impact (1‑5)</th><th>Finanz (1‑5)</th></tr></thead>
+          <tbody>
+            <tr><td>Klimaschutz</td><td>5</td><td>5</td><td>5</td></tr>
+            <tr><td>Zirkularität</td><td>4</td><td>4</td><td>3</td></tr>
+            <tr><td>Diversität</td><td>3</td><td>3</td><td>2</td></tr>
+          </tbody>
+        </table>
+  
+        <!-- Fallbeispiel -->
+        <div class="casebox">
+          <strong>Fallbeispiel – Henkel (2024)</strong><br>
+          Henkel hat 2 000 Stakeholder befragt. Ergebnis: „Recyclingfähigkeit der Verpackungen“ rückte von Platz 8 auf Platz 3. Das Unternehmen investierte 60 Mio. € in neue Designs und senkte Kunststoff­einsatz um 18 % – <em>gleichzeitig</em> stieg der Marktanteil in Europa um 2 %.
+        </div>
+  
+        <!-- Infografik -->
+        <div class="media">
+          <img src="https://betterearth.partners/wp-content/uploads/2024/08/Wesentlichkeitsmatrix-BE-1024x768-1-1.png" alt="Beispiel einer Wesentlichkeitsmatrix" />
+        </div>
+  
+        <div class="infobox"><i class="fas fa-lightbulb"></i> <strong>Tipp:</strong> Wiederhole die Analyse alle 2 Jahre – 65 % der ESG‑Leader aktualisieren ihre Matrix mindestens so häufig.</div>
+      </section>
+
+    <!-- 4. KPIs -->
+    <section id="kpi">
+      <h2>4. KPIs & Datenerfassung</h2>
+      <p>Ohne verlässliche Daten kein glaubwürdiger Bericht. Häufige KPIs:</p>
+      <ul>
+        <li><strong>Treibhausgas‑Emissionen (Scope&nbsp;1&nbsp;–&nbsp;3)</strong></li>
+        <li><strong>Energie‑ & Materialeffizienz</strong></li>
+        <li><strong>Diversitäts‑Kennzahlen</strong></li>
+        <li><strong>Unfallrate (LTIFR)</strong></li>
+      </ul>
+      <p><em>Best Practice:</em> Nutze eine ESG‑Software, die automatisch <strong>IoT‑Messwerte</strong> einliest und an CSRD‑Konformität erinnert.</p>
+    </section>
+
+    <!-- 5. Storytelling -->
+    <section id="storytelling">
+      <h2>5. Digitale Kommunikation & Storytelling</h2>
+      <p>Zahlen alleine überzeugen selten. Kombiniere Fakten mit <strong>Geschichten</strong> und <strong>Visuals</strong>:</p>
+      <ul>
+        <li><i class="fas fa-video"></i> <strong>Kurzvideos</strong> (1–2&nbsp;Min.) erklären ESG‑Projekte.</li>
+        <li><i class="fas fa-chart-pie"></i> <strong>Interaktive Grafiken</strong> machen KPIs greifbar.</li>
+        <li><i class="fas fa-users"></i> <strong>Mitarbeiter‑Stories</strong> zeigen reale Gesichter.</li>
+      </ul>
+      <div class="infobox"><i class="fas fa-lightbulb"></i> Beispiel: Der Schokoladen‑Hersteller <em>Tony’s Chocolonely</em> veröffentlicht jedes Jahr einen <strong>Comic‑Report</strong> mit klarer Sprache & Humor.</div>
+    </section>
+
+    <!-- 6. Best Practices -->
+    <section id="best">
+      <h2>6. Best Practices</h2>
+      <ul>
+        <li><strong>Patagonia</strong>: Vollständige Offenlegung der Lieferketten & Risiken in einem interaktiven Online‑Report.</li>
+        <li><strong>DHL Group</strong>: CSRD‑Pilotbericht 2024 mit doppelt‑materialer Matrix & KI‑gestützter Datenverifizierung.</li>
+        <li><strong>Siemens</strong>: Digital Twin der Fabriken, der Echtzeit‑ESG‑KPIs live streamt.</li>
+      </ul>
+    </section>
+
+    <!-- 7. Video -->
+    <section id="video" class="media">
+      <h2>7. Video: Sustainability Reporting erklärt</h2>
+      <!-- Video: Sustainability Reporting erklärt -->
+<iframe
+style="width:100%;aspect-ratio:16/9;border:0"
+src="https://www.youtube.com/embed/oyMJQXLW_e8"
+title="Sustainability Reporting erklärt"
+allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+allowfullscreen>
+</iframe>    </section>
+
+    <!-- 8. Quiz -->
+    <section id="quiz" class="quiz-container">
+      <h2>8. Wissens‑Check</h2>
+      <form id="quizForm">
+        <div class="question">
+          <strong>1) Wie nennt man den Prozess, die wichtigsten Nachhaltigkeitsthemen zu bestimmen?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q1" value="a"> CO₂‑Bilanzierung</label>
+            <label><input type="radio" name="q1" value="b"> Wesentlichkeits‑Analyse</label>
+            <label><input type="radio" name="q1" value="c"> Greenwashing</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>2) Welcher Reporting‑Standard wird in der EU ab 2025 Pflicht?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q2" value="a"> SASB</label>
+            <label><input type="radio" name="q2" value="b"> CSRD / ESRS</label>
+            <label><input type="radio" name="q2" value="c"> TCFD</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>3) Welches Framework fokussiert speziell auf klimabezogene Finanzrisiken?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q3" value="a"> TCFD</label>
+            <label><input type="radio" name="q3" value="b"> GRI</label>
+            <label><input type="radio" name="q3" value="c"> Global Compact</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>4) Laut GRI sollte ein Nachhaltigkeitsbericht vor allem welche Inhalte zeigen?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q4" value="a"> Wesentliche Themen & deren Management</label>
+            <label><input type="radio" name="q4" value="b"> Unternehmenslogo und Slogans</label>
+            <label><input type="radio" name="q4" value="c"> Nur Finanzzahlen</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>5) Welches Medium erzeugt laut Studien das höchste Engagement für ESG‑Geschichten?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q5" value="a"> Bedruckte Broschüre</label>
+            <label><input type="radio" name="q5" value="b"> Video</label>
+            <label><input type="radio" name="q5" value="c"> Plain‑Text PDF</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>6) Welche Firma gilt als Pionier für transparenten Nachhaltigkeitsbericht?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q6" value="a"> Patagonia</label>
+            <label><input type="radio" name="q6" value="b"> Tesla</label>
+            <label><input type="radio" name="q6" value="c"> Burger King</label>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">Quiz auswerten</button>
+        <div class="result" id="quizResult"></div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    // Richtige Antworten
+    const answers={q1:'b',q2:'b',q3:'a',q4:'a',q5:'b',q6:'a'};
+    function getProgress(){return JSON.parse(localStorage.getItem('learning_progress')||'{}');}
+    function saveProgress(d){localStorage.setItem('learning_progress',JSON.stringify(d));}
+
+    document.getElementById('quizForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      let score=0;
+      Object.keys(answers).forEach(k=>{
+        if(document.querySelector(`input[name="${k}"]:checked`)?.value===answers[k]) score++;});
+      const total=Object.keys(answers).length;
+      const percent=score/total*100;
+      const res=document.getElementById('quizResult');
+      res.textContent=`Ergebnis: ${score}/${total} korrekt (${percent.toFixed(0)}%)`;
+      if(score===total){
+        res.style.color='#4caf50';
+        const prog=getProgress();
+        if(!prog['mod6']){prog['mod6']=true;saveProgress(prog);} 
+        setTimeout(()=>{alert('Super! Modul Nachhaltigkeitskommunikation & Reporting abgeschlossen.\nZurück zur Lernplattform.');window.location.href='Lernplattform.html';},1500);
+      } else {
+        res.style.color='#ff6b6b';
+        alert('Fast geschafft! Lies die Inhalte noch einmal, um alle Fragen richtig zu beantworten.');
+      }
+    });
+  </script>
+</body>
+</html>

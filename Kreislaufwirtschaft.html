@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kreislaufwirtschaft & Abfallmanagement</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* =============================
+       DESIGN‑TOKENS
+    ==============================*/
+    :root{
+      --primary:#00c389;   /* frisches Grün */
+      --secondary:#0087ff; /* Business‑Blau */
+      --dark:#003844;
+      --light:#f4f9fb;
+      --white:#ffffff;
+      --danger:#ff5252;
+      --warning:#ffb300;
+
+      --radius-sm:8px;
+      --radius-md:14px;
+      --radius-lg:26px;
+      --shadow-sm:0 2px 6px rgba(0,0,0,.06);
+      --shadow-md:0 4px 14px rgba(0,0,0,.10);
+      --shadow-lg:0 8px 26px rgba(0,0,0,.12);
+      --transition:all .25s ease-in-out;
+    }
+
+    /* =============================
+       RESET & GLOBALS
+    ==============================*/
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Inter',Arial,sans-serif;
+      font-size:16px;
+      line-height:1.6;
+      color:#333;
+      background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);
+      background-attachment:fixed;
+      background-size:400% 400%;
+      animation:gradient 15s ease infinite;
+      min-height:100vh;
+      display:flex;flex-direction:column;
+    }
+    @keyframes gradient{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+
+    /* =============================
+       HEADER / NAVBAR
+    ==============================*/
+    header{
+      position:sticky;top:0;z-index:1000;
+      backdrop-filter:saturate(180%) blur(6px);
+      background:rgba(0,56,68,.95);
+      box-shadow:var(--shadow-sm);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:.9rem 1.6rem;
+    }
+    header img{height:90px;transition:var(--transition)}
+    header img:hover{transform:scale(1.06)}
+    nav{display:flex;flex-wrap:wrap;gap:1rem;margin-left:1rem}
+    nav a{
+      color:var(--white);text-decoration:none;font-weight:500;
+      padding:.55rem 1rem;border-radius:var(--radius-lg);
+      display:flex;align-items:center;gap:.4rem;
+      transition:var(--transition);
+    }
+    nav a:hover{background:rgba(255,255,255,.17);transform:translateY(-2px)}
+    nav a.active{background:rgba(0,195,137,.35)}
+
+    /* =============================
+       CONTAINER
+    ==============================*/
+    .container{
+      width:95%;max-width:1280px;margin:3rem auto;padding:2.6rem;
+      background:var(--white);
+      border-radius:var(--radius-md);
+      box-shadow:var(--shadow-md);
+    }
+
+    /* =============================
+       TYPOGRAPHY
+    ==============================*/
+    h1{font-family:'Montserrat',sans-serif;font-size:2.4rem;text-align:center;margin-bottom:1.3rem;color:var(--dark)}
+    h2{font-size:1.55rem;font-weight:600;margin-top:2.6rem;margin-bottom:1.1rem;color:var(--dark)}
+    h3{font-size:1.15rem;font-weight:600;margin:1rem 0 .45rem;color:var(--dark)}
+    p,li{font-size:1rem}
+    ul{padding-left:1.2rem}
+
+    /* =============================
+       TOC / INFOBOX / CASEBOX
+    ==============================*/
+    .toc{
+      background:var(--light);
+      border-left:4px solid var(--primary);
+      padding:1.2rem;border-radius:var(--radius-sm);
+      box-shadow:var(--shadow-sm);margin-bottom:2.2rem;
+    }
+    .toc a{display:block;color:var(--dark);text-decoration:none;font-size:.95rem;margin:.28rem 0}
+    .toc a:hover{text-decoration:underline}
+
+    .infobox,.casebox{
+      padding:1rem 1.2rem;border-radius:var(--radius-sm);
+      font-size:.95rem;box-shadow:var(--shadow-sm);margin:1.2rem 0;
+    }
+    .infobox{background:var(--light);border-left:5px solid var(--primary)}
+    .casebox{background:#fffbea;border-left:5px solid var(--warning)}
+
+    /* =============================
+       MEDIA WRAPPER
+    ==============================*/
+    .media{margin:1.6rem 0;text-align:center}
+    .media img,.media iframe{max-width:100%;border-radius:var(--radius-sm);box-shadow:var(--shadow-md)}
+    .media iframe{aspect-ratio:16/9;border:0}
+
+    /* =============================
+       GRID COMPONENTS
+    ==============================*/
+    .steps-grid,.tool-grid{
+      display:grid;gap:1.5rem;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      margin-top:1.4rem;
+    }
+    .step-card,.tool-card{
+      background:var(--light);
+      border-radius:var(--radius-md);
+      padding:1.2rem 1.4rem;
+      box-shadow:var(--shadow-sm);
+      transition:var(--transition);
+    }
+    .step-card:hover,.tool-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+
+    .step-card{position:relative}
+    .step-number{
+      position:absolute;top:-16px;left:-16px;width:44px;height:44px;border-radius:50%;
+      background:var(--secondary);color:var(--white);display:flex;align-items:center;justify-content:center;
+      font-weight:600;box-shadow:var(--shadow-sm)
+    }
+    .tool-card{display:flex;gap:12px;align-items:flex-start;background:#eaf5ff}
+    .tool-card i{font-size:1.7rem;color:#1e88e5;margin-top:4px}
+
+    /* =============================
+       TABLES & QUIZ
+    ==============================*/
+    .impact-table{width:100%;border-collapse:collapse;margin-top:1.2rem;font-size:.92rem}
+    .impact-table th,.impact-table td{padding:8px;border:1px solid #dcdcdc;text-align:center}
+    .impact-table thead{background:var(--light)}
+
+    .quiz-container{background:var(--light);padding:2rem;border-radius:var(--radius-md);box-shadow:var(--shadow-md);margin-top:2.5rem}
+    .question{margin:1.2rem 0}
+    .options label{display:block;margin:.45rem 0;cursor:pointer}
+    .submit-btn{
+      background:var(--primary);color:var(--white);border:none;
+      padding:.7rem 1.6rem;border-radius:var(--radius-lg);font-weight:600;
+      transition:var(--transition);cursor:pointer;
+    }
+    .submit-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+    .result{margin-top:1rem;font-weight:600}
+
+    /* =============================
+       RESPONSIVE
+    ==============================*/
+    @media(max-width:640px){
+      h1{font-size:2rem} header img{height:70px}
+      nav{gap:.6rem}
+      nav a{padding:.45rem .8rem;font-size:.88rem}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="Dateipload.html"><img src="logo.png" alt="DigiGreen Pilot Logo"></a>
+    <nav>
+      <a href="Dateipload.html"><i class="fas fa-poll"></i> Umfrage</a>
+      <a href="Co2express.html"><i class="fas fa-bolt"></i> CO₂ Express</a>
+      <a href="Chatbot.html"><i class="fas fa-comments"></i> Chatbot</a>
+      <a href="Dashboard.html"><i class="fas fa-leaf"></i> Dashboard</a>
+      <a href="Lernplattform.html" class="active"><i class="fas fa-graduation-cap"></i> Lernplattform</a>
+      <a href="Meinprofil.html"><i class="fas fa-user"></i> Mein Profil</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>Kreislaufwirtschaft & Abfallmanagement</h1>
+
+    <div class="toc">
+      <strong>Inhaltsverzeichnis</strong>
+      <a href="#why">1. Warum Kreislaufwirtschaft?</a>
+      <a href="#linear">2. Linear vs. Zirkulär (Diagramm)</a>
+      <a href="#hierarchy">3. Abfallhierarchie</a>
+      <a href="#design">4. Designprinzipien (9Rs)</a>
+      <a href="#business">5. Geschäftsmodelle</a>
+      <a href="#policy">6. Gesetzliche Rahmen & EU-Strategie</a>
+      <a href="#best">7. Best Practices</a>
+      <a href="#video">8. Video: Circular Economy</a>
+      <a href="#quiz">9. Wissens-Check</a>
+    </div>
+
+    <section id="why">
+      <h2>1. Warum Kreislaufwirtschaft?</h2>
+      <p>Die Welt produziert jährlich über <strong>2 Mrd. Tonnen</strong> Müll. Nur 9 % der Ressourcen fließen aktuell in Kreisläufe zurück (<a href="https://www.circularity-gap.world/" target="_blank">Circularity Gap Report</a>). Kreislaufwirtschaft (CE) schließt Stoffkreisläufe, spart Rohstoffe, reduziert CO₂ und eröffnet neue Geschäftsmodelle.</p>
+      <div class="infobox"><i class="fas fa-recycle"></i> Inspiration: Die EU schätzt ein zusätzliches BIP-Wachstum von <strong>0,5 %</strong> & 700.000 neuen Jobs bis 2030 durch CE.</div>
+    </section>
+
+    <section id="linear">
+      <h2>2. Linear vs. Zirkulär</h2>
+      <p>Das lineare Modell "Take–Make–Waste" führt zu Ressourcenknappheit & hohen Emissionen. CE setzt auf "Design Out Waste", Kreisläufe & Regeneration.</p>
+      <div class="media">
+        <img src="https://futurerecycling.com.au/wp-content/uploads/2020/06/future-recycling-circular-economy-diagram-800px.png" alt="Circular Economy Diagramm">
+      </div>
+    </section>
+
+    <section id="hierarchy">
+      <h2>3. Abfallhierarchie</h2>
+      <p>Die EU-Abfallrahmenrichtlinie priorisiert Maßnahmen:</p>
+      <ol>
+        <li>Vermeidung</li>
+        <li>Wiederverwendung</li>
+        <li>Recycling</li>
+        <li>Andere Verwertung (z. B. energetisch)</li>
+        <li>Beseitigung</li>
+      </ol>
+      <div class="media">
+        <img src="https://environment.ec.europa.eu/sites/default/files/styles/oe_theme_medium_no_crop/public/2021-01/SC656%20waste_hierachy%20FINAL.jpg?itok=fTGHo3-Y" alt="Waste Hierarchy">
+      </div>
+    </section>
+
+    <section id="design">
+      <h2>4. Designprinzipien – die 9Rs</h2>
+      <ul>
+        <li><strong>Refuse</strong> – unnötige Produkte vermeiden</li>
+        <li><strong>Rethink</strong> – Sharing, Digitale Dienste statt Besitz</li>
+        <li><strong>Reduce</strong> – Material- & Energieeinsatz minimieren</li>
+        <li><strong>Reuse</strong> – Mehrweg & Second-Hand</li>
+        <li><strong>Repair</strong> – Langlebigkeit erhöhen</li>
+        <li><strong>Refurbish</strong> – Aufarbeiten</li>
+        <li><strong>Remanufacture</strong> – Komponenten wiederverwerten</li>
+        <li><strong>Recycle</strong> – Stofflich verwerten</li>
+        <li><strong>Recover</strong> – Energetische Verwertung </li>
+      </ul>
+    </section>
+
+    <section id="business">
+      <h2>5. Geschäftsmodelle</h2>
+      <ul>
+        <li><em>Product-as-a-Service</em>: Philips verkauft "Licht" statt Lampen (Pay-per-Lux).</li>
+        <li><em>Reverse Logistics</em>: H&M Garment Collecting Programme.</li>
+        <li><em>Industrial Symbiosis</em>: Abwärme einer Fabrik heizt Gewächshäuser.</li>
+        <li><em>Materialplattformen</em>: B2B-Marktplätze für Sekundärrohstoffe.</li>
+      </ul>
+    </section>
+
+    <section id="policy">
+      <h2>6. Gesetzliche Rahmen & EU-Strategie</h2>
+      <p>Die EU-Kommission veröffentlichte 2020 den <strong>CEAP 2.0</strong>. Schlüsselinitiativen:</p>
+      <ul>
+        <li>Ökodesign-Verordnung für nachhaltige Produkte</li>
+        <li>Recht auf Reparatur</li>
+        <li>Verpflichtende Recyclingquoten & Rezyklatanteile</li>
+      </ul>
+      <p>Deutschland: <em>Kreislaufwirtschaftsgesetz</em>, VerpackG (Mindest-Rezyklat in PET, Pfandpflicht).</p>
+    </section>
+
+    <section id="best">
+      <h2>7. Best Practices</h2>
+      <ul>
+        <li><strong>Interface</strong>: Teppichfliesen aus 100 % recyceltem Nylon, CO₂-negativ.</li>
+        <li><strong>Patagonia Worn Wear</strong>: Reparatur & Second-Hand-Plattform.</li>
+        <li><strong>Loop by TerraCycle</strong>: Nachfüllbare Verpackungen im Kreislauf.</li>
+      </ul>
+    </section>
+
+    <section id="video" class="media">
+      <h2>8. Video: Circular Economy erklärt</h2>
+      <iframe width="800" height="450" src="https://www.youtube.com/embed/zCRKvDyyHmI" title="Circular Economy" frameborder="0" allowfullscreen></iframe>
+    </section>
+
+    <section id="quiz" class="quiz-container">
+      <h2>9. Wissens-Check</h2>
+      <form id="quizForm">
+        <div class="question">
+          <strong>1) Welches Prinzip steht an erster Stelle der Abfallhierarchie?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q1" value="a"> Recycling</label>
+            <label><input type="radio" name="q1" value="b"> Vermeidung</label>
+            <label><input type="radio" name="q1" value="c"> Beseitigung</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>2) Wie viel Prozent der Ressourcen gehen laut Circularity Gap Report aktuell in den Kreislauf zurück?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q2" value="a"> 9 %</label>
+            <label><input type="radio" name="q2" value="b"> 25 %</label>
+            <label><input type="radio" name="q2" value="c"> 50 %</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>3) Welches Geschäftsmodell beschreibt "Pay-per-Lux" von Philips?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q3" value="a"> Product-as-a-Service</label>
+            <label><input type="radio" name="q3" value="b"> Reverse Logistics</label>
+            <label><input type="radio" name="q3" value="c"> Industrial Symbiosis</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>4) Welcher Buchstabe der 9Rs steht für das Aufarbeiten gebrauchter Produkte?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q4" value="a"> Refurbish</label>
+            <label><input type="radio" name="q4" value="b"> Recover</label>
+            <label><input type="radio" name="q4" value="c"> Refuse</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>5) Welches EU-Dokument treibt die Kreislaufwirtschaft seit 2020 maßgeblich voran?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q5" value="a"> CEAP 2.0</label>
+            <label><input type="radio" name="q5" value="b"> REACH-Verordnung</label>
+            <label><input type="radio" name="q5" value="c"> RED II</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>6) Welcher Hersteller bietet Teppichfliesen mit negativer CO₂-Bilanz an?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q6" value="a"> Interface</label>
+            <label><input type="radio" name="q6" value="b"> H&M</label>
+            <label><input type="radio" name="q6" value="c"> Apple</label>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">Quiz auswerten</button>
+        <div class="result" id="quizResult"></div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    const correct={q1:'b',q2:'a',q3:'a',q4:'a',q5:'a',q6:'a'};
+    function getProgress(){return JSON.parse(localStorage.getItem('learning_progress')||'{}');}
+    function saveProgress(d){localStorage.setItem('learning_progress',JSON.stringify(d));}
+
+    document.getElementById('quizForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      let score=0;Object.keys(correct).forEach(k=>{if(document.querySelector(`input[name="${k}"]:checked`)?.value===correct[k])score++;});
+      const total=Object.keys(correct).length;
+      const percent=score/total*100;
+      const res=document.getElementById('quizResult');
+      res.textContent=`Ergebnis: ${score}/${total} korrekt (${percent.toFixed(0)}%)`;
+      if(score===total){
+        res.style.color='#4caf50';
+        const prog=getProgress();if(!prog['mod4']){prog['mod4']=true;saveProgress(prog);} 
+        setTimeout(()=>{alert('Super! Modul Kreislaufwirtschaft abgeschlossen.\nZurück zur Lernplattform.');window.location.href='Lernplattform.html';},1500);
+      } else {
+        res.style.color='#ff6b6b';
+        alert('Gut gemacht! Prüfe die Antworten und versuche, alle Fragen korrekt zu beantworten.');
+      }
+    });
+  </script>
+</body>
+</html> 

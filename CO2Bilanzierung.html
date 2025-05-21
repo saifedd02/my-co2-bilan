@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CO₂-Bilanzierung & Klimamanagement</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* =============================
+       DESIGN‑TOKENS
+    ==============================*/
+    :root{
+      --primary:#00c389;   /* frisches Grün */
+      --secondary:#0087ff; /* Business‑Blau */
+      --dark:#003844;
+      --light:#f4f9fb;
+      --white:#ffffff;
+      --danger:#ff5252;
+      --warning:#ffb300;
+
+      --radius-sm:8px;
+      --radius-md:14px;
+      --radius-lg:26px;
+      --shadow-sm:0 2px 6px rgba(0,0,0,.06);
+      --shadow-md:0 4px 14px rgba(0,0,0,.10);
+      --shadow-lg:0 8px 26px rgba(0,0,0,.12);
+      --transition:all .25s ease-in-out;
+    }
+
+    /* =============================
+       RESET & GLOBALS
+    ==============================*/
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Inter',Arial,sans-serif;
+      font-size:16px;
+      line-height:1.6;
+      color:#333;
+      background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);
+      background-attachment:fixed;
+      background-size:400% 400%;
+      animation:gradient 15s ease infinite;
+      min-height:100vh;
+      display:flex;flex-direction:column;
+    }
+    @keyframes gradient{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+
+    /* =============================
+       HEADER / NAVBAR
+    ==============================*/
+    header{
+      position:sticky;top:0;z-index:1000;
+      backdrop-filter:saturate(180%) blur(6px);
+      background:rgba(0,56,68,.95);
+      box-shadow:var(--shadow-sm);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:.9rem 1.6rem;
+    }
+    header img{height:90px;transition:var(--transition)}
+    header img:hover{transform:scale(1.06)}
+    nav{display:flex;flex-wrap:wrap;gap:1rem;margin-left:1rem}
+    nav a{
+      color:var(--white);text-decoration:none;font-weight:500;
+      padding:.55rem 1rem;border-radius:var(--radius-lg);
+      display:flex;align-items:center;gap:.4rem;
+      transition:var(--transition);
+    }
+    nav a:hover{background:rgba(255,255,255,.17);transform:translateY(-2px)}
+    nav a.active{background:rgba(0,195,137,.35)}
+
+    /* =============================
+       CONTAINER
+    ==============================*/
+    .container{
+      width:95%;max-width:1280px;margin:3rem auto;padding:2.6rem;
+      background:var(--white);
+      border-radius:var(--radius-md);
+      box-shadow:var(--shadow-md);
+    }
+
+    /* =============================
+       TYPOGRAPHY
+    ==============================*/
+    h1{font-family:'Montserrat',sans-serif;font-size:2.4rem;text-align:center;margin-bottom:1.3rem;color:var(--dark)}
+    h2{font-size:1.55rem;font-weight:600;margin-top:2.6rem;margin-bottom:1.1rem;color:var(--dark)}
+    h3{font-size:1.15rem;font-weight:600;margin:1rem 0 .45rem;color:var(--dark)}
+    p,li{font-size:1rem}
+    ul{padding-left:1.2rem}
+
+    /* =============================
+       TOC / INFOBOX / CASEBOX
+    ==============================*/
+    .toc{
+      background:var(--light);
+      border-left:4px solid var(--primary);
+      padding:1.2rem;border-radius:var(--radius-sm);
+      box-shadow:var(--shadow-sm);margin-bottom:2.2rem;
+    }
+    .toc a{display:block;color:var(--dark);text-decoration:none;font-size:.95rem;margin:.28rem 0}
+    .toc a:hover{text-decoration:underline}
+
+    .infobox,.casebox{
+      padding:1rem 1.2rem;border-radius:var(--radius-sm);
+      font-size:.95rem;box-shadow:var(--shadow-sm);margin:1.2rem 0;
+    }
+    .infobox{background:var(--light);border-left:5px solid var(--primary)}
+    .casebox{background:#fffbea;border-left:5px solid var(--warning)}
+
+    /* =============================
+       MEDIA WRAPPER
+    ==============================*/
+    .media{margin:1.6rem 0;text-align:center}
+    .media img,.media iframe{max-width:100%;border-radius:var(--radius-sm);box-shadow:var(--shadow-md)}
+    .media iframe{aspect-ratio:16/9;border:0}
+
+    /* =============================
+       GRID COMPONENTS
+    ==============================*/
+    .steps-grid,.tool-grid{
+      display:grid;gap:1.5rem;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      margin-top:1.4rem;
+    }
+    .step-card,.tool-card{
+      background:var(--light);
+      border-radius:var(--radius-md);
+      padding:1.2rem 1.4rem;
+      box-shadow:var(--shadow-sm);
+      transition:var(--transition);
+    }
+    .step-card:hover,.tool-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+
+    .step-card{position:relative}
+    .step-number{
+      position:absolute;top:-16px;left:-16px;width:44px;height:44px;border-radius:50%;
+      background:var(--secondary);color:var(--white);display:flex;align-items:center;justify-content:center;
+      font-weight:600;box-shadow:var(--shadow-sm)
+    }
+    .tool-card{display:flex;gap:12px;align-items:flex-start;background:#eaf5ff}
+    .tool-card i{font-size:1.7rem;color:#1e88e5;margin-top:4px}
+
+    /* =============================
+       TABLES & QUIZ
+    ==============================*/
+    .impact-table{width:100%;border-collapse:collapse;margin-top:1.2rem;font-size:.92rem}
+    .impact-table th,.impact-table td{padding:8px;border:1px solid #dcdcdc;text-align:center}
+    .impact-table thead{background:var(--light)}
+
+    .quiz-container{background:var(--light);padding:2rem;border-radius:var(--radius-md);box-shadow:var(--shadow-md);margin-top:2.5rem}
+    .question{margin:1.2rem 0}
+    .options label{display:block;margin:.45rem 0;cursor:pointer}
+    .submit-btn{
+      background:var(--primary);color:var(--white);border:none;
+      padding:.7rem 1.6rem;border-radius:var(--radius-lg);font-weight:600;
+      transition:var(--transition);cursor:pointer;
+    }
+    .submit-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+    .result{margin-top:1rem;font-weight:600}
+
+    /* =============================
+       RESPONSIVE
+    ==============================*/
+    @media(max-width:640px){
+      h1{font-size:2rem} header img{height:70px}
+      nav{gap:.6rem}
+      nav a{padding:.45rem .8rem;font-size:.88rem}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="Dateipload.html"><img src="logo.png" alt="DigiGreen Pilot Logo"></a>
+    <nav>
+      <a href="Dateipload.html"><i class="fas fa-poll"></i> Umfrage</a>
+      <a href="Co2express.html"><i class="fas fa-bolt"></i> CO₂ Express</a>
+      <a href="Chatbot.html"><i class="fas fa-comments"></i> Chatbot</a>
+      <a href="Dashboard.html"><i class="fas fa-leaf"></i> Dashboard</a>
+      <a href="Lernplattform.html" class="active"><i class="fas fa-graduation-cap"></i> Lernplattform</a>
+      <a href="Meinprofil.html"><i class="fas fa-user"></i> Mein Profil</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>CO₂-Bilanzierung & Klimamanagement</h1>
+
+    <div class="toc">
+      <strong>Inhaltsverzeichnis</strong>
+      <a href="#why">1. Warum CO₂-Bilanzen?</a>
+      <a href="#scopes">2. GHG Protocol & Scopes</a>
+      <a href="#data">3. Aktivitätsdaten & Emissionsfaktoren</a>
+      <a href="#tools">4. Tools & Standards</a>
+      <a href="#reduction">5. Reduktionsstrategien & Net-Zero</a>
+      <a href="#offset">6. Kompensation & Qualität von Offsets</a>
+      <a href="#best">7. Best Practices</a>
+      <a href="#quiz">8. Wissens-Check</a>
+    </div>
+
+    <section id="why">
+      <h2>1. Warum CO₂-Bilanzen?</h2>
+      <p>Was man misst, kann man steuern. Eine <strong>Corporate Carbon Footprint (CCF)</strong> zeigt, wo Treibhausgase entstehen und bildet die Basis für Ziele nach <em>Science Based Targets</em>. Investoren, Kunden und Regulierung (CSRD, EU-Taxonomie) fordern transparente Klimadaten.</p>
+      <div class="infobox"><i class="fas fa-chart-line"></i> Motivation-Booster: Firmen mit klaren Klimazielen verzeichnen laut CDP im Schnitt <strong>18 % geringere Energiekosten</strong>.</div>
+    </section>
+
+    <section id="scopes">
+      <h2>2. GHG Protocol & Scopes</h2>
+      <p>Das <strong>Greenhouse Gas Protocol</strong> teilt Emissionen in drei Bereiche:</p>
+      <ul>
+        <li><strong>Scope 1</strong>: Direkte Emissionen (z. B. firmeneigene Heizkessel, Fuhrpark).</li>
+        <li><strong>Scope 2</strong>: Indirekte Emissionen aus eingekaufter Energie (Strom, Wärme, Kälte, Dampf).</li>
+        <li><strong>Scope 3</strong>: Alle weiteren vor- und nachgelagerten Emissionen der Wertschöpfungskette (z. B. eingekaufte Waren, Geschäftsreisen, Nutzung der Produkte).</li>
+      </ul>
+      <p>Scope-3-Emissionen machen bei vielen Unternehmen <strong>70-90 %</strong> des Fußabdrucks aus – hier liegt großes Reduktionspotenzial.</p>
+    </section>
+
+    <section id="data">
+      <h2>3. Aktivitätsdaten & Emissionsfaktoren</h2>
+      <p>Die Formel lautet: <code>Emissionen = Aktivitätsdaten × Emissionsfaktor</code>.</p>
+      <p>Quellen für Emissionsfaktoren:</p>
+      <ul>
+        <li>Ecoinvent Datenbank</li>
+        <li>DEFRA / BEIS (UK)</li>
+        <li><a href="https://www.umweltbundesamt.de/themen/klima-energie/treibhausgas-emissionsfaktoren" target="_blank">Umweltbundesamt (UBA)</a></li>
+      </ul>
+      <div class="infobox"><i class="fas fa-database"></i> Tipp: Nutze automatisierte Schnittstellen (APIs), um Faktor-Updates jährlich einzuspielen.</div>
+    </section>
+
+    <section id="tools">
+      <h2>4. Tools & Standards</h2>
+      <ul>
+        <li><strong>ISO 14064-1</strong>: Standard zur Quantifizierung von Treibhausgasemissionen.</li>
+        <li><strong>SBTi Net-Zero Standard</strong>: Leitlinie für wissenschaftsbasierte Klimaziele.</li>
+        <li><strong>PCAF</strong>: Methodik speziell für Finanzinstitute.</li>
+        <li>Software-Tools: ClimateOS, Plan A, Microsoft Sustainability Manager.</li>
+      </ul>
+    </section>
+
+    <section id="reduction">
+      <h2>5. Reduktionsstrategien & Net-Zero</h2>
+      <p>Nach der <em>Avoid-Reduce-Compensate</em>-Hierarchie:</p>
+      <ol>
+        <li><strong>Vermeiden</strong>: Prozessumstellungen, erneuerbare Energien.</li>
+        <li><strong>Reduzieren</strong>: Effizienzmaßnahmen, Kreislaufstrategien.</li>
+        <li><strong>Kompensieren</strong>: Hochqualitative Offsets (nur Restemissionen).</li>
+      </ol>
+      <p>Net-Zero erfordert oft <strong>90-95 %</strong> absolute Reduktion <em>vor</em> 2050.</p>
+    </section>
+
+    <section id="offset">
+      <h2>6. Kompensation & Qualität von Offsets</h2>
+      <p>Nicht alle Zertifikate sind gleichwertig. Prüfe:</p>
+      <ul>
+        <li><strong>Zusätzlichkeit</strong>: Würde das Projekt ohne Finanzierung passieren?</li>
+        <li><strong>Dauerhaftigkeit</strong>: Werden Emissionen dauerhaft gebunden?</li>
+        <li><strong>Verifizierbarkeit</strong>: Unabhängige Audits (Gold Standard, VCS).</li>
+      </ul>
+      <p>Immer wichtiger: <em>Carbon Removal</em> (Direct Air Capture, Biochar) statt reiner Vermeidung.</p>
+    </section>
+
+    <section id="best">
+      <h2>7. Best Practices</h2>
+      <ul>
+        <li><strong>Ikea</strong>: Verpflichtung zu 100 % erneuerbarem Strom & Scope-3-Reduktion durch Kreislaufmöbel.</li>
+        <li><strong>Microsoft</strong>: Negativemissionen-Ziel bis 2030; interne CO₂-Kosten von 100 $/t.</li>
+        <li><strong>Patagonia</strong>: Reparatur-Services, regenerative Landwirtschaft in Lieferkette.</li>
+      </ul>
+    </section>
+
+    <section id="quiz" class="quiz-container">
+      <h2>8. Wissens-Check</h2>
+      <form id="quizForm">
+        <div class="question">
+          <strong>1) Welche Scope-Kategorie umfasst Geschäftsreisen?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q1" value="a"> Scope 1</label>
+            <label><input type="radio" name="q1" value="b"> Scope 2</label>
+            <label><input type="radio" name="q1" value="c"> Scope 3</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>2) Was ist die korrekte Berechnungsformel für Emissionen?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q2" value="a"> Emissionen × Aktivitätsdaten</label>
+            <label><input type="radio" name="q2" value="b"> Aktivitätsdaten × Emissionsfaktor</label>
+            <label><input type="radio" name="q2" value="c"> Emissionsfaktor / Aktivitätsdaten</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>3) Wie hoch ist typischerweise der Anteil von Scope-3-Emissionen?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q3" value="a"> 10-20 %</label>
+            <label><input type="radio" name="q3" value="b"> 40-60 %</label>
+            <label><input type="radio" name="q3" value="c"> 70-90 %</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>4) Welcher Standard definiert wissenschaftsbasierte Klimaziele?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q4" value="a"> ISO 14064-1</label>
+            <label><input type="radio" name="q4" value="b"> SBTi</label>
+            <label><input type="radio" name="q4" value="c"> PCAF</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>5) Welche Eigenschaft ist <em>keine</em> Qualitätsanforderung an Offsets?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q5" value="a"> Zusätzlichkeit</label>
+            <label><input type="radio" name="q5" value="b"> Dauerhaftigkeit</label>
+            <label><input type="radio" name="q5" value="c"> Kurzfristigkeit</label>
+          </div>
+        </div>
+        <div class="question">
+          <strong>6) Bis wann fordert der SBTi Net-Zero Standard typischerweise 90-95 % Reduktion?</strong><br>
+          <div class="options">
+            <label><input type="radio" name="q6" value="a"> 2030</label>
+            <label><input type="radio" name="q6" value="b"> 2050</label>
+            <label><input type="radio" name="q6" value="c"> 2100</label>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">Quiz auswerten</button>
+        <div class="result" id="quizResult"></div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    function getProgress(){return JSON.parse(localStorage.getItem('learning_progress')||'{}');}
+    function saveProgress(d){localStorage.setItem('learning_progress',JSON.stringify(d));}
+
+    document.getElementById('quizForm').addEventListener('submit',function(e){
+      e.preventDefault();
+      const answers={q1:'c',q2:'b',q3:'c',q4:'b',q5:'c',q6:'b'};
+      let score=0;
+      Object.keys(answers).forEach(k=>{
+        if(document.querySelector(`input[name="${k}"]:checked`)?.value===answers[k])score++;
+      });
+      const total=Object.keys(answers).length;
+      const percent=(score/total)*100;
+      const res=document.getElementById('quizResult');
+      res.textContent=`Ergebnis: ${score}/${total} korrekt (${percent.toFixed(0)}%)`;
+      if(score===total){
+        res.style.color='#4caf50';
+        const prog=getProgress();
+        if(!prog['mod3']){prog['mod3']=true;saveProgress(prog);} // mark module 3 completed
+        setTimeout(()=>{
+          alert('Klasse! Du hast das Modul CO₂-Bilanzierung abgeschlossen.\nZurück zur Lernplattform!');
+          window.location.href='Lernplattform.html';
+        },1500);
+      } else {
+        res.style.color='#ff6b6b';
+        alert('Fast geschafft – schau dir die Inhalte noch einmal an, um 100 % zu erreichen.');
+      }
+    });
+  </script>
+</body>
+</html> 
